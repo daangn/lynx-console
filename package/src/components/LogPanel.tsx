@@ -1,0 +1,241 @@
+import { useEffect, useRef, useState } from "@lynx-js/react";
+import type { BaseEvent, InputInputEvent, NodesRef } from "@lynx-js/types";
+import { stringify } from "javascript-stringify";
+import type { LogEntry } from "../types";
+import * as css from "./ConsolePanel.css";
+
+interface LogPanelProps {
+  logs: LogEntry[];
+  clearLogs: () => void;
+}
+
+const runCode = (code: string) => {
+  try {
+    // biome-ignore lint: intentional REPL tool
+    const result = eval(code);
+    if (result instanceof Promise) {
+      result.then((r) => console.log(r)).catch((e) => console.error(e));
+    } else {
+      console.log(result);
+    }
+  } catch (e) {
+    console.error(e);
+  }
+};
+
+export const LogPanel = ({ logs, clearLogs }: LogPanelProps) => {
+  const [expandedArgs, setExpandedArgs] = useState(new Set());
+  const [code, setCode] = useState("");
+  const inputRef = useRef<NodesRef>(null);
+  const listRef = useRef<NodesRef>(null);
+  const logsRef = useRef(logs);
+  logsRef.current = logs;
+
+  const scrollToBottom = (smooth: boolean) => {
+    if (logsRef.current.length === 0) return;
+    listRef.current
+      ?.invoke({
+        method: "scrollToPosition",
+        params: { position: logsRef.current.length - 1, smooth },
+      })
+      .exec();
+  };
+
+  useEffect(() => {
+    scrollToBottom(true);
+  }, [logs]);
+
+  const toggleArg = (key: string) => {
+    setExpandedArgs((prev) => {
+      const next = new Set(prev);
+      if (next.has(key)) {
+        next.delete(key);
+      } else {
+        next.add(key);
+      }
+      return next;
+    });
+  };
+
+  const handleRun = () => {
+    const trimmed = code.trim();
+    if (!trimmed) return;
+
+    setCode("");
+    inputRef.current
+      ?.invoke({ method: "setValue", params: { value: "" } })
+      .exec();
+    runCode(trimmed);
+    setTimeout(() => scrollToBottom(false), 100);
+  };
+
+  const renderArg = (
+    arg: unknown,
+    parentKey: string,
+    level: "log" | "info" | "warn" | "error",
+  ): React.ReactNode => {
+    const key = parentKey;
+    const isExpanded = expandedArgs.has(key);
+
+    if (arg === null) {
+      return <text className={css.argNull}>null</text>;
+    }
+
+    if (arg === undefined) {
+      return <text className={css.argUndefined}>undefined</text>;
+    }
+
+    if (typeof arg === "string") {
+      const MAX_LENGTH = 80;
+      const shouldTruncate = arg.length > MAX_LENGTH;
+
+      if (!shouldTruncate) {
+        return <text className={css.argString({ level })}>{arg}</text>;
+      }
+
+      // 문자열이 길 경우 토글 버튼 추가
+      return (
+        <view className={css.argObject}>
+          <view className={css.argObjectHeader} bindtap={() => toggleArg(key)}>
+            <text className={css.toggleIndicator}>
+              {isExpanded ? "▼" : "▶"}
+            </text>
+            <text className={css.argString({ level })}>
+              {isExpanded ? arg : `${arg.slice(0, MAX_LENGTH)}...`}
+            </text>
+          </view>
+        </view>
+      );
+    }
+
+    if (typeof arg === "number" || typeof arg === "boolean") {
+      return <text className={css.argPrimitive({ level })}>{String(arg)}</text>;
+    }
+
+    if (typeof arg === "object") {
+      let preview = "Object";
+      if (Array.isArray(arg)) {
+        preview = `Array(${arg.length})`;
+      } else if (arg instanceof Map) {
+        preview = `Map(${arg.size})`;
+      } else if (arg instanceof Set) {
+        preview = `Set(${arg.size})`;
+      } else if (arg instanceof Date) {
+        preview = `Date`;
+      } else if (arg instanceof RegExp) {
+        preview = `RegExp`;
+      } else if (arg instanceof Error) {
+        preview = `${arg.constructor.name}`;
+      } else if (arg?.constructor?.name && arg.constructor.name !== "Object") {
+        preview = arg.constructor.name;
+      }
+
+      let jsonString: string;
+      if (arg instanceof Map) {
+        const entries = Array.from(arg.entries()).map(
+          ([k, v]) => `  [${stringify(k)}, ${stringify(v)}]`,
+        );
+        jsonString = `{\n${entries.join(",\n")}\n}`;
+      } else if (arg instanceof Set) {
+        const values = Array.from(arg.values()).map((v) => stringify(v));
+        jsonString = `{\n${values.join(", ")}\n}`;
+      } else {
+        jsonString =
+          stringify(arg, null, 2, { references: true }) ?? String(arg);
+      }
+
+      return (
+        <view className={css.argObject}>
+          <view className={css.argObjectHeader} bindtap={() => toggleArg(key)}>
+            <text className={css.toggleIndicator}>
+              {isExpanded ? "▼" : "▶"}
+            </text>
+            <text className={css.argObjectPreview}>{preview}</text>
+          </view>
+          {isExpanded && (
+            <view className={css.argObjectContent}>
+              <text className={css.argObjectJson}>{jsonString}</text>
+            </view>
+          )}
+        </view>
+      );
+    }
+
+    return <text className={css.argPrimitive({ level })}>{String(arg)}</text>;
+  };
+
+  return (
+    <view className={css.logContainer}>
+      <view className={css.logHeader}>
+        <text className={css.logCount}>Total {logs.length} logs</text>
+        <view style={{ display: "flex", flexDirection: "row", gap: 8 }}>
+          <view className={css.clearButton} bindtap={clearLogs}>
+            <text className={css.clearButtonText}>Clear</text>
+          </view>
+        </view>
+      </view>
+      <list
+        ref={listRef}
+        scroll-orientation="vertical"
+        className={css.logList}
+        initial-scroll-index={Math.max(0, logs.length - 1)}
+      >
+        {logs.length === 0 ? (
+          <list-item item-key="empty-state">
+            <view className={css.placeholder}>
+              <text className={css.placeholderText}>
+                No logs yet. Try console.log("Hello!")
+              </text>
+            </view>
+          </list-item>
+        ) : (
+          logs.map((log) => {
+            return (
+              <list-item key={log.id} item-key={log.id}>
+                <view className={css.logItem({ level: log.level })}>
+                  <view className={css.logItemHeader}>
+                    <text className={css.logLevel({ level: log.level })}>
+                      {log.level.toUpperCase()}
+                    </text>
+                    <text className={css.logTime}>
+                      {new Date(log.timestamp).toISOString()}
+                    </text>
+                  </view>
+                  <view className={css.logArgsContainer}>
+                    {log.args.map((arg, index) => (
+                      <view
+                        key={`${log.id}-${index.toString()}`}
+                        className={css.logArgItem}
+                      >
+                        {renderArg(
+                          arg,
+                          `${log.id}-${index.toString()}`,
+                          log.level,
+                        )}
+                      </view>
+                    ))}
+                  </view>
+                </view>
+              </list-item>
+            );
+          })
+        )}
+      </list>
+      <view className={css.replInputRow}>
+        <text className={css.replPrompt}>{"›"}</text>
+        <input
+          ref={inputRef}
+          className={css.replInput}
+          placeholder="enter code..."
+          bindinput={(e: BaseEvent<"bindinput", InputInputEvent>) =>
+            setCode(e.detail.value)
+          }
+          bindconfirm={handleRun}
+        />
+        <view className={css.replRunButton} bindtap={handleRun}>
+          <text className={css.replRunButtonText}>Run</text>
+        </view>
+      </view>
+    </view>
+  );
+};

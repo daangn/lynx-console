@@ -1,0 +1,54 @@
+{
+  "name": "lynx-console",
+  "version": "0.0.0",
+  "type": "module",
+  "sideEffects": [
+    "**/*.css",
+    "dist/index.css"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.mts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    },
+    "./setup": {
+      "types": "./dist/setup.d.mts",
+      "import": "./dist/setup.mjs",
+      "require": "./dist/setup.cjs"
+    },
+    "./style.css": "./dist/index.css"
+  },
+  "main": "dist/index.mjs",
+  "types": "dist/index.d.mts",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "build": "tsdown",
+    "dev": "tsdown --watch"
+  },
+  "devDependencies": {
+    "@lynx-js/react": "^0.114.3",
+    "@lynx-js/types": "^3.6.0",
+    "@types/react": "^18.3.28",
+    "@vanilla-extract/css": "^1.18.0",
+    "@vanilla-extract/recipes": "^0.5.7",
+    "@vanilla-extract/rollup-plugin": "^1.5.1",
+    "react": "^18.3.1",
+    "tsdown": "^0.20.1",
+    "typescript": "^5.9.3"
+  },
+  "peerDependencies": {
+    "@lynx-js/react": "^0.114.3",
+    "@lynx-js/types": "^3.6.0",
+    "@types/react": "^18"
+  },
+  "dependencies": {
+    "javascript-stringify": "^2.1.0"
+  },
+  "publishConfig": {
+    "provenance": true
+  }
+}

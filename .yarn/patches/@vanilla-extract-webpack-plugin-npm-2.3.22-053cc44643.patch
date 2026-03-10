@@ -1,0 +1,48 @@
+diff --git a/loader/dist/vanilla-extract-webpack-plugin-loader.cjs.dev.js b/loader/dist/vanilla-extract-webpack-plugin-loader.cjs.dev.js
+index 6ba499ea04282c29a05a5ae7616bc214371c52eb..9c940acf1dc246a63fa2b52732a1ad1b4d0f1cf5 100644
+--- a/loader/dist/vanilla-extract-webpack-plugin-loader.cjs.dev.js
++++ b/loader/dist/vanilla-extract-webpack-plugin-loader.cjs.dev.js
+@@ -33,14 +33,12 @@ function loader (source) {
+     name
+   } = integration.getPackageInfo(this.rootContext);
+   const callback = this.async();
+-  integration.transform({
+-    source,
++  integration.compile({
+     filePath: this.resourcePath,
+-    rootPath: this.rootContext,
+-    packageName: name,
+-    identOption: defaultIdentifierOption(this.mode, identifiers)
+-  }).then(code => {
+-    callback(null, code);
++    cwd: this.rootContext,
++    identOption: defaultIdentifierOption(this.mode, identifiers),
++  }).then(result => {
++    callback(null, result.source);
+   }).catch(e => {
+     callback(e);
+   });
+diff --git a/loader/dist/vanilla-extract-webpack-plugin-loader.cjs.prod.js b/loader/dist/vanilla-extract-webpack-plugin-loader.cjs.prod.js
+index 8d9e8d2665f32adc85646c766d876543d26b942f..315d9fb8433785cfc173b8378bcc7c1a1af602bd 100644
+--- a/loader/dist/vanilla-extract-webpack-plugin-loader.cjs.prod.js
++++ b/loader/dist/vanilla-extract-webpack-plugin-loader.cjs.prod.js
+@@ -33,14 +33,12 @@ function loader (source) {
+     name
+   } = integration.getPackageInfo(this.rootContext);
+   const callback = this.async();
+-  integration.transform({
+-    source,
++  integration.compile({
+     filePath: this.resourcePath,
+-    rootPath: this.rootContext,
+-    packageName: name,
+-    identOption: defaultIdentifierOption(this.mode, identifiers)
+-  }).then(code => {
+-    callback(null, code);
++    cwd: this.rootContext,
++    identOption: defaultIdentifierOption(this.mode, identifiers),
++  }).then(result => {
++    callback(null, result.source);
+   }).catch(e => {
+     callback(e);
+   });

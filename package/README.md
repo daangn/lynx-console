@@ -59,13 +59,30 @@ function App() {
 }
 ```
 
+```tsx
+const LynxConsole = lazy(() => import("lynx-console"));
+
+function App() {
+  return (
+    <view>
+      {/* Your app content */}
+      <Suspense>
+        <LynxConsole theme="light" safeAreaInsetBottom="34px" />
+      <Suspense>
+    </view>
+  );
+}
+```
+
 ### Controlling with ref
 
 You can programmatically open and close the console using `LynxConsoleHandle`.
 
 ```tsx
-import LynxConsole, { type LynxConsoleHandle } from "lynx-console";
+import { type LynxConsoleHandle } from "lynx-console";
 import { useRef } from "@lynx-js/react";
+
+const LynxConsole = lazy(() => import("lynx-console"));
 
 function App() {
   const consoleRef = useRef<LynxConsoleHandle>(null);
@@ -80,7 +97,9 @@ function App() {
 
   return (
     <view>
-      <LynxConsole ref={consoleRef} />
+      <Suspense>
+        <LynxConsole ref={consoleRef} />
+      <Suspense>
     </view>
   );
 }

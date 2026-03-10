@@ -58,13 +58,30 @@ function App() {
 }
 ```
 
+```tsx
+const LynxConsole = lazy(() => import("lynx-console"));
+
+function App() {
+  return (
+    <view>
+      {/* 앱 콘텐츠 */}
+      <Suspense>
+        <LynxConsole theme="light" safeAreaInsetBottom="34px" />
+      <Suspense>
+    </view>
+  );
+}
+```
+
 ### ref로 제어하기
 
 `LynxConsoleHandle`을 통해 프로그래밍 방식으로 콘솔을 열고 닫을 수 있어요.
 
 ```tsx
-import LynxConsole, { type LynxConsoleHandle } from "lynx-console";
+import { type LynxConsoleHandle } from "lynx-console";
 import { useRef } from "@lynx-js/react";
+
+const LynxConsole = lazy(() => import("lynx-console"));
 
 function App() {
   const consoleRef = useRef<LynxConsoleHandle>(null);
@@ -79,7 +96,9 @@ function App() {
 
   return (
     <view>
-      <LynxConsole ref={consoleRef} />
+      <Suspense>
+        <LynxConsole ref={consoleRef} />
+      <Suspense>
     </view>
   );
 }

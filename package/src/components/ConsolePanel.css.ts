@@ -45,6 +45,91 @@ export const logCount = style({
   color: vars.$color.fg.neutralSubtle,
 });
 
+export const filterWrapper = style({
+  position: "relative",
+});
+
+export const filterButton = style({
+  display: "flex",
+  flexDirection: "row",
+  alignItems: "center",
+  gap: 2,
+  padding: "6px 12px",
+  backgroundColor: vars.$color.bg.neutralWeak,
+  borderRadius: 4,
+});
+
+export const filterButtonText = style({
+  ...typography("t3", "medium"),
+  color: vars.$color.fg.neutral,
+});
+
+export const filterButtonArrow = style({
+  ...typography("t7", "medium"),
+  color: vars.$color.fg.neutral,
+});
+
+export const filterOverlay = style({
+  position: "fixed",
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
+  zIndex: 99,
+});
+
+export const filterDropdown = style({
+  position: "absolute",
+  top: "100%",
+  left: 0,
+  marginTop: 4,
+  backgroundColor: vars.$color.bg.layerDefault,
+  borderWidth: 1,
+  borderColor: vars.$color.stroke.neutralSubtle,
+  borderStyle: "solid",
+  borderRadius: 8,
+  padding: "4px 0",
+  zIndex: 100,
+  minWidth: 90,
+});
+
+export const filterOption = style({
+  display: "flex",
+  flexDirection: "row",
+  alignItems: "center",
+  gap: 4,
+  padding: "8px 12px",
+});
+
+export const filterCheckbox = recipe({
+  base: {
+    ...typography("t3", "medium"),
+    width: 16,
+  },
+  variants: {
+    level: {
+      log: { color: vars.$color.palette.green600 },
+      info: { color: vars.$color.palette.blue600 },
+      warn: { color: vars.$color.palette.yellow600 },
+      error: { color: vars.$color.palette.red600 },
+    },
+  },
+});
+
+export const filterLabel = recipe({
+  base: {
+    ...typography("t3", "medium"),
+  },
+  variants: {
+    level: {
+      log: { color: vars.$color.palette.green600 },
+      info: { color: vars.$color.palette.blue600 },
+      warn: { color: vars.$color.palette.yellow600 },
+      error: { color: vars.$color.palette.red600 },
+    },
+  },
+});
+
 export const clearButton = style({
   padding: "6px 12px",
   backgroundColor: vars.$color.bg.neutralWeak,

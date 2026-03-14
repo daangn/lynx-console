@@ -6,7 +6,7 @@ export const wrapper = style({
   position: "fixed",
   right: "16px",
   bottom: "84px",
-  zIndex: 9999,
+  zIndex: 9998,
   display: "flex",
   flexDirection: "row",
   alignItems: "center",

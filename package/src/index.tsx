@@ -85,7 +85,7 @@ const LynxConsole = forwardRef<LynxConsoleHandle, LynxConsoleProps>(
 
     return (
       <view className={themeClass}>
-        <FloatingButton bindtap={handleOpenBottomSheet} isVisible={!isOpen}>
+        <FloatingButton bindtap={handleOpenBottomSheet}>
           <text className={floatingButtonCss.title}>LynxConsole</text>
           <text className={floatingButtonCss.subtitle}>
             {`${latestFcp?.name ?? "FCP"}: ${latestFcp?.duration ? latestFcp.duration.toFixed(2) : "--"}ms`}

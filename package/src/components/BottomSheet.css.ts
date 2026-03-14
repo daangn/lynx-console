@@ -11,7 +11,7 @@ export const overlay = style({
   display: "flex",
   justifyContent: "center",
   alignItems: "flex-end",
-  zIndex: 3,
+  zIndex: 9999,
 });
 
 export const backdrop = style({
@@ -20,7 +20,7 @@ export const backdrop = style({
   right: 0,
   bottom: 0,
   left: 0,
-  zIndex: 2,
+  zIndex: 9998,
   background: vars.$color.bg.overlay,
   transition: `opacity ${vars.$duration.d6} cubic-bezier(0.4, 0, 0.2, 1)`,
 });

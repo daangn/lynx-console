@@ -139,7 +139,7 @@ const App = () => {
       </view>
 
       <Suspense fallback={<text>Loading...</text>}>
-        <LynxConsole safeAreaInsetBottom="34px" theme="light" />
+        <LynxConsole safeAreaInsetBottom="0px" theme="light" />
       </Suspense>
     </view>
   );

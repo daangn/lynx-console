@@ -3,17 +3,13 @@ import * as css from "./FloatingButton.css";
 
 interface FloatingButtonProps {
   bindtap: () => void;
-  isVisible: boolean;
   children: ReactNode;
 }
 
 export const FloatingButton = ({
   bindtap,
-  isVisible,
   children,
 }: FloatingButtonProps) => {
-  if (!isVisible) return null;
-
   const handleReload = () => {
     try {
       lynx.reload({}, () => {

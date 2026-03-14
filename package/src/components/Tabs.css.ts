@@ -26,7 +26,6 @@ export const tabTriggerButton = style({
 
 export const tabTriggerButtonText = recipe({
   base: {
-    ...typography("t5", "bold"),
     color: vars.$color.fg.neutralSubtle,
   },
   variants: {
@@ -35,6 +34,16 @@ export const tabTriggerButtonText = recipe({
         color: vars.$color.fg.neutral,
       },
     },
+    size: {
+      t5: typography("t5", "bold"),
+      t4: typography("t4", "bold"),
+      t3: typography("t3", "bold"),
+      t2: typography("t2", "bold"),
+      t1: typography("t1", "bold"),
+    },
+  },
+  defaultVariants: {
+    size: "t5",
   },
 });
 

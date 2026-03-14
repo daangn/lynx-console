@@ -80,7 +80,7 @@ export const PerformancePanel = ({
             <text>Log</text>
           </view>
           <view bindtap={clearPerformances} className={css.clearButton}>
-            <text className={css.clearButtonText}>Clear</text>
+            <text className={css.clearButtonText}>🗑</text>
           </view>
         </view>
         <view className={css.placeholder}>
@@ -97,7 +97,7 @@ export const PerformancePanel = ({
       <view className={css.header}>
         <text className={css.count}>{performances.length} entries</text>
         <view bindtap={clearPerformances} className={css.clearButton}>
-          <text className={css.clearButtonText}>Clear</text>
+          <text className={css.clearButtonText}>🗑</text>
         </view>
       </view>
 

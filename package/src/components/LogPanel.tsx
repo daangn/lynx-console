@@ -269,10 +269,23 @@ export const LogPanel = ({ logs, clearLogs }: LogPanelProps) => {
               setSearchQuery(e.detail.value)
             }
           />
+          {searchQuery.length > 0 && (
+            <view
+              className={css.searchClear}
+              bindtap={() => {
+                setSearchQuery("");
+                searchInputRef.current
+                  ?.invoke({ method: "setValue", params: { value: "" } })
+                  .exec();
+              }}
+            >
+              <text className={css.searchClearText}>✕</text>
+            </view>
+          )}
         </view>
         <view style={{ display: "flex", flexDirection: "row", gap: 8 }}>
           <view className={css.clearButton} bindtap={clearLogs}>
-            <text className={css.clearButtonText}>Clear</text>
+            <text className={css.clearButtonText}>🗑</text>
           </view>
         </view>
       </view>

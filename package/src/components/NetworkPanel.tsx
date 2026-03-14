@@ -71,7 +71,7 @@ export const NetworkPanel = ({
       <view className={css.header}>
         <text className={css.count}>Total: {networks.length} requests</text>
         <view className={css.clearButton} bindtap={clearNetworks}>
-          <text className={css.clearButtonText}>Clear</text>
+          <text className={css.clearButtonText}>🗑</text>
         </view>
       </view>
 

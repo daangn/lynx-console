@@ -138,6 +138,15 @@ export const searchInput = style({
   caretColor: vars.$color.palette.green600,
 });
 
+export const searchClear = style({
+  padding: "2px 4px",
+});
+
+export const searchClearText = style({
+  ...typography("t3", "medium"),
+  color: vars.$color.fg.placeholder,
+});
+
 export const clearButton = style({
   padding: "3px 6px",
   backgroundColor: vars.$color.bg.neutralWeak,

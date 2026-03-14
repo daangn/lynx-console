@@ -1,6 +1,7 @@
 import { useState } from "@lynx-js/react";
 import { stringify } from "javascript-stringify";
 import type { PerformanceEntryData } from "../types";
+import { FadeList } from "./FadeList";
 import * as css from "./PerformancePanel.css";
 
 interface PerformancePanelProps {
@@ -65,7 +66,6 @@ export const PerformancePanel = ({
   clearPerformances,
 }: PerformancePanelProps) => {
   const [selectedId, setSelectedId] = useState<string | null>(null);
-
   if (performances.length === 0) {
     return (
       <view className={css.container}>
@@ -101,7 +101,7 @@ export const PerformancePanel = ({
         </view>
       </view>
 
-      <list className={css.list}>
+      <FadeList className={css.list}>
         {performances.map((perf) => {
           const isMetricFcp = isMetricFcpEntry(perf);
           const fcpMetrics = extractFcpMetrics(perf);
@@ -203,7 +203,7 @@ export const PerformancePanel = ({
             </list-item>
           );
         })}
-      </list>
+      </FadeList>
     </view>
   );
 };

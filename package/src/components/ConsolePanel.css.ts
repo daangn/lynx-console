@@ -36,13 +36,6 @@ export const logHeader = style({
   paddingBottom: 3,
 });
 
-export const fadeTop = style({
-  height: 20,
-  marginBottom: -20,
-  zIndex: 1,
-  background: `linear-gradient(to bottom, ${vars.$color.bg.layerDefault}, #ffffff00)`,
-});
-
 export const filterWrapper = style({
   position: "relative",
 });
@@ -66,7 +59,7 @@ export const filterDropdown = style({
   top: "100%",
   left: 0,
   marginTop: 4,
-  backgroundColor: vars.$color.bg.layerDefault,
+  backgroundColor: vars.$color.bg.layerFloating,
   borderWidth: 1,
   borderColor: vars.$color.stroke.neutralSubtle,
   borderStyle: "solid",
@@ -318,13 +311,6 @@ export const argObjectKey = style({
 export const argObjectJson = style({
   ...typography("t3", "regular"),
   color: vars.$color.fg.neutral,
-});
-
-export const fadeBottom = style({
-  height: 20,
-  marginTop: -20,
-  zIndex: 1,
-  background: `linear-gradient(to top, ${vars.$color.bg.layerDefault}, #ffffff00)`,
 });
 
 export const replInputRow = style({

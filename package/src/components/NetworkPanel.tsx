@@ -1,5 +1,6 @@
 import { useState } from "@lynx-js/react";
 import type { NetworkEntry } from "../types";
+import { FadeList } from "./FadeList";
 import { NetworkDetailSection } from "./NetworkDetailSection";
 import * as css from "./NetworkPanel.css";
 
@@ -16,7 +17,6 @@ export const NetworkPanel = ({
 }: NetworkPanelProps) => {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<TabType>("general");
-
   const formatDuration = (duration?: number): string => {
     if (!duration) return "-";
     if (duration < 1000) return `${duration}ms`;
@@ -80,7 +80,7 @@ export const NetworkPanel = ({
           <text className={css.placeholderText}>No network requests yet</text>
         </view>
       ) : (
-        <list className={css.list}>
+        <FadeList className={css.list}>
           {networks.map((network) => (
             <list-item key={network.id} item-key={network.id}>
               <view className={css.item({ status: network.status })}>
@@ -215,7 +215,7 @@ export const NetworkPanel = ({
               </view>
             </list-item>
           ))}
-        </list>
+        </FadeList>
       )}
     </view>
   );

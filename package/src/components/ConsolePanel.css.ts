@@ -58,7 +58,7 @@ export const filterButton = style({
 
 export const filterButtonText = style({
   ...typography("t3", "medium"),
-  color: vars.$color.fg.neutral,
+  color: vars.$color.fg.neutralMuted,
 });
 
 export const filterDropdown = style({
@@ -146,7 +146,7 @@ export const clearButton = style({
 
 export const clearButtonText = style({
   ...typography("t3", "medium"),
-  color: vars.$color.fg.neutral,
+  color: vars.$color.fg.neutralMuted,
 });
 
 export const logList = style({

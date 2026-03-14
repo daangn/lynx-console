@@ -4,18 +4,18 @@ import { vars } from "../styles/vars";
 
 export const wrapper = style({
   position: "fixed",
-  right: "16px",
-  bottom: "84px",
-  zIndex: 9998,
+  zIndex: 9999,
   display: "flex",
   flexDirection: "row",
   alignItems: "center",
   gap: "8px",
+  overflow: "visible",
+  transition: `transform ${vars.$duration.d4} cubic-bezier(0.4, 0, 0.2, 1)`,
 });
 
-export const container = style({});
-
 export const button = style({
+  position: "relative",
+  overflow: "hidden",
   paddingLeft: "8px",
   paddingRight: "8px",
   paddingTop: "4px",
@@ -28,6 +28,16 @@ export const button = style({
   justifyContent: "center",
   gap: "2px",
   boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
+});
+
+export const shineOverlay = style({
+  position: "absolute",
+  top: "-50%",
+  left: "-25%",
+  width: "150%",
+  height: "200%",
+  backgroundColor: "rgba(255, 255, 255, 0.2)",
+  borderRadius: "9999px",
 });
 
 export const title = style({
@@ -43,6 +53,7 @@ export const subtitle = style({
 });
 
 export const reloadButton = style({
+  overflow: "visible",
   width: "32px",
   height: "32px",
   borderRadius: "16px",

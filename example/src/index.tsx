@@ -16,9 +16,9 @@ initPerformanceMonitor();
 
 function AppWrapper() {
   return (
-    <view className="data-seed-color-mode__light-only">
+    <page className="data-seed-color-mode__light-only">
       <App />
-    </view>
+    </page>
   );
 }
 

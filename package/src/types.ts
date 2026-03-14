@@ -1,4 +1,12 @@
+import type { ReactNode } from "@lynx-js/react";
+
 // LynxConsole shared types
+
+export interface CustomTab {
+  key: string;
+  label: string;
+  renderContent: () => ReactNode;
+}
 
 // 추후 Lynx에서 지원하는 Console API를 추가적으로 지원 예정
 // https://lynxjs.org/api/lynx-api/global.html

@@ -1,12 +1,14 @@
-import { useEffect, useRef, useState } from "@lynx-js/react";
+import { useEffect, useMemo, useRef, useState } from "@lynx-js/react";
 import type { BaseEvent, InputInputEvent, NodesRef } from "@lynx-js/types";
 import { stringify } from "javascript-stringify";
 import type { LogEntry, LogLevel } from "../types";
+import { vars } from "../styles/vars";
 import * as css from "./ConsolePanel.css";
 
 const LOG_LEVELS: LogLevel[] = ["log", "info", "warn", "error"];
 
 let savedEnabledLevels: Set<LogLevel> | null = null;
+let savedSearchQuery = "";
 let closeFilterDropdown: (() => void) | null = null;
 
 export const dismissFilterDropdown = () => closeFilterDropdown?.();
@@ -37,7 +39,11 @@ export const LogPanel = ({ logs, clearLogs }: LogPanelProps) => {
     () => savedEnabledLevels ?? new Set(LOG_LEVELS),
   );
   const [filterOpen, setFilterOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState(savedSearchQuery);
+  const [fadeState, setFadeState] = useState({ atTop: true, atBottom: true });
+  const fadeRef = useRef({ atTop: true, atBottom: true });
   const inputRef = useRef<NodesRef>(null);
+  const searchInputRef = useRef<NodesRef>(null);
   const listRef = useRef<NodesRef>(null);
 
   useEffect(() => {
@@ -45,11 +51,34 @@ export const LogPanel = ({ logs, clearLogs }: LogPanelProps) => {
   }, [enabledLevels]);
 
   useEffect(() => {
+    savedSearchQuery = searchQuery;
+  }, [searchQuery]);
+
+  useEffect(() => {
+    if (savedSearchQuery) {
+      searchInputRef.current
+        ?.invoke({ method: "setValue", params: { value: savedSearchQuery } })
+        .exec();
+    }
+  }, []);
+
+  useEffect(() => {
     closeFilterDropdown = () => setFilterOpen(false);
     return () => { closeFilterDropdown = null; };
   }, []);
 
-  const filteredLogs = logs.filter((log) => enabledLevels.has(log.level));
+  const filteredLogs = useMemo(
+    () =>
+      logs.filter((log) => {
+        if (!enabledLevels.has(log.level)) return false;
+        if (searchQuery) {
+          const query = searchQuery.toLowerCase();
+          return log.args.some((arg) => String(arg).toLowerCase().includes(query));
+        }
+        return true;
+      }),
+    [logs, enabledLevels, searchQuery],
+  );
   const logsRef = useRef(filteredLogs);
   logsRef.current = filteredLogs;
 
@@ -209,7 +238,7 @@ export const LogPanel = ({ logs, clearLogs }: LogPanelProps) => {
             className={css.filterButton}
             catchtap={() => setFilterOpen((v) => !v)}
           >
-            <text className={css.filterButtonText}>Filter   ▼</text>
+            <text className={css.filterButtonText}>Filter  ▼</text>
           </view>
           {filterOpen && (
             <view className={css.filterDropdown} catchtap={() => {}}>
@@ -230,17 +259,48 @@ export const LogPanel = ({ logs, clearLogs }: LogPanelProps) => {
             </view>
           )}
         </view>
+        <view className={css.searchWrapper}>
+          <text className={css.searchPrompt}>{"›"}</text>
+          <input
+            ref={searchInputRef}
+            className={css.searchInput}
+            placeholder="Search logs..."
+            bindinput={(e: BaseEvent<"bindinput", InputInputEvent>) =>
+              setSearchQuery(e.detail.value)
+            }
+          />
+        </view>
         <view style={{ display: "flex", flexDirection: "row", gap: 8 }}>
           <view className={css.clearButton} bindtap={clearLogs}>
             <text className={css.clearButtonText}>Clear</text>
           </view>
         </view>
       </view>
+      <view
+        className={css.fadeTop}
+        style={{
+          background: fadeState.atTop
+            ? `linear-gradient(to bottom, #ffffff00, #ffffff00)`
+            : `linear-gradient(to bottom, ${vars.$color.bg.layerDefault}, #ffffff00)`,
+        }}
+      />
       <list
         ref={listRef}
         scroll-orientation="vertical"
         className={css.logList}
+        preload-buffer-count={10}
         initial-scroll-index={Math.max(0, filteredLogs.length - 1)}
+        scroll-event-throttle={16}
+        bindscroll={(e: BaseEvent<"bindscroll", { scrollTop: number; scrollHeight: number; listHeight: number }>) => {
+          const { scrollTop, scrollHeight, listHeight } = e.detail;
+          const atTop = scrollTop <= 10;
+          const atBottom = scrollTop + listHeight >= scrollHeight - 10;
+          if (atTop !== fadeRef.current.atTop || atBottom !== fadeRef.current.atBottom) {
+            fadeRef.current.atTop = atTop;
+            fadeRef.current.atBottom = atBottom;
+            setFadeState({ atTop, atBottom });
+          }
+        }}
       >
         {filteredLogs.length === 0 ? (
           <list-item item-key="empty-state">
@@ -283,6 +343,14 @@ export const LogPanel = ({ logs, clearLogs }: LogPanelProps) => {
           })
         )}
       </list>
+      <view
+        className={css.fadeBottom}
+        style={{
+          background: fadeState.atBottom
+            ? `linear-gradient(to top, #ffffff00, #ffffff00)`
+            : `linear-gradient(to top, ${vars.$color.bg.layerDefault}, #ffffff00)`,
+        }}
+      />
       <view className={css.replInputRow}>
         <text className={css.replPrompt}>{"›"}</text>
         <input

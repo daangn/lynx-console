@@ -1,6 +1,6 @@
 import { useConsole, useNetwork, usePerformance } from "../hooks";
 import * as css from "./ConsolePanel.css";
-import { LogPanel } from "./LogPanel";
+import { LogPanel, dismissFilterDropdown } from "./LogPanel";
 import { NetworkPanel } from "./NetworkPanel";
 import { PerformancePanel } from "./PerformancePanel";
 import Tabs from "./Tabs";
@@ -13,6 +13,7 @@ export const ConsolePanel = () => {
   return (
     <view className={css.container}>
       <Tabs
+        onTabChange={dismissFilterDropdown}
         items={[
           {
             key: "log",

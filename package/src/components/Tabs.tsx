@@ -8,6 +8,7 @@ type TabsProps = {
     label: string;
     renderContent: () => ReactNode;
   }>;
+  onTabChange?: () => void;
 };
 
 export default function Tabs(props: TabsProps) {
@@ -23,6 +24,7 @@ export default function Tabs(props: TabsProps) {
             className={css.tabTriggerButton}
             bindtap={() => {
               setActiveIndex(i);
+              props.onTabChange?.();
 
               tabContentsRef.current
                 ?.invoke({
@@ -59,6 +61,7 @@ export default function Tabs(props: TabsProps) {
         className={css.tabContents}
         scroll-orientation="horizontal"
         item-snap={{ factor: 0, offset: 0 }}
+        bindscroll={() => props.onTabChange?.()}
         bindsnap={(e: ListSnapEvent) => {
           setActiveIndex(e.detail.position);
         }}

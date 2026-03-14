@@ -11,6 +11,7 @@ import { ConsolePanel } from "./components/ConsolePanel.jsx";
 import * as floatingButtonCss from "./components/FloatingButton.css";
 import { FloatingButton } from "./components/FloatingButton.jsx";
 import { usePerformance } from "./hooks/usePerformance";
+import type { CustomTab } from "./types";
 
 export interface LynxConsoleHandle {
   open: () => void;
@@ -21,6 +22,7 @@ export interface LynxConsoleHandle {
 export interface LynxConsoleProps {
   theme?: "light" | "dark";
   safeAreaInsetBottom?: string;
+  customTabs?: CustomTab[];
 }
 
 interface FcpMetric {
@@ -36,7 +38,7 @@ interface MetricFcpEntry {
 
 const LynxConsole = forwardRef<LynxConsoleHandle, LynxConsoleProps>(
   (
-    { theme = "light", safeAreaInsetBottom = "50px" },
+    { theme = "light", safeAreaInsetBottom = "50px", customTabs },
     ref: ForwardedRef<LynxConsoleHandle>,
   ) => {
     const [isOpen, setIsOpen] = useState(false);
@@ -99,7 +101,7 @@ const LynxConsole = forwardRef<LynxConsoleHandle, LynxConsoleProps>(
             title="Lynx Console"
             safeAreaInsetBottom={safeAreaInsetBottom}
           >
-            <ConsolePanel />
+            <ConsolePanel customTabs={customTabs} />
           </BottomSheet>
         )}
       </view>
@@ -107,4 +109,5 @@ const LynxConsole = forwardRef<LynxConsoleHandle, LynxConsoleProps>(
   },
 );
 
+export type { CustomTab } from "./types";
 export default LynxConsole;

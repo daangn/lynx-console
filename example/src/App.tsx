@@ -139,7 +139,45 @@ const App = () => {
       </view>
 
       <Suspense fallback={<text>Loading...</text>}>
-        <LynxConsole safeAreaInsetBottom="0px" theme="light" />
+        <LynxConsole
+          safeAreaInsetBottom="0px"
+          theme="light"
+          customTabs={[
+            {
+              key: "custom",
+              label: "Custom",
+              renderContent: () => (
+                <view style={{ padding: "16px" }}>
+                  <text style={{ fontSize: "14px", fontWeight: "bold" }}>
+                    Custom Tab
+                  </text>
+                  <text style={{ fontSize: "12px", marginTop: "8px" }}>
+                    This is a custom tab added via the customTabs prop.
+                  </text>
+                </view>
+              ),
+            },
+            {
+              key: "debug",
+              label: "Debug",
+              renderContent: () => (
+                <view style={{ padding: "16px", display: "flex", flexDirection: "column", gap: "8px" }}>
+                  <view
+                    bindtap={() => {
+                      console.log(lynx.__globalProps);
+                    }}
+                    className={css.consoleButton}
+                  >
+                    <text className={css.consoleButtonText}>
+                      Log globalProps
+                    </text>
+                  </view>
+
+                </view>
+              ),
+            },
+          ]}
+        />
       </Suspense>
     </view>
   );

@@ -40,11 +40,6 @@ export const logHeader = style({
   borderBottomStyle: "solid",
 });
 
-export const logCount = style({
-  ...typography("t3", "regular"),
-  color: vars.$color.fg.neutralSubtle,
-});
-
 export const filterWrapper = style({
   position: "relative",
 });
@@ -53,7 +48,6 @@ export const filterButton = style({
   display: "flex",
   flexDirection: "row",
   alignItems: "center",
-  gap: 2,
   padding: "6px 12px",
   backgroundColor: vars.$color.bg.neutralWeak,
   borderRadius: 4,
@@ -62,20 +56,6 @@ export const filterButton = style({
 export const filterButtonText = style({
   ...typography("t3", "medium"),
   color: vars.$color.fg.neutral,
-});
-
-export const filterButtonArrow = style({
-  ...typography("t7", "medium"),
-  color: vars.$color.fg.neutral,
-});
-
-export const filterOverlay = style({
-  position: "fixed",
-  top: 0,
-  left: 0,
-  right: 0,
-  bottom: 0,
-  zIndex: 99,
 });
 
 export const filterDropdown = style({

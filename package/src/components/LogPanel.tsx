@@ -1,8 +1,15 @@
 import { useEffect, useRef, useState } from "@lynx-js/react";
 import type { BaseEvent, InputInputEvent, NodesRef } from "@lynx-js/types";
 import { stringify } from "javascript-stringify";
-import type { LogEntry } from "../types";
+import type { LogEntry, LogLevel } from "../types";
 import * as css from "./ConsolePanel.css";
+
+const LOG_LEVELS: LogLevel[] = ["log", "info", "warn", "error"];
+
+let savedEnabledLevels: Set<LogLevel> | null = null;
+let closeFilterDropdown: (() => void) | null = null;
+
+export const dismissFilterDropdown = () => closeFilterDropdown?.();
 
 interface LogPanelProps {
   logs: LogEntry[];
@@ -26,10 +33,37 @@ const runCode = (code: string) => {
 export const LogPanel = ({ logs, clearLogs }: LogPanelProps) => {
   const [expandedArgs, setExpandedArgs] = useState(new Set());
   const [code, setCode] = useState("");
+  const [enabledLevels, setEnabledLevels] = useState<Set<LogLevel>>(
+    () => savedEnabledLevels ?? new Set(LOG_LEVELS),
+  );
+  const [filterOpen, setFilterOpen] = useState(false);
   const inputRef = useRef<NodesRef>(null);
   const listRef = useRef<NodesRef>(null);
-  const logsRef = useRef(logs);
-  logsRef.current = logs;
+
+  useEffect(() => {
+    savedEnabledLevels = enabledLevels;
+  }, [enabledLevels]);
+
+  useEffect(() => {
+    closeFilterDropdown = () => setFilterOpen(false);
+    return () => { closeFilterDropdown = null; };
+  }, []);
+
+  const filteredLogs = logs.filter((log) => enabledLevels.has(log.level));
+  const logsRef = useRef(filteredLogs);
+  logsRef.current = filteredLogs;
+
+  const toggleLevel = (level: LogLevel) => {
+    setEnabledLevels((prev) => {
+      const next = new Set(prev);
+      if (next.has(level)) {
+        next.delete(level);
+      } else {
+        next.add(level);
+      }
+      return next;
+    });
+  };
 
   const scrollToBottom = (smooth: boolean) => {
     if (logsRef.current.length === 0) return;
@@ -43,7 +77,7 @@ export const LogPanel = ({ logs, clearLogs }: LogPanelProps) => {
 
   useEffect(() => {
     scrollToBottom(true);
-  }, [logs]);
+  }, [filteredLogs]);
 
   const toggleArg = (key: string) => {
     setExpandedArgs((prev) => {
@@ -165,9 +199,37 @@ export const LogPanel = ({ logs, clearLogs }: LogPanelProps) => {
   };
 
   return (
-    <view className={css.logContainer}>
+    <view
+      className={css.logContainer}
+      bindtap={() => { if (filterOpen) setFilterOpen(false); }}
+    >
       <view className={css.logHeader}>
-        <text className={css.logCount}>Total {logs.length} logs</text>
+        <view className={css.filterWrapper}>
+          <view
+            className={css.filterButton}
+            catchtap={() => setFilterOpen((v) => !v)}
+          >
+            <text className={css.filterButtonText}>Filter   ▼</text>
+          </view>
+          {filterOpen && (
+            <view className={css.filterDropdown} catchtap={() => {}}>
+              {LOG_LEVELS.map((level) => (
+                <view
+                  key={level}
+                  className={css.filterOption}
+                  bindtap={() => toggleLevel(level)}
+                >
+                  <text className={css.filterCheckbox({ level })}>
+                    {enabledLevels.has(level) ? "✅" : "⬜"}
+                  </text>
+                  <text className={css.filterLabel({ level })}>
+                    {level.toUpperCase()}
+                  </text>
+                </view>
+              ))}
+            </view>
+          )}
+        </view>
         <view style={{ display: "flex", flexDirection: "row", gap: 8 }}>
           <view className={css.clearButton} bindtap={clearLogs}>
             <text className={css.clearButtonText}>Clear</text>
@@ -178,9 +240,9 @@ export const LogPanel = ({ logs, clearLogs }: LogPanelProps) => {
         ref={listRef}
         scroll-orientation="vertical"
         className={css.logList}
-        initial-scroll-index={Math.max(0, logs.length - 1)}
+        initial-scroll-index={Math.max(0, filteredLogs.length - 1)}
       >
-        {logs.length === 0 ? (
+        {filteredLogs.length === 0 ? (
           <list-item item-key="empty-state">
             <view className={css.placeholder}>
               <text className={css.placeholderText}>
@@ -189,7 +251,7 @@ export const LogPanel = ({ logs, clearLogs }: LogPanelProps) => {
             </view>
           </list-item>
         ) : (
-          logs.map((log) => {
+          filteredLogs.map((log) => {
             return (
               <list-item key={log.id} item-key={log.id}>
                 <view className={css.logItem({ level: log.level })}>

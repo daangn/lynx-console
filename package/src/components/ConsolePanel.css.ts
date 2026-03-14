@@ -40,9 +40,74 @@ export const logHeader = style({
   borderBottomStyle: "solid",
 });
 
-export const logCount = style({
-  ...typography("t3", "regular"),
-  color: vars.$color.fg.neutralSubtle,
+export const filterWrapper = style({
+  position: "relative",
+});
+
+export const filterButton = style({
+  display: "flex",
+  flexDirection: "row",
+  alignItems: "center",
+  padding: "6px 12px",
+  backgroundColor: vars.$color.bg.neutralWeak,
+  borderRadius: 4,
+});
+
+export const filterButtonText = style({
+  ...typography("t3", "medium"),
+  color: vars.$color.fg.neutral,
+});
+
+export const filterDropdown = style({
+  position: "absolute",
+  top: "100%",
+  left: 0,
+  marginTop: 4,
+  backgroundColor: vars.$color.bg.layerDefault,
+  borderWidth: 1,
+  borderColor: vars.$color.stroke.neutralSubtle,
+  borderStyle: "solid",
+  borderRadius: 8,
+  padding: "4px 0",
+  zIndex: 100,
+  minWidth: 90,
+});
+
+export const filterOption = style({
+  display: "flex",
+  flexDirection: "row",
+  alignItems: "center",
+  gap: 4,
+  padding: "8px 12px",
+});
+
+export const filterCheckbox = recipe({
+  base: {
+    ...typography("t3", "medium"),
+    width: 16,
+  },
+  variants: {
+    level: {
+      log: { color: vars.$color.palette.green600 },
+      info: { color: vars.$color.palette.blue600 },
+      warn: { color: vars.$color.palette.yellow600 },
+      error: { color: vars.$color.palette.red600 },
+    },
+  },
+});
+
+export const filterLabel = recipe({
+  base: {
+    ...typography("t3", "medium"),
+  },
+  variants: {
+    level: {
+      log: { color: vars.$color.palette.green600 },
+      info: { color: vars.$color.palette.blue600 },
+      warn: { color: vars.$color.palette.yellow600 },
+      error: { color: vars.$color.palette.red600 },
+    },
+  },
 });
 
 export const clearButton = style({

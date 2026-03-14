@@ -33,11 +33,14 @@ export const logHeader = style({
   flexDirection: "row",
   alignItems: "center",
   justifyContent: "space-between",
-  marginBottom: 8,
-  paddingBottom: 4,
-  borderBottomWidth: 1,
-  borderBottomColor: vars.$color.stroke.neutralSubtle,
-  borderBottomStyle: "solid",
+  paddingBottom: 3,
+});
+
+export const fadeTop = style({
+  height: 20,
+  marginBottom: -20,
+  zIndex: 1,
+  background: `linear-gradient(to bottom, ${vars.$color.bg.layerDefault}, #ffffff00)`,
 });
 
 export const filterWrapper = style({
@@ -48,7 +51,7 @@ export const filterButton = style({
   display: "flex",
   flexDirection: "row",
   alignItems: "center",
-  padding: "6px 12px",
+  padding: "3px 6px",
   backgroundColor: vars.$color.bg.neutralWeak,
   borderRadius: 4,
 });
@@ -110,8 +113,33 @@ export const filterLabel = recipe({
   },
 });
 
+export const searchWrapper = style({
+  display: "flex",
+  flexDirection: "row",
+  alignItems: "center",
+  flex: 1,
+  marginLeft: 8,
+  marginRight: 8,
+  borderBottomWidth: 1,
+  borderBottomColor: vars.$color.stroke.neutralSubtle,
+  borderBottomStyle: "solid",
+  gap: 8,
+});
+
+export const searchPrompt = style({
+  ...typography("t6", "medium"),
+  color: vars.$color.fg.placeholder,
+});
+
+export const searchInput = style({
+  flex: 1,
+  ...typography("t3", "regular"),
+  color: vars.$color.fg.neutral,
+  caretColor: vars.$color.palette.green600,
+});
+
 export const clearButton = style({
-  padding: "6px 12px",
+  padding: "3px 6px",
   backgroundColor: vars.$color.bg.neutralWeak,
   borderRadius: 4,
 });
@@ -123,6 +151,8 @@ export const clearButtonText = style({
 
 export const logList = style({
   flex: 1,
+  paddingTop: 0,
+  paddingBottom: 0,
 });
 
 export const logItem = recipe({
@@ -281,22 +311,20 @@ export const argObjectJson = style({
   color: vars.$color.fg.neutral,
 });
 
+export const fadeBottom = style({
+  height: 20,
+  marginTop: -20,
+  zIndex: 1,
+  background: `linear-gradient(to top, ${vars.$color.bg.layerDefault}, #ffffff00)`,
+});
+
 export const replInputRow = style({
   display: "flex",
   flexDirection: "row",
   alignItems: "center",
   gap: 8,
-  paddingTop: 8,
+  paddingTop: 0,
   paddingBottom: 8,
-  marginTop: -1,
-  borderTopWidth: 1,
-  borderTopColor: vars.$color.stroke.neutralSubtle,
-  borderTopStyle: "solid",
-  backgroundImage: `linear-gradient(to bottom, transparent, ${vars.$color.bg.layerDefault})`,
-  backgroundSize: "100% 32px",
-  backgroundRepeat: "no-repeat",
-  backgroundPosition: "top",
-  backgroundColor: vars.$color.bg.layerDefault,
 });
 
 export const replPrompt = style({

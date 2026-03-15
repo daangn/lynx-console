@@ -45,26 +45,29 @@ export const FloatingButton = ({
   const isDragging = phase === "dragging";
 
   return (
-    <view
-      className={css.wrapper}
-      style={{
-        right: `${right}px`,
-        bottom: `${bottom}px`,
-        transform: isDragging ? "scale(1.05)" : "scale(1)",
-      }}
-      {...handlers}
-    >
-      <view className={css.button}>
-        {children}
-        <view className={css.shineOverlay} style={SHINE_STYLES[phase]} />
-      </view>
+    <>
       <view
-        className={css.reloadButton}
-        catchtouchstart={() => clearTimer()}
-        bindtap={handleReload}
+        className={css.wrapper}
+        consume-slide-event={[[-180, 180]]}
+        style={{
+          right: `${right}px`,
+          bottom: `${bottom}px`,
+          transform: isDragging ? "scale(1.05)" : "scale(1)",
+        }}
+        {...handlers}
       >
-        <text className={css.reloadIcon}>{"\u21BB"}</text>
+        <view className={css.button}>
+          {children}
+          <view className={css.shineOverlay} style={SHINE_STYLES[phase]} />
+        </view>
+        <view
+          className={css.reloadButton}
+          catchtouchstart={() => clearTimer()}
+          bindtap={handleReload}
+        >
+          <text className={css.reloadIcon}>{"\u21BB"}</text>
+        </view>
       </view>
-    </view>
+    </>
   );
 };

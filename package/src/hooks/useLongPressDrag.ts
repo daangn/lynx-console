@@ -87,9 +87,9 @@ export function useLongPressDrag(onTap: () => void) {
     bottom: isDragging ? tempBottom : bottom,
     clearTimer,
     handlers: {
-      bindtouchstart: handleTouchStart,
-      bindtouchmove: handleTouchMove,
-      bindtouchend: handleTouchEnd,
+      catchtouchstart: handleTouchStart,
+      catchtouchmove: handleTouchMove,
+      catchtouchend: handleTouchEnd,
     },
   };
 }

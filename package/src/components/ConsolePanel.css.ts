@@ -36,13 +36,6 @@ export const logHeader = style({
   paddingBottom: 3,
 });
 
-export const fadeTop = style({
-  height: 20,
-  marginBottom: -20,
-  zIndex: 1,
-  background: `linear-gradient(to bottom, ${vars.$color.bg.layerDefault}, #ffffff00)`,
-});
-
 export const filterWrapper = style({
   position: "relative",
 });
@@ -58,7 +51,7 @@ export const filterButton = style({
 
 export const filterButtonText = style({
   ...typography("t3", "medium"),
-  color: vars.$color.fg.neutral,
+  color: vars.$color.fg.neutralMuted,
 });
 
 export const filterDropdown = style({
@@ -66,7 +59,7 @@ export const filterDropdown = style({
   top: "100%",
   left: 0,
   marginTop: 4,
-  backgroundColor: vars.$color.bg.layerDefault,
+  backgroundColor: vars.$color.bg.layerFloating,
   borderWidth: 1,
   borderColor: vars.$color.stroke.neutralSubtle,
   borderStyle: "solid",
@@ -138,6 +131,15 @@ export const searchInput = style({
   caretColor: vars.$color.palette.green600,
 });
 
+export const searchClear = style({
+  padding: "2px 4px",
+});
+
+export const searchClearText = style({
+  ...typography("t3", "medium"),
+  color: vars.$color.fg.placeholder,
+});
+
 export const clearButton = style({
   padding: "3px 6px",
   backgroundColor: vars.$color.bg.neutralWeak,
@@ -146,7 +148,7 @@ export const clearButton = style({
 
 export const clearButtonText = style({
   ...typography("t3", "medium"),
-  color: vars.$color.fg.neutral,
+  color: vars.$color.fg.neutralMuted,
 });
 
 export const logList = style({
@@ -309,13 +311,6 @@ export const argObjectKey = style({
 export const argObjectJson = style({
   ...typography("t3", "regular"),
   color: vars.$color.fg.neutral,
-});
-
-export const fadeBottom = style({
-  height: 20,
-  marginTop: -20,
-  zIndex: 1,
-  background: `linear-gradient(to top, ${vars.$color.bg.layerDefault}, #ffffff00)`,
 });
 
 export const replInputRow = style({

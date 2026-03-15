@@ -17,9 +17,6 @@ export const header = style({
   justifyContent: "space-between",
   marginBottom: 8,
   paddingBottom: 4,
-  borderBottomWidth: 1,
-  borderBottomColor: vars.$color.stroke.neutralSubtle,
-  borderBottomStyle: "solid",
 });
 
 export const count = style({
@@ -28,14 +25,14 @@ export const count = style({
 });
 
 export const clearButton = style({
-  padding: "6px 12px",
+  padding: "3px 6px",
   backgroundColor: vars.$color.bg.neutralWeak,
   borderRadius: 4,
 });
 
 export const clearButtonText = style({
   ...typography("t3", "medium"),
-  color: vars.$color.fg.neutral,
+  color: vars.$color.fg.neutralMuted,
 });
 
 export const list = style({

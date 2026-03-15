@@ -17,9 +17,6 @@ export const header = style({
   justifyContent: "space-between",
   marginBottom: 8,
   paddingBottom: 4,
-  borderBottomWidth: 1,
-  borderBottomColor: vars.$color.stroke.neutralSubtle,
-  borderBottomStyle: "solid",
 });
 
 export const count = style({

@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "@lynx-js/react";
 import type { BaseEvent, InputInputEvent, NodesRef } from "@lynx-js/types";
 import { stringify } from "javascript-stringify";
 import type { LogEntry, LogLevel } from "../types";
-import * as css from "./ConsolePanel.css";
+import "./ConsolePanel.css";
 import { FadeList } from "./FadeList";
 
 const LOG_LEVELS: LogLevel[] = ["log", "info", "warn", "error"];
@@ -139,11 +139,11 @@ export const LogPanel = ({ logs, clearLogs }: LogPanelProps) => {
     const isExpanded = expandedArgs.has(key);
 
     if (arg === null) {
-      return <text className={css.argNull}>null</text>;
+      return <text className={"cp-argNull"}>null</text>;
     }
 
     if (arg === undefined) {
-      return <text className={css.argUndefined}>undefined</text>;
+      return <text className={"cp-argUndefined"}>undefined</text>;
     }
 
     if (typeof arg === "string") {
@@ -151,17 +151,16 @@ export const LogPanel = ({ logs, clearLogs }: LogPanelProps) => {
       const shouldTruncate = arg.length > MAX_LENGTH;
 
       if (!shouldTruncate) {
-        return <text className={css.argString({ level })}>{arg}</text>;
+        return <text className={`cp-argString cp-argString--${level}`}>{arg}</text>;
       }
 
-      // 문자열이 길 경우 토글 버튼 추가
       return (
-        <view className={css.argObject}>
-          <view className={css.argObjectHeader} bindtap={() => toggleArg(key)}>
-            <text className={css.toggleIndicator}>
+        <view className={"cp-argObject"}>
+          <view className={"cp-argObjectHeader"} bindtap={() => toggleArg(key)}>
+            <text className={"cp-toggleIndicator"}>
               {isExpanded ? "▼" : "▶"}
             </text>
-            <text className={css.argString({ level })}>
+            <text className={`cp-argString cp-argString--${level}`}>
               {isExpanded ? arg : `${arg.slice(0, MAX_LENGTH)}...`}
             </text>
           </view>
@@ -170,7 +169,7 @@ export const LogPanel = ({ logs, clearLogs }: LogPanelProps) => {
     }
 
     if (typeof arg === "number" || typeof arg === "boolean") {
-      return <text className={css.argPrimitive({ level })}>{String(arg)}</text>;
+      return <text className={`cp-argPrimitive cp-argPrimitive--${level}`}>{String(arg)}</text>;
     }
 
     if (typeof arg === "object") {
@@ -206,50 +205,50 @@ export const LogPanel = ({ logs, clearLogs }: LogPanelProps) => {
       }
 
       return (
-        <view className={css.argObject}>
-          <view className={css.argObjectHeader} bindtap={() => toggleArg(key)}>
-            <text className={css.toggleIndicator}>
+        <view className={"cp-argObject"}>
+          <view className={"cp-argObjectHeader"} bindtap={() => toggleArg(key)}>
+            <text className={"cp-toggleIndicator"}>
               {isExpanded ? "▼" : "▶"}
             </text>
-            <text className={css.argObjectPreview}>{preview}</text>
+            <text className={"cp-argObjectPreview"}>{preview}</text>
           </view>
           {isExpanded && (
-            <view className={css.argObjectContent}>
-              <text className={css.argObjectJson}>{jsonString}</text>
+            <view className={"cp-argObjectContent"}>
+              <text className={"cp-argObjectJson"}>{jsonString}</text>
             </view>
           )}
         </view>
       );
     }
 
-    return <text className={css.argPrimitive({ level })}>{String(arg)}</text>;
+    return <text className={`cp-argPrimitive cp-argPrimitive--${level}`}>{String(arg)}</text>;
   };
 
   return (
     <view
-      className={css.logContainer}
+      className={"cp-logContainer"}
       bindtap={() => { if (filterOpen) setFilterOpen(false); }}
     >
-      <view className={css.logHeader}>
-        <view className={css.filterWrapper}>
+      <view className={"cp-logHeader"}>
+        <view className={"cp-filterWrapper"}>
           <view
-            className={css.filterButton}
+            className={"cp-filterButton"}
             catchtap={() => setFilterOpen((v) => !v)}
           >
-            <text className={css.filterButtonText}>Filter  ▼</text>
+            <text className={"cp-filterButtonText"}>Filter  ▼</text>
           </view>
           {filterOpen && (
-            <view className={css.filterDropdown} catchtap={() => {}}>
+            <view className={"cp-filterDropdown"} catchtap={() => {}}>
               {LOG_LEVELS.map((level) => (
                 <view
                   key={level}
-                  className={css.filterOption}
+                  className={"cp-filterOption"}
                   bindtap={() => toggleLevel(level)}
                 >
-                  <text className={css.filterCheckbox({ level })}>
+                  <text className={`cp-filterCheckbox cp-filterCheckbox--${level}`}>
                     {enabledLevels.has(level) ? "✅" : "⬜"}
                   </text>
-                  <text className={css.filterLabel({ level })}>
+                  <text className={`cp-filterLabel cp-filterLabel--${level}`}>
                     {level.toUpperCase()}
                   </text>
                 </view>
@@ -257,11 +256,11 @@ export const LogPanel = ({ logs, clearLogs }: LogPanelProps) => {
             </view>
           )}
         </view>
-        <view className={css.searchWrapper}>
-          <text className={css.searchPrompt}>{"›"}</text>
+        <view className={"cp-searchWrapper"}>
+          <text className={"cp-searchPrompt"}>{"›"}</text>
           <input
             ref={searchInputRef}
-            className={css.searchInput}
+            className={"cp-searchInput"}
             placeholder="Search logs..."
             bindinput={(e: BaseEvent<"bindinput", InputInputEvent>) =>
               setSearchQuery(e.detail.value)
@@ -269,7 +268,7 @@ export const LogPanel = ({ logs, clearLogs }: LogPanelProps) => {
           />
           {searchQuery.length > 0 && (
             <view
-              className={css.searchClear}
+              className={"cp-searchClear"}
               bindtap={() => {
                 setSearchQuery("");
                 searchInputRef.current
@@ -277,26 +276,26 @@ export const LogPanel = ({ logs, clearLogs }: LogPanelProps) => {
                   .exec();
               }}
             >
-              <text className={css.searchClearText}>✕</text>
+              <text className={"cp-searchClearText"}>✕</text>
             </view>
           )}
         </view>
         <view style={{ display: "flex", flexDirection: "row", gap: 8 }}>
-          <view className={css.clearButton} bindtap={clearLogs}>
-            <text className={css.clearButtonText}>🗑</text>
+          <view className={"cp-clearButton"} bindtap={clearLogs}>
+            <text className={"cp-clearButtonText"}>🗑</text>
           </view>
         </view>
       </view>
       <FadeList
         listRef={listRef}
-        className={css.logList}
+        className={"cp-logList"}
         preload-buffer-count={10}
         initial-scroll-index={Math.max(0, filteredLogs.length - 1)}
       >
         {filteredLogs.length === 0 ? (
           <list-item item-key="empty-state">
-            <view className={css.placeholder}>
-              <text className={css.placeholderText}>
+            <view className={"cp-placeholder"}>
+              <text className={"cp-placeholderText"}>
                 No logs yet. Try console.log("Hello!")
               </text>
             </view>
@@ -305,20 +304,20 @@ export const LogPanel = ({ logs, clearLogs }: LogPanelProps) => {
           filteredLogs.map((log) => {
             return (
               <list-item key={log.id} item-key={log.id}>
-                <view className={css.logItem({ level: log.level })}>
-                  <view className={css.logItemHeader}>
-                    <text className={css.logLevel({ level: log.level })}>
+                <view className={`cp-logItem cp-logItem--${log.level}`}>
+                  <view className={"cp-logItemHeader"}>
+                    <text className={`cp-logLevel cp-logLevel--${log.level}`}>
                       {log.level.toUpperCase()}
                     </text>
-                    <text className={css.logTime}>
+                    <text className={"cp-logTime"}>
                       {new Date(log.timestamp).toISOString()}
                     </text>
                   </view>
-                  <view className={css.logArgsContainer}>
+                  <view className={"cp-logArgsContainer"}>
                     {log.args.map((arg, index) => (
                       <view
                         key={`${log.id}-${index.toString()}`}
-                        className={css.logArgItem}
+                        className={"cp-logArgItem"}
                       >
                         {renderArg(
                           arg,
@@ -334,19 +333,19 @@ export const LogPanel = ({ logs, clearLogs }: LogPanelProps) => {
           })
         )}
       </FadeList>
-      <view className={css.replInputRow}>
-        <text className={css.replPrompt}>{"›"}</text>
+      <view className={"cp-replInputRow"}>
+        <text className={"cp-replPrompt"}>{"›"}</text>
         <input
           ref={inputRef}
-          className={css.replInput}
+          className={"cp-replInput"}
           placeholder="enter code..."
           bindinput={(e: BaseEvent<"bindinput", InputInputEvent>) =>
             setCode(e.detail.value)
           }
           bindconfirm={handleRun}
         />
-        <view className={css.replRunButton} bindtap={handleRun}>
-          <text className={css.replRunButtonText}>Run</text>
+        <view className={"cp-replRunButton"} bindtap={handleRun}>
+          <text className={"cp-replRunButtonText"}>Run</text>
         </view>
       </view>
     </view>

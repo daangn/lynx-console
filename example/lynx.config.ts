@@ -5,8 +5,6 @@ import { pluginQRCode } from "@lynx-js/qrcode-rsbuild-plugin";
 import { pluginReactLynx } from "@lynx-js/react-rsbuild-plugin";
 import { defineConfig } from "@lynx-js/rspeedy";
 import { pluginTypeCheck } from "@rsbuild/plugin-type-check";
-import { VanillaExtractPlugin } from "@vanilla-extract/webpack-plugin";
-
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -43,8 +41,6 @@ export default defineConfig({
 
   tools: {
     rspack(config) {
-      config.plugins.push(new VanillaExtractPlugin());
-
       config.resolve.alias = {
         ...config.resolve.alias,
         "lynx-console": path.resolve(

@@ -2,7 +2,7 @@ import { useState } from "@lynx-js/react";
 import { stringify } from "javascript-stringify";
 import type { PerformanceEntryData } from "../types";
 import { FadeList } from "./FadeList";
-import * as css from "./PerformancePanel.css";
+import "./PerformancePanel.css";
 
 interface PerformancePanelProps {
   performances: PerformanceEntryData[];
@@ -68,9 +68,9 @@ export const PerformancePanel = ({
   const [selectedId, setSelectedId] = useState<string | null>(null);
   if (performances.length === 0) {
     return (
-      <view className={css.container}>
-        <view className={css.header}>
-          <text className={css.count}>0 entries</text>
+      <view className={"pp-container"}>
+        <view className={"pp-header"}>
+          <text className={"pp-count"}>0 entries</text>
           <view
             bindtap={() => {
               console.log("[PerformancePanel] performances", performances);
@@ -79,12 +79,12 @@ export const PerformancePanel = ({
           >
             <text>Log</text>
           </view>
-          <view bindtap={clearPerformances} className={css.clearButton}>
-            <text className={css.clearButtonText}>🗑</text>
+          <view bindtap={clearPerformances} className={"pp-clearButton"}>
+            <text className={"pp-clearButtonText"}>🗑</text>
           </view>
         </view>
-        <view className={css.placeholder}>
-          <text className={css.placeholderText}>
+        <view className={"pp-placeholder"}>
+          <text className={"pp-placeholderText"}>
             No performance data yet...
           </text>
         </view>
@@ -93,15 +93,15 @@ export const PerformancePanel = ({
   }
 
   return (
-    <view className={css.container}>
-      <view className={css.header}>
-        <text className={css.count}>{performances.length} entries</text>
-        <view bindtap={clearPerformances} className={css.clearButton}>
-          <text className={css.clearButtonText}>🗑</text>
+    <view className={"pp-container"}>
+      <view className={"pp-header"}>
+        <text className={"pp-count"}>{performances.length} entries</text>
+        <view bindtap={clearPerformances} className={"pp-clearButton"}>
+          <text className={"pp-clearButtonText"}>🗑</text>
         </view>
       </view>
 
-      <FadeList className={css.list}>
+      <FadeList className={"pp-list"}>
         {performances.map((perf) => {
           const isMetricFcp = isMetricFcpEntry(perf);
           const fcpMetrics = extractFcpMetrics(perf);
@@ -110,18 +110,18 @@ export const PerformancePanel = ({
 
           return (
             <list-item key={perf.id} item-key={perf.id}>
-              <view className={css.item}>
+              <view className={"pp-item"}>
                 <view
-                  className={css.itemHeader}
+                  className={"pp-itemHeader"}
                   bindtap={() =>
                     setSelectedId(selectedId === perf.id ? null : perf.id)
                   }
                 >
-                  <text className={css.entryType({ type: perf.entryType })}>
+                  <text className={`pp-entryType pp-entryType--${perf.entryType}`}>
                     {perf.entryType}
                   </text>
-                  <text className={css.entryName}>{perf.name}</text>
-                  <text className={css.timestamp}>
+                  <text className={"pp-entryName"}>{perf.name}</text>
+                  <text className={"pp-timestamp"}>
                     {new Date(perf.timestamp).toISOString()}
                   </text>
                 </view>
@@ -132,25 +132,25 @@ export const PerformancePanel = ({
                   }
                 >
                   {isMetricFcp && primaryFcp && (
-                    <text className={css.fcpHighlight}>{primaryFcp}</text>
+                    <text className={"pp-fcpHighlight"}>{primaryFcp}</text>
                   )}
                 </view>
 
                 {selectedId === perf.id && (
-                  <view className={css.detailsContainer}>
+                  <view className={"pp-detailsContainer"}>
                     {isMetricFcp && fcpMetrics && (
-                      <view className={css.fcpSection}>
+                      <view className={"pp-fcpSection"}>
                         {totalFcp !== undefined && (
-                          <view className={css.fcpMetric}>
-                            <view className={css.fcpMetricHeader}>
-                              <text className={css.fcpMetricName}>
+                          <view className={"pp-fcpMetric"}>
+                            <view className={"pp-fcpMetricHeader"}>
+                              <text className={"pp-fcpMetricName"}>
                                 전체 FCP
                               </text>
-                              <text className={css.fcpMetricValue}>
+                              <text className={"pp-fcpMetricValue"}>
                                 {formatDuration(totalFcp.duration)}
                               </text>
                             </view>
-                            <text className={css.fcpMetricDescription}>
+                            <text className={"pp-fcpMetricDescription"}>
                               PrepareTemplate Start부터 Paint End 까지 걸리는
                               시간
                             </text>
@@ -158,30 +158,30 @@ export const PerformancePanel = ({
                         )}
 
                         {lynxFcp !== undefined && (
-                          <view className={css.fcpMetric}>
-                            <view className={css.fcpMetricHeader}>
-                              <text className={css.fcpMetricName}>LynxFCP</text>
-                              <text className={css.fcpMetricValue}>
+                          <view className={"pp-fcpMetric"}>
+                            <view className={"pp-fcpMetricHeader"}>
+                              <text className={"pp-fcpMetricName"}>LynxFCP</text>
+                              <text className={"pp-fcpMetricValue"}>
                                 {formatDuration(lynxFcp.duration)}
                               </text>
                             </view>
-                            <text className={css.fcpMetricDescription}>
+                            <text className={"pp-fcpMetricDescription"}>
                               Bundle Load 시작부터 Paint End 까지 걸리는 시간
                             </text>
                           </view>
                         )}
 
                         {fcp !== undefined && (
-                          <view className={css.fcpMetric}>
-                            <view className={css.fcpMetricHeader}>
-                              <text className={css.fcpMetricName}>
+                          <view className={"pp-fcpMetric"}>
+                            <view className={"pp-fcpMetricHeader"}>
+                              <text className={"pp-fcpMetricName"}>
                                 렌더링 FCP
                               </text>
-                              <text className={css.fcpMetricValue}>
+                              <text className={"pp-fcpMetricValue"}>
                                 {formatDuration(fcp.duration)}
                               </text>
                             </view>
-                            <text className={css.fcpMetricDescription}>
+                            <text className={"pp-fcpMetricDescription"}>
                               TemplateBundle 준비부터 Paint End 까지 걸리는 시간
                             </text>
                           </view>
@@ -190,9 +190,9 @@ export const PerformancePanel = ({
                     )}
 
                     {!!perf.rawEntry && (
-                      <view className={css.rawEntrySection}>
-                        <text className={css.detailTitle}>Raw Entry</text>
-                        <text className={css.rawEntry}>
+                      <view className={"pp-rawEntrySection"}>
+                        <text className={"pp-detailTitle"}>Raw Entry</text>
+                        <text className={"pp-rawEntry"}>
                           {String(stringify(perf.rawEntry, null, 2, { references: true }))}
                         </text>
                       </view>

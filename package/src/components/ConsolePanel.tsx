@@ -1,6 +1,6 @@
 import { useConsole, useNetwork, usePerformance } from "../hooks";
 import type { CustomTab } from "../types";
-import * as css from "./ConsolePanel.css";
+import "./ConsolePanel.css";
 import { LogPanel, dismissFilterDropdown } from "./LogPanel";
 import { NetworkPanel } from "./NetworkPanel";
 import { PerformancePanel } from "./PerformancePanel";
@@ -69,7 +69,7 @@ export const ConsolePanel = ({ customTabs }: ConsolePanelProps) => {
   }
 
   return (
-    <view className={css.container}>
+    <view className="cp-container">
       <Tabs onTabChange={dismissFilterDropdown} items={items} />
     </view>
   );

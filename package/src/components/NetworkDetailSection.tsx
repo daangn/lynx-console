@@ -1,4 +1,4 @@
-import * as css from "./NetworkPanel.css";
+import "./NetworkPanel.css";
 
 interface NetworkDetailSectionProps {
   headers?: Record<string, string> | undefined;
@@ -14,28 +14,28 @@ export const NetworkDetailSection = ({
   return (
     <>
       {/* Headers */}
-      <view className={css.detailSection}>
-        <text className={css.detailSectionTitle}>Headers</text>
+      <view className={"np-detailSection"}>
+        <text className={"np-detailSectionTitle"}>Headers</text>
         {headers && Object.keys(headers).length > 0 ? (
-          <view className={css.table}>
+          <view className={"np-table"}>
             {Object.entries(headers).map(([key, value]) => (
-              <view key={key} className={css.tableRow}>
-                <text className={css.tableKey}>{key}</text>
-                <text className={css.tableValue}>{value}</text>
+              <view key={key} className={"np-tableRow"}>
+                <text className={"np-tableKey"}>{key}</text>
+                <text className={"np-tableValue"}>{value}</text>
               </view>
             ))}
           </view>
         ) : (
-          <text className={css.emptyText}>No headers</text>
+          <text className={"np-emptyText"}>No headers</text>
         )}
       </view>
 
       {/* Body */}
-      <view className={css.detailSection}>
-        <text className={css.detailSectionTitle}>Body</text>
-        {error && <text className={css.errorText}>{error}</text>}
-        {body && <text className={css.bodyText}>{body}</text>}
-        {!error && !body && <text className={css.emptyText}>No body</text>}
+      <view className={"np-detailSection"}>
+        <text className={"np-detailSectionTitle"}>Body</text>
+        {error && <text className={"np-errorText"}>{error}</text>}
+        {body && <text className={"np-bodyText"}>{body}</text>}
+        {!error && !body && <text className={"np-emptyText"}>No body</text>}
       </view>
     </>
   );

@@ -1,0 +1,249 @@
+.pp-container {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding-top: 4px;
+}
+
+.pp-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  padding-bottom: 4px;
+  border-bottom-width: 1px;
+  border-bottom-color: var(--seed-color-stroke-neutral-subtle);
+  border-bottom-style: solid;
+}
+
+.pp-count {
+  font-size: 0.8125rem;
+  line-height: 1.125rem;
+  font-weight: var(--seed-font-weight-regular);
+  color: var(--seed-color-fg-neutral-subtle);
+}
+
+.pp-clearButton {
+  padding: 3px 6px;
+  background-color: var(--seed-color-bg-neutral-weak);
+  border-radius: 4px;
+}
+
+.pp-clearButtonText {
+  font-size: 0.8125rem;
+  line-height: 1.125rem;
+  font-weight: var(--seed-font-weight-medium);
+  color: var(--seed-color-fg-neutral-muted);
+}
+
+.pp-list {
+  flex: 1;
+}
+
+.pp-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.pp-placeholderText {
+  font-size: 0.875rem;
+  line-height: 1.1875rem;
+  font-weight: var(--seed-font-weight-regular);
+  color: var(--seed-color-fg-disabled);
+}
+
+.pp-item {
+  padding: 8px;
+  border-bottom-width: 1px;
+  border-bottom-color: var(--seed-color-stroke-neutral-weak);
+  border-bottom-style: solid;
+}
+
+.pp-itemHeader {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 4px;
+  gap: 8px;
+}
+
+.pp-entryType {
+  font-size: 0.75rem;
+  line-height: 1rem;
+  font-weight: var(--seed-font-weight-bold);
+  padding: 0 6px;
+  border-radius: 2px;
+  color: var(--seed-color-fg-neutral);
+  background-color: var(--seed-color-bg-neutral-weak);
+}
+
+.pp-entryType--init {
+  color: var(--seed-color-palette-blue-600);
+  background-color: var(--seed-color-palette-blue-100);
+}
+
+.pp-entryType--metric {
+  color: var(--seed-color-palette-green-600);
+  background-color: var(--seed-color-palette-green-100);
+}
+
+.pp-entryType--pipeline {
+  color: var(--seed-color-palette-purple-600);
+  background-color: var(--seed-color-palette-purple-100);
+}
+
+.pp-entryType--resource {
+  color: var(--seed-color-palette-yellow-600);
+  background-color: var(--seed-color-palette-yellow-100);
+}
+
+.pp-entryName {
+  font-size: 0.75rem;
+  line-height: 1rem;
+  font-weight: var(--seed-font-weight-medium);
+  color: var(--seed-color-fg-neutral);
+}
+
+.pp-timestamp {
+  font-size: 0.75rem;
+  line-height: 1rem;
+  font-weight: var(--seed-font-weight-regular);
+  color: var(--seed-color-fg-neutral-subtle);
+}
+
+.pp-fcpMetricHeader {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+}
+
+.pp-fcpHighlight {
+  font-size: 0.8125rem;
+  line-height: 1.125rem;
+  font-weight: var(--seed-font-weight-bold);
+  color: var(--seed-color-palette-blue-600);
+  background-color: var(--seed-color-palette-blue-100);
+  padding: 4px 8px;
+  border-radius: 4px;
+  margin-top: 4px;
+}
+
+.pp-metrics {
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.pp-metric {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px;
+  background-color: var(--seed-color-bg-neutral-weak);
+  border-radius: 2px;
+}
+
+.pp-metricName {
+  font-size: 0.8125rem;
+  line-height: 1.125rem;
+  font-weight: var(--seed-font-weight-medium);
+  color: var(--seed-color-fg-neutral-subtle);
+  min-width: 100px;
+  flex-shrink: 0;
+}
+
+.pp-metricValue {
+  font-size: 0.8125rem;
+  line-height: 1.125rem;
+  font-weight: var(--seed-font-weight-bold);
+  color: var(--seed-color-palette-green-600);
+  flex: 1;
+}
+
+.pp-detailsContainer {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.pp-fcpSection {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.pp-fcpSectionDescription {
+  font-size: 0.8125rem;
+  line-height: 1.125rem;
+  font-weight: var(--seed-font-weight-regular);
+  color: var(--seed-color-fg-neutral-subtle);
+  margin-bottom: 4px;
+}
+
+.pp-fcpMetric {
+  background-color: var(--seed-color-bg-layer-default);
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.pp-fcpMetricName {
+  font-size: 0.75rem;
+  line-height: 1rem;
+  font-weight: var(--seed-font-weight-bold);
+  color: var(--seed-color-fg-neutral);
+}
+
+.pp-fcpMetricValue {
+  font-size: 0.6875rem;
+  line-height: 0.9375rem;
+  font-weight: var(--seed-font-weight-bold);
+  color: var(--seed-color-palette-blue-600);
+}
+
+.pp-fcpMetricDescription {
+  font-size: 0.8125rem;
+  line-height: 1.125rem;
+  font-weight: var(--seed-font-weight-regular);
+  color: var(--seed-color-fg-neutral-subtle);
+}
+
+.pp-fcpMetricFormula {
+  font-size: 0.875rem;
+  line-height: 1.1875rem;
+  font-weight: var(--seed-font-weight-regular);
+  color: var(--seed-color-fg-disabled);
+  font-family: monospace;
+}
+
+.pp-rawEntrySection {
+  padding: 12px;
+  background-color: var(--seed-color-bg-neutral-weak);
+  border-radius: 4px;
+}
+
+.pp-detailTitle {
+  font-size: 0.8125rem;
+  line-height: 1.125rem;
+  font-weight: var(--seed-font-weight-bold);
+  color: var(--seed-color-fg-neutral);
+  margin-bottom: 8px;
+}
+
+.pp-rawEntry {
+  font-size: 0.8125rem;
+  line-height: 1.125rem;
+  font-weight: var(--seed-font-weight-regular);
+  color: var(--seed-color-fg-neutral-subtle);
+  font-family: monospace;
+  white-space: pre-wrap;
+  word-break: break-all;
+}

@@ -1,6 +1,6 @@
 import { type ReactNode, useRef, useState } from "@lynx-js/react";
 import type { ListSnapEvent, NodesRef } from "@lynx-js/types";
-import * as css from "./Tabs.css";
+import "./Tabs.css";
 
 type TabsProps = {
   items: Array<{
@@ -20,12 +20,12 @@ export default function Tabs(props: TabsProps) {
       : (`t${Math.max(1, 5 - (props.items.length - 3))}`);
 
   return (
-    <view className={css.tabs}>
-      <view className={css.tabHeader}>
+    <view className={"tabs-root"}>
+      <view className={"tabs-header"}>
         {props.items.map((item, i) => (
           <view
             key={item.key}
-            className={css.tabTriggerButton}
+            className={"tabs-triggerButton"}
             bindtap={() => {
               setActiveIndex(i);
               props.onTabChange?.();
@@ -42,19 +42,16 @@ export default function Tabs(props: TabsProps) {
             }}
           >
             <text
-              className={css.tabTriggerButtonText({
-                active: i === activeIndex,
-                size: tabSize,
-              })}
+              className={`tabs-triggerButtonText${i === activeIndex ? " tabs-triggerButtonText--active" : ""}${tabSize ? ` tabs-triggerButtonText--${tabSize}` : ""}`}
             >
               {item.label}
             </text>
             {i === 0 && (
               <view
-                className={css.tabTriggerIndicator}
+                className={"tabs-triggerIndicator"}
                 style={{ transform: `translateX(${activeIndex * 100}%)` }}
               >
-                <view className={css.tabTriggerIndicatorLine} />
+                <view className={"tabs-triggerIndicatorLine"} />
               </view>
             )}
           </view>
@@ -63,7 +60,7 @@ export default function Tabs(props: TabsProps) {
 
       <list
         ref={tabContentsRef}
-        className={css.tabContents}
+        className={"tabs-contents"}
         scroll-orientation="horizontal"
         item-snap={{ factor: 0, offset: 0 }}
         bindscroll={() => props.onTabChange?.()}
@@ -78,7 +75,7 @@ export default function Tabs(props: TabsProps) {
             key={item.key}
             item-key={item.key}
             recyclable={false}
-            className={css.tabContent}
+            className={"tabs-content"}
           >
             {item.renderContent()}
           </list-item>

@@ -1,8 +1,8 @@
 page {
-  background-color: var(--seed-color-bg-layer-default);
+  background-color: var(--lynx-console-color-bg-layer-default);
   font-size: 16px;
 }
 
 text {
-  color: var(--seed-color-fg-neutral);
+  color: var(--lynx-console-color-fg-neutral);
 }

@@ -166,7 +166,7 @@ const App = () => {
       <Suspense fallback={<text>Loading...</text>}>
         <LynxConsole
           safeAreaInsetBottom="0px"
-          theme="light"
+          theme="dark"
           customTabs={[
             {
               key: "custom",

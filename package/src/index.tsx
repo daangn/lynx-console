@@ -83,7 +83,7 @@ const LynxConsole = forwardRef<LynxConsoleHandle, LynxConsoleProps>(
       setShouldClose(false);
     };
 
-    const themeClass = `data-seed-color-mode__${theme}-only`;
+    const themeClass = `data-lynx-console-color-mode__${theme}-only`;
 
     return (
       <view className={themeClass}>

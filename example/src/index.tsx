@@ -16,7 +16,7 @@ initPerformanceMonitor();
 
 function AppWrapper() {
   return (
-    <page className="data-seed-color-mode__light-only">
+    <page>
       <App />
     </page>
   );

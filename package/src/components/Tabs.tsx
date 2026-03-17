@@ -14,6 +14,10 @@ type TabsProps = {
 export default function Tabs(props: TabsProps) {
   const tabContentsRef = useRef<NodesRef>(null);
   const [activeIndex, setActiveIndex] = useState(0);
+  const tabSize =
+    props.items.length < 4
+      ? undefined
+      : (`t${Math.max(1, 5 - (props.items.length - 3))}`);
 
   return (
     <view className={css.tabs}>
@@ -40,6 +44,7 @@ export default function Tabs(props: TabsProps) {
             <text
               className={css.tabTriggerButtonText({
                 active: i === activeIndex,
+                size: tabSize,
               })}
             >
               {item.label}

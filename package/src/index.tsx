@@ -8,7 +8,7 @@ import {
 } from "@lynx-js/react";
 import BottomSheet from "./components/BottomSheet.jsx";
 import { ConsolePanel } from "./components/ConsolePanel.jsx";
-import * as floatingButtonCss from "./components/FloatingButton.css";
+import "./components/FloatingButton.css";
 import { FloatingButton } from "./components/FloatingButton.jsx";
 import { usePerformance } from "./hooks/usePerformance";
 import type { CustomTab } from "./types";
@@ -88,8 +88,8 @@ const LynxConsole = forwardRef<LynxConsoleHandle, LynxConsoleProps>(
     return (
       <view className={themeClass}>
         <FloatingButton bindtap={handleOpenBottomSheet}>
-          <text className={floatingButtonCss.title}>LynxConsole</text>
-          <text className={floatingButtonCss.subtitle}>
+          <text className="fb-title">LynxConsole</text>
+          <text className="fb-subtitle">
             {`${latestFcp?.name ?? "FCP"}: ${latestFcp?.duration ? latestFcp.duration.toFixed(2) : "--"}ms`}
           </text>
         </FloatingButton>

@@ -1,6 +1,6 @@
 import type { ReactNode } from "@lynx-js/react";
 import { useLongPressDrag } from "../hooks/useLongPressDrag";
-import * as css from "./FloatingButton.css";
+import "./FloatingButton.css";
 
 interface FloatingButtonProps {
   bindtap: () => void;
@@ -47,7 +47,7 @@ export const FloatingButton = ({
   return (
     <>
       <view
-        className={css.wrapper}
+        className={"fb-wrapper"}
         consume-slide-event={[[-180, 180]]}
         style={{
           right: `${right}px`,
@@ -56,16 +56,16 @@ export const FloatingButton = ({
         }}
         {...handlers}
       >
-        <view className={css.button}>
+        <view className={"fb-button"}>
           {children}
-          <view className={css.shineOverlay} style={SHINE_STYLES[phase]} />
+          <view className={"fb-shineOverlay"} style={SHINE_STYLES[phase]} />
         </view>
         <view
-          className={css.reloadButton}
+          className={"fb-reloadButton"}
           catchtouchstart={() => clearTimer()}
           bindtap={handleReload}
         >
-          <text className={css.reloadIcon}>{"\u21BB"}</text>
+          <text className={"fb-reloadIcon"}>{"\u21BB"}</text>
         </view>
       </view>
     </>

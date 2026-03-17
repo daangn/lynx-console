@@ -2,7 +2,7 @@ import { useState } from "@lynx-js/react";
 import type { NetworkEntry } from "../types";
 import { FadeList } from "./FadeList";
 import { NetworkDetailSection } from "./NetworkDetailSection";
-import * as css from "./NetworkPanel.css";
+import "./NetworkPanel.css";
 
 interface NetworkPanelProps {
   networks: NetworkEntry[];
@@ -67,68 +67,56 @@ export const NetworkPanel = ({
   };
 
   return (
-    <view className={css.container}>
-      <view className={css.header}>
-        <text className={css.count}>Total: {networks.length} requests</text>
-        <view className={css.clearButton} bindtap={clearNetworks}>
-          <text className={css.clearButtonText}>🗑</text>
+    <view className={"np-container"}>
+      <view className={"np-header"}>
+        <text className={"np-count"}>Total: {networks.length} requests</text>
+        <view className={"np-clearButton"} bindtap={clearNetworks}>
+          <text className={"np-clearButtonText"}>🗑</text>
         </view>
       </view>
 
       {networks.length === 0 ? (
-        <view className={css.placeholder}>
-          <text className={css.placeholderText}>No network requests yet</text>
+        <view className={"np-placeholder"}>
+          <text className={"np-placeholderText"}>No network requests yet</text>
         </view>
       ) : (
-        <FadeList className={css.list}>
+        <FadeList className={"np-list"}>
           {networks.map((network) => (
             <list-item key={network.id} item-key={network.id}>
-              <view className={css.item({ status: network.status })}>
+              <view className={`np-item np-item--${network.status}`}>
                 <view
-                  className={css.itemHeader}
+                  className={"np-itemHeader"}
                   bindtap={() =>
                     setSelectedId(selectedId === network.id ? null : network.id)
                   }
                 >
                   <text
-                    className={css.method({
-                      type: network.method as
-                        | "GET"
-                        | "POST"
-                        | "PUT"
-                        | "PATCH"
-                        | "DELETE",
-                    })}
+                    className={`np-method np-method--${network.method}`}
                   >
                     {network.method}
                   </text>
                   {network.statusCode && (
                     <text
-                      className={css.statusCode({
-                        type: getStatusCodeVariant(
-                          network.status,
-                          network.statusCode,
-                        ),
-                      })}
+                      className={`np-statusCode np-statusCode--${getStatusCodeVariant(network.status, network.statusCode)}`}
                     >
                       {network.statusCode}
                     </text>
                   )}
                   {network.status === "pending" && (
-                    <text className={css.statusCode({ type: "pending" })}>
+                    <text className={"np-statusCode np-statusCode--pending"}>
                       Pending...
                     </text>
                   )}
-                  <text className={css.time}>
+                  <text className={"np-time"}>
                     {formatDuration(network.duration)}
                   </text>
-                  <text className={css.time}>
+                  <text className={"np-time"}>
                     {new Date(network.startTime).toISOString()}
                   </text>
                 </view>
 
                 <text
-                  className={css.path}
+                  className={"np-path"}
                   bindtap={() =>
                     setSelectedId(selectedId === network.id ? null : network.id)
                   }
@@ -137,43 +125,35 @@ export const NetworkPanel = ({
                 </text>
 
                 {selectedId === network.id && (
-                  <view className={css.detailsContainer}>
+                  <view className={"np-detailsContainer"}>
                     {/* Tabs */}
-                    <view className={css.tabs}>
+                    <view className={"np-tabs"}>
                       <view
-                        className={css.tab({ active: activeTab === "general" })}
+                        className={`np-tab${activeTab === "general" ? " np-tab--active" : ""}`}
                         bindtap={() => setActiveTab("general")}
                       >
                         <text
-                          className={css.tabText({
-                            active: activeTab === "general",
-                          })}
+                          className={`np-tabText${activeTab === "general" ? " np-tabText--active" : ""}`}
                         >
                           General
                         </text>
                       </view>
                       <view
-                        className={css.tab({ active: activeTab === "request" })}
+                        className={`np-tab${activeTab === "request" ? " np-tab--active" : ""}`}
                         bindtap={() => setActiveTab("request")}
                       >
                         <text
-                          className={css.tabText({
-                            active: activeTab === "request",
-                          })}
+                          className={`np-tabText${activeTab === "request" ? " np-tabText--active" : ""}`}
                         >
                           Request
                         </text>
                       </view>
                       <view
-                        className={css.tab({
-                          active: activeTab === "response",
-                        })}
+                        className={`np-tab${activeTab === "response" ? " np-tab--active" : ""}`}
                         bindtap={() => setActiveTab("response")}
                       >
                         <text
-                          className={css.tabText({
-                            active: activeTab === "response",
-                          })}
+                          className={`np-tabText${activeTab === "response" ? " np-tabText--active" : ""}`}
                         >
                           Response
                         </text>
@@ -181,13 +161,13 @@ export const NetworkPanel = ({
                     </view>
 
                     {/* Tab Content */}
-                    <view className={css.tabContent}>
+                    <view className={"np-tabContent"}>
                       {activeTab === "general" && (
-                        <view className={css.table}>
+                        <view className={"np-table"}>
                           {getGeneralInfo(network).map((item) => (
-                            <view key={item.key} className={css.tableRow}>
-                              <text className={css.tableKey}>{item.key}</text>
-                              <text className={css.tableValue}>
+                            <view key={item.key} className={"np-tableRow"}>
+                              <text className={"np-tableKey"}>{item.key}</text>
+                              <text className={"np-tableValue"}>
                                 {item.value}
                               </text>
                             </view>

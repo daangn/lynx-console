@@ -18,8 +18,5 @@
     "@types/react": "^18.3.28",
     "typescript": "^5.9.3"
   },
-  "packageManager": "yarn@4.12.0",
-  "resolutions": {
-    "@vanilla-extract/webpack-plugin": "patch:@vanilla-extract/webpack-plugin@npm%3A2.3.22#./.yarn/patches/@vanilla-extract-webpack-plugin-npm-2.3.22-053cc44643.patch"
-  }
+  "packageManager": "yarn@4.12.0"
 }

@@ -1,0 +1,280 @@
+.np-container {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding-top: 4px;
+}
+
+.np-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  padding-bottom: 4px;
+}
+
+.np-count {
+  font-size: 0.8125rem;
+  line-height: 1.125rem;
+  font-weight: var(--lynx-console-font-weight-regular);
+  color: var(--lynx-console-color-fg-neutral-subtle);
+}
+
+.np-clearButton {
+  padding: 3px 6px;
+  background-color: var(--lynx-console-color-bg-neutral-weak);
+  border-radius: 4px;
+}
+
+.np-clearButtonText {
+  font-size: 0.8125rem;
+  line-height: 1.125rem;
+  font-weight: var(--lynx-console-font-weight-medium);
+  color: var(--lynx-console-color-fg-neutral-muted);
+}
+
+.np-list {
+  flex: 1;
+}
+
+.np-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.np-placeholderText {
+  font-size: 0.875rem;
+  line-height: 1.1875rem;
+  font-weight: var(--lynx-console-font-weight-regular);
+  color: var(--lynx-console-color-fg-disabled);
+}
+
+.np-item {
+  padding: 8px;
+  border-bottom-width: 1px;
+  border-bottom-color: var(--lynx-console-color-stroke-neutral-weak);
+  border-bottom-style: solid;
+}
+
+.np-item--pending {
+  background-color: var(--lynx-console-color-palette-gray-100);
+}
+
+.np-item--error {
+  background-color: var(--lynx-console-color-palette-red-100);
+}
+
+.np-itemHeader {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 4px;
+  gap: 8px;
+}
+
+.np-method {
+  font-size: 0.75rem;
+  line-height: 1rem;
+  font-weight: var(--lynx-console-font-weight-bold);
+  padding: 0 4px;
+  border-radius: 2px;
+  color: var(--lynx-console-color-fg-neutral);
+  background-color: var(--lynx-console-color-bg-neutral-weak);
+}
+
+.np-method--GET {
+  color: var(--lynx-console-color-palette-blue-600);
+  background-color: var(--lynx-console-color-palette-blue-100);
+}
+
+.np-method--POST {
+  color: var(--lynx-console-color-palette-green-600);
+  background-color: var(--lynx-console-color-palette-green-100);
+}
+
+.np-method--PUT {
+  color: var(--lynx-console-color-palette-yellow-600);
+  background-color: var(--lynx-console-color-palette-yellow-100);
+}
+
+.np-method--PATCH {
+  color: var(--lynx-console-color-palette-purple-600);
+  background-color: var(--lynx-console-color-palette-purple-100);
+}
+
+.np-method--DELETE {
+  color: var(--lynx-console-color-palette-red-600);
+  background-color: var(--lynx-console-color-palette-red-100);
+}
+
+.np-statusCode {
+  font-size: 0.75rem;
+  line-height: 1rem;
+  font-weight: var(--lynx-console-font-weight-bold);
+}
+
+.np-statusCode--success {
+  color: var(--lynx-console-color-palette-green-600);
+}
+
+.np-statusCode--error {
+  color: var(--lynx-console-color-palette-red-600);
+}
+
+.np-statusCode--pending {
+  color: var(--lynx-console-color-fg-neutral-subtle);
+}
+
+.np-time {
+  font-size: 0.75rem;
+  line-height: 1rem;
+  font-weight: var(--lynx-console-font-weight-regular);
+  color: var(--lynx-console-color-fg-neutral-subtle);
+}
+
+.np-url {
+  font-size: 0.8125rem;
+  line-height: 1.125rem;
+  font-weight: var(--lynx-console-font-weight-regular);
+  color: var(--lynx-console-color-fg-neutral);
+  word-break: break-all;
+  margin-bottom: 4px;
+}
+
+.np-path {
+  font-size: 0.8125rem;
+  line-height: 1.125rem;
+  font-weight: var(--lynx-console-font-weight-regular);
+  color: var(--lynx-console-color-fg-neutral);
+  word-break: break-all;
+  white-space: pre-wrap;
+  overflow: visible;
+  margin-bottom: 4px;
+}
+
+.np-details {
+  font-size: 0.8125rem;
+  line-height: 1.125rem;
+  font-weight: var(--lynx-console-font-weight-regular);
+  color: var(--lynx-console-color-fg-neutral-subtle);
+}
+
+.np-detailsContainer {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top-width: 1px;
+  border-top-color: var(--lynx-console-color-stroke-neutral-subtle);
+  border-top-style: solid;
+}
+
+.np-tabs {
+  display: flex;
+  flex-direction: row;
+  gap: 4px;
+  padding-bottom: 6px;
+}
+
+.np-tab {
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.np-tab--active {
+  background-color: var(--lynx-console-color-bg-neutral-weak);
+}
+
+.np-tabText {
+  font-size: 0.875rem;
+  line-height: 1.1875rem;
+  font-weight: var(--lynx-console-font-weight-medium);
+  color: var(--lynx-console-color-fg-neutral-subtle);
+}
+
+.np-tabText--active {
+  color: var(--lynx-console-color-fg-neutral);
+}
+
+.np-tabContent {
+  padding-top: 8px;
+}
+
+.np-detailSection {
+  margin-bottom: 12px;
+}
+
+.np-detailSectionTitle {
+  font-size: 0.8125rem;
+  line-height: 1.125rem;
+  font-weight: var(--lynx-console-font-weight-bold);
+  color: var(--lynx-console-color-fg-neutral);
+  margin-bottom: 8px;
+}
+
+.np-table {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.np-tableRow {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  padding: 4px 8px;
+  background-color: var(--lynx-console-color-bg-neutral-weak);
+  border-radius: 2px;
+}
+
+.np-tableKey {
+  font-size: 0.8125rem;
+  line-height: 1.125rem;
+  font-weight: var(--lynx-console-font-weight-bold);
+  color: var(--lynx-console-color-fg-neutral-subtle);
+  min-width: 70px;
+  flex-shrink: 0;
+}
+
+.np-tableValue {
+  font-size: 0.8125rem;
+  line-height: 1.125rem;
+  font-weight: var(--lynx-console-font-weight-regular);
+  color: var(--lynx-console-color-fg-neutral);
+  word-break: break-all;
+  flex: 1;
+}
+
+.np-bodyText {
+  font-size: 0.8125rem;
+  line-height: 1.125rem;
+  font-weight: var(--lynx-console-font-weight-regular);
+  color: var(--lynx-console-color-fg-neutral);
+  padding: 8px;
+  background-color: var(--lynx-console-color-bg-neutral-weak);
+  border-radius: 4px;
+  word-break: break-all;
+  white-space: pre-wrap;
+}
+
+.np-errorText {
+  font-size: 0.8125rem;
+  line-height: 1.125rem;
+  font-weight: var(--lynx-console-font-weight-regular);
+  color: var(--lynx-console-color-palette-red-600);
+  padding: 8px;
+  background-color: var(--lynx-console-color-palette-red-100);
+  border-radius: 4px;
+  word-break: break-all;
+}
+
+.np-emptyText {
+  font-size: 0.8125rem;
+  line-height: 1.125rem;
+  font-weight: var(--lynx-console-font-weight-regular);
+  color: var(--lynx-console-color-fg-disabled);
+  text-align: center;
+  padding: 16px 0;
+}

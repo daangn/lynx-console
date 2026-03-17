@@ -1,5 +1,5 @@
 import { lazy, Suspense } from "@lynx-js/react";
-import * as css from "./App.css";
+import "./App.css";
 
 const LynxConsole = lazy(() => import("lynx-console"));
 
@@ -90,40 +90,40 @@ const App = () => {
     }
   };
   return (
-    <view className={css.container}>
+    <view className="app-container">
       <list
-        className={css.list}
+        className="app-list"
         scroll-orientation="vertical"
       >
         <list-item item-key="section-console">
-          <view className={css.section}>
-            <text className={css.sectionTitle}>Console Tests</text>
-            <view bindtap={testConsoleLog} className={css.consoleButton}>
-              <text className={css.consoleButtonText}>Test Console Log</text>
+          <view className="app-section">
+            <text className="app-sectionTitle">Console Tests</text>
+            <view bindtap={testConsoleLog} className="app-consoleButton">
+              <text className="app-consoleButtonText">Test Console Log</text>
             </view>
             <view
               bindtap={() => {
                 throw new Error("Test Error");
               }}
-              className={css.consoleButton}
+              className="app-consoleButton"
             >
-              <text className={css.consoleButtonText}>Test throw error</text>
+              <text className="app-consoleButtonText">Test throw error</text>
             </view>
             <view
               bindtap={() => {
                 console.error("Test console error");
               }}
-              className={css.consoleButton}
+              className="app-consoleButton"
             >
-              <text className={css.consoleButtonText}>
+              <text className="app-consoleButtonText">
                 Test console error
               </text>
             </view>
             <view
               main-thread:bindtap={testConsoleLogInMainThread}
-              className={css.consoleButton}
+              className="app-consoleButton"
             >
-              <text className={css.consoleButtonText}>
+              <text className="app-consoleButtonText">
                 Test Console Log (Main Thread)
               </text>
             </view>
@@ -131,19 +131,19 @@ const App = () => {
         </list-item>
 
         <list-item item-key="section-network">
-          <view className={css.section}>
-            <text className={css.sectionTitle}>Network Tests</text>
-            <view bindtap={testGetRequest} className={css.getButton}>
-              <text className={css.getButtonText}>GET Request</text>
+          <view className="app-section">
+            <text className="app-sectionTitle">Network Tests</text>
+            <view bindtap={testGetRequest} className="app-getButton">
+              <text className="app-getButtonText">GET Request</text>
             </view>
-            <view bindtap={testPostRequest} className={css.postButton}>
-              <text className={css.postButtonText}>POST Request</text>
+            <view bindtap={testPostRequest} className="app-postButton">
+              <text className="app-postButtonText">POST Request</text>
             </view>
-            <view bindtap={testPatchRequest} className={css.patchButton}>
-              <text className={css.patchButtonText}>PATCH Request</text>
+            <view bindtap={testPatchRequest} className="app-patchButton">
+              <text className="app-patchButtonText">PATCH Request</text>
             </view>
-            <view bindtap={testDeleteRequest} className={css.deleteButton}>
-              <text className={css.deleteButtonText}>DELETE Request</text>
+            <view bindtap={testDeleteRequest} className="app-deleteButton">
+              <text className="app-deleteButtonText">DELETE Request</text>
             </view>
           </view>
         </list-item>
@@ -152,10 +152,10 @@ const App = () => {
           <list-item item-key={`item-${i}`} key={`item-${i}`}>
             <view
               bindtap={() => console.log(`Item ${i + 1} tapped`)}
-              className={css.consoleButton}
+              className="app-consoleButton"
               style={{ margin: "4px 16px" }}
             >
-              <text className={css.consoleButtonText}>
+              <text className="app-consoleButtonText">
                 List Item {i + 1}
               </text>
             </view>
@@ -191,9 +191,9 @@ const App = () => {
                     bindtap={() => {
                       console.log(lynx.__globalProps);
                     }}
-                    className={css.consoleButton}
+                    className="app-consoleButton"
                   >
-                    <text className={css.consoleButtonText}>
+                    <text className="app-consoleButtonText">
                       Log globalProps
                     </text>
                   </view>

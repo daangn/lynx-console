@@ -1,0 +1,402 @@
+.cp-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.cp-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.cp-placeholderText {
+  font-size: 0.875rem;
+  line-height: 1.1875rem;
+  font-weight: var(--lynx-console-font-weight-regular);
+  color: var(--lynx-console-color-fg-disabled);
+}
+
+.cp-logContainer {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding-top: 4px;
+}
+
+.cp-logHeader {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 3px;
+}
+
+.cp-filterWrapper {
+  position: relative;
+}
+
+.cp-filterButton {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 3px 6px;
+  background-color: var(--lynx-console-color-bg-neutral-weak);
+  border-radius: 4px;
+}
+
+.cp-filterButtonText {
+  font-size: 0.8125rem;
+  line-height: 1.125rem;
+  font-weight: var(--lynx-console-font-weight-medium);
+  color: var(--lynx-console-color-fg-neutral-muted);
+}
+
+.cp-filterDropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 4px;
+  background-color: var(--lynx-console-color-bg-layer-floating);
+  border-width: 1px;
+  border-color: var(--lynx-console-color-stroke-neutral-subtle);
+  border-style: solid;
+  border-radius: 8px;
+  padding: 4px 0;
+  z-index: 100;
+  min-width: 90px;
+}
+
+.cp-filterOption {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 12px;
+}
+
+.cp-filterCheckbox {
+  font-size: 0.8125rem;
+  line-height: 1.125rem;
+  font-weight: var(--lynx-console-font-weight-medium);
+  width: 16px;
+}
+
+.cp-filterCheckbox--log {
+  color: var(--lynx-console-color-palette-green-600);
+}
+
+.cp-filterCheckbox--info {
+  color: var(--lynx-console-color-palette-blue-600);
+}
+
+.cp-filterCheckbox--warn {
+  color: var(--lynx-console-color-palette-yellow-600);
+}
+
+.cp-filterCheckbox--error {
+  color: var(--lynx-console-color-palette-red-600);
+}
+
+.cp-filterLabel {
+  font-size: 0.8125rem;
+  line-height: 1.125rem;
+  font-weight: var(--lynx-console-font-weight-medium);
+}
+
+.cp-filterLabel--log {
+  color: var(--lynx-console-color-palette-green-600);
+}
+
+.cp-filterLabel--info {
+  color: var(--lynx-console-color-palette-blue-600);
+}
+
+.cp-filterLabel--warn {
+  color: var(--lynx-console-color-palette-yellow-600);
+}
+
+.cp-filterLabel--error {
+  color: var(--lynx-console-color-palette-red-600);
+}
+
+.cp-searchWrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex: 1;
+  margin-left: 8px;
+  margin-right: 8px;
+  border-bottom-width: 1px;
+  border-bottom-color: var(--lynx-console-color-stroke-neutral-subtle);
+  border-bottom-style: solid;
+  gap: 8px;
+}
+
+.cp-searchPrompt {
+  font-size: 1.125rem;
+  line-height: 1.5rem;
+  font-weight: var(--lynx-console-font-weight-medium);
+  color: var(--lynx-console-color-fg-placeholder);
+}
+
+.cp-searchInput {
+  flex: 1;
+  font-size: 0.8125rem;
+  line-height: 1.125rem;
+  font-weight: var(--lynx-console-font-weight-regular);
+  color: var(--lynx-console-color-fg-neutral);
+  caret-color: var(--lynx-console-color-palette-green-600);
+}
+
+.cp-searchClear {
+  padding: 2px 4px;
+}
+
+.cp-searchClearText {
+  font-size: 0.8125rem;
+  line-height: 1.125rem;
+  font-weight: var(--lynx-console-font-weight-medium);
+  color: var(--lynx-console-color-fg-placeholder);
+}
+
+.cp-clearButton {
+  padding: 3px 6px;
+  background-color: var(--lynx-console-color-bg-neutral-weak);
+  border-radius: 4px;
+}
+
+.cp-clearButtonText {
+  font-size: 0.8125rem;
+  line-height: 1.125rem;
+  font-weight: var(--lynx-console-font-weight-medium);
+  color: var(--lynx-console-color-fg-neutral-muted);
+}
+
+.cp-logList {
+  flex: 1;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.cp-logItem {
+  padding: 8px;
+  border-bottom-width: 1px;
+  border-bottom-color: var(--lynx-console-color-stroke-neutral-weak);
+  border-bottom-style: solid;
+}
+
+.cp-logItem--warn {
+  background-color: var(--lynx-console-color-palette-yellow-100);
+}
+
+.cp-logItem--error {
+  background-color: var(--lynx-console-color-palette-red-100);
+}
+
+.cp-logItemHeader {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.cp-logLevel {
+  font-size: 0.75rem;
+  line-height: 1rem;
+  font-weight: var(--lynx-console-font-weight-bold);
+  margin-right: 8px;
+}
+
+.cp-logLevel--log {
+  color: var(--lynx-console-color-palette-green-600);
+}
+
+.cp-logLevel--info {
+  color: var(--lynx-console-color-palette-blue-600);
+}
+
+.cp-logLevel--warn {
+  color: var(--lynx-console-color-palette-yellow-600);
+}
+
+.cp-logLevel--error {
+  color: var(--lynx-console-color-palette-red-600);
+}
+
+.cp-logTime {
+  font-size: 0.75rem;
+  line-height: 1rem;
+  font-weight: var(--lynx-console-font-weight-regular);
+  color: var(--lynx-console-color-fg-neutral-subtle);
+}
+
+.cp-toggleIndicator {
+  font-size: 0.75rem;
+  line-height: 1rem;
+  font-weight: var(--lynx-console-font-weight-regular);
+  color: var(--lynx-console-color-fg-neutral-subtle);
+  margin-left: 4px;
+  align-self: flex-start;
+}
+
+.cp-logMessage {
+  font-size: 0.8125rem;
+  line-height: 1.125rem;
+  font-weight: var(--lynx-console-font-weight-regular);
+  color: var(--lynx-console-color-fg-neutral);
+  word-break: break-all;
+}
+
+.cp-logArgsContainer {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.cp-logArgItem {
+  font-size: 0.8125rem;
+  line-height: 1.125rem;
+  font-weight: var(--lynx-console-font-weight-regular);
+}
+
+.cp-argNull {
+  color: var(--lynx-console-color-fg-neutral-subtle);
+}
+
+.cp-argUndefined {
+  color: var(--lynx-console-color-fg-neutral-subtle);
+}
+
+.cp-argString {
+  font-size: 0.8125rem;
+  line-height: 1.125rem;
+  font-weight: var(--lynx-console-font-weight-regular);
+}
+
+.cp-argString--log {
+  color: var(--lynx-console-color-fg-neutral);
+}
+
+.cp-argString--info {
+  color: var(--lynx-console-color-fg-neutral);
+}
+
+.cp-argString--warn {
+  color: var(--lynx-console-color-palette-yellow-900);
+}
+
+.cp-argString--error {
+  color: var(--lynx-console-color-palette-red-900);
+}
+
+.cp-argPrimitive {
+  font-size: 0.8125rem;
+  line-height: 1.125rem;
+  font-weight: var(--lynx-console-font-weight-regular);
+}
+
+.cp-argPrimitive--log {
+  color: var(--lynx-console-color-palette-blue-600);
+}
+
+.cp-argPrimitive--info {
+  color: var(--lynx-console-color-palette-blue-600);
+}
+
+.cp-argPrimitive--warn {
+  color: var(--lynx-console-color-palette-yellow-900);
+}
+
+.cp-argPrimitive--error {
+  color: var(--lynx-console-color-palette-red-900);
+}
+
+.cp-argObject {
+  display: flex;
+  flex-direction: column;
+}
+
+.cp-argObjectHeader {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 4px;
+}
+
+.cp-argObjectPreview {
+  font-size: 0.8125rem;
+  line-height: 1.125rem;
+  font-weight: var(--lynx-console-font-weight-medium);
+  color: var(--lynx-console-color-fg-neutral);
+}
+
+.cp-argObjectContent {
+  margin-top: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.cp-argObjectProperty {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+}
+
+.cp-argObjectKey {
+  font-size: 0.8125rem;
+  line-height: 1.125rem;
+  font-weight: var(--lynx-console-font-weight-medium);
+  color: var(--lynx-console-color-palette-purple-600);
+}
+
+.cp-argObjectJson {
+  font-size: 0.8125rem;
+  line-height: 1.125rem;
+  font-weight: var(--lynx-console-font-weight-regular);
+  color: var(--lynx-console-color-fg-neutral);
+}
+
+.cp-replInputRow {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  padding-top: 0;
+  padding-bottom: 8px;
+}
+
+.cp-replPrompt {
+  font-size: 1.625rem;
+  line-height: 2.1875rem;
+  font-weight: var(--lynx-console-font-weight-medium);
+  color: var(--lynx-console-color-fg-placeholder);
+  padding-bottom: 8px;
+}
+
+.cp-replInput {
+  flex: 1;
+  font-size: 1rem;
+  line-height: 1.375rem;
+  font-weight: var(--lynx-console-font-weight-regular);
+  color: var(--lynx-console-color-fg-neutral);
+  caret-color: var(--lynx-console-color-palette-green-600);
+  padding-bottom: 8px;
+}
+
+.cp-replRunButton {
+  padding: 4px 10px;
+  background-color: var(--lynx-console-color-palette-green-100);
+  border-radius: 4px;
+  margin-bottom: 8px;
+}
+
+.cp-replRunButtonText {
+  font-size: 0.8125rem;
+  line-height: 1.125rem;
+  font-weight: var(--lynx-console-font-weight-medium);
+  color: var(--lynx-console-color-palette-green-600);
+}

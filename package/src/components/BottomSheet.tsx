@@ -1,6 +1,6 @@
 import { type ReactNode, useEffect, useState } from "@lynx-js/react";
 import type { BaseTouchEvent, Target } from "@lynx-js/types";
-import * as css from "./BottomSheet.css";
+import "./BottomSheet.css";
 
 interface BottomSheetProps {
   children: ReactNode;
@@ -98,14 +98,14 @@ export default function BottomSheet({
 
   return (
     <scroll-view
-      className={css.backdrop}
+      className="bs-backdrop"
       style={{
         opacity: isOpening || isClosing ? 0 : 1,
       }}
     >
-      <view className={css.overlay} bindtap={handleClose}>
+      <view className="bs-overlay" bindtap={handleClose}>
         <view
-          className={css.content}
+          className="bs-content"
           catchtap={() => {}}
           style={{
             height: `${isDragging ? tempHeight : sheetHeight}px`,
@@ -116,25 +116,25 @@ export default function BottomSheet({
         >
           {/* catchtap: 이벤트 버블링 차단 */}
           <view
-            className={css.handleContainer}
+            className="bs-handleContainer"
             bindtouchstart={handleTouchStart}
             bindtouchmove={handleTouchMove}
             bindtouchend={handleTouchEnd}
           >
-            <view className={css.handle} />
+            <view className="bs-handle" />
           </view>
-          <view className={css.header}>
-            {title && <text className={css.title}>{title}</text>}
+          <view className="bs-header">
+            {title && <text className="bs-title">{title}</text>}
           </view>
           <view
-            className={css.body}
+            className="bs-body"
             style={{
               paddingBottom: safeAreaInsetBottom,
             }}
           >
             {children}
           </view>
-          {footer && <view className={css.footer}>{footer}</view>}
+          {footer && <view className="bs-footer">{footer}</view>}
         </view>
       </view>
     </scroll-view>

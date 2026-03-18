@@ -1,5 +1,17 @@
 # lynx-console
 
+## 0.2.0
+
+### Minor Changes
+
+- 701ad51: 커스텀 탭을 지원하고, FadeList의 fade 효과를 제거해요
+- 1e4e08e: vanilla-extract 의존성을 제거하고 모든 스타일을 plain CSS로 전환
+
+### Patch Changes
+
+- d5e301f: 사용하지 않는 vanilla-extract webpack plugin 패치 파일 제거
+- 6df534e: CSS 변수 prefix를 seed에서 lynx-console로 변경하고 미사용 토큰 제거
+
 ## 0.1.1
 
 ### Patch Changes

@@ -25,7 +25,7 @@ const getLocalIP = () => {
 export default defineConfig({
   source: {
     entry: {
-      "main": "./src/index.tsx",
+      main: "./src/index.tsx",
     },
     define: { console: "globalThis.console" },
     include: [
@@ -43,15 +43,23 @@ export default defineConfig({
     rspack(config) {
       config.resolve.alias = {
         ...config.resolve.alias,
-        "lynx-console": path.resolve(
-          __dirname,
-          "../package/src/index.tsx",
-        ),
+        "lynx-console": path.resolve(__dirname, "../package/src/index.tsx"),
       };
 
       return config;
     },
   },
 
-  plugins: [pluginQRCode(), pluginReactLynx({}), pluginTypeCheck()],
+  plugins: [
+    pluginQRCode({
+      schema(url) {
+        return {
+          LynxExplorer: `${url}?fullscreen=true`,
+          LynxConsoleDemo: `https://lynx-console-demo.vercel.app/main.lynx.bundle?fullscreen=true`,
+        };
+      },
+    }),
+    pluginReactLynx({}),
+    pluginTypeCheck(),
+  ],
 });

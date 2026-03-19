@@ -1,4 +1,5 @@
 import "./styles/vars/index.css";
+import "./styles/global.css";
 import {
   type ForwardedRef,
   forwardRef,

@@ -36,7 +36,7 @@ export default defineConfig({
     ],
   },
   output: {
-    assetPrefix: `http://${getLocalIP()}:<port>/`,
+    assetPrefix: process.env.ASSET_PREFIX ?? `http://${getLocalIP()}:<port>/`,
   },
 
   tools: {

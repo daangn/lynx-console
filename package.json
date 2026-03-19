@@ -9,6 +9,7 @@
     "build": "yarn workspace lynx-console build",
     "dev": "yarn workspace lynx-console dev",
     "dev:example": "yarn workspace lynx-console-test dev",
+    "build:example": "yarn workspace lynx-console-test build",
     "format": "biome check --fix --unsafe",
     "release": "changeset publish"
   },

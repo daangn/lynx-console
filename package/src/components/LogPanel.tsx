@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from "@lynx-js/react";
 import type { BaseEvent, InputInputEvent, NodesRef } from "@lynx-js/types";
 import { stringify } from "javascript-stringify";
+import { useThemeColors } from "../styles/ThemeContext";
+import { type ThemeColors, fontWeight } from "../styles/theme";
 import type { LogEntry, LogLevel } from "../types";
 import "./ConsolePanel.css";
 import { FadeList } from "./FadeList";
@@ -32,7 +34,57 @@ const runCode = (code: string) => {
   }
 };
 
+function getLevelColor(colors: ThemeColors, level: LogLevel): string {
+  switch (level) {
+    case "log":
+      return colors.palette.green600;
+    case "info":
+      return colors.palette.blue600;
+    case "warn":
+      return colors.palette.yellow600;
+    case "error":
+      return colors.palette.red600;
+  }
+}
+
+function getLogItemBg(
+  colors: ThemeColors,
+  level: LogLevel,
+): string | undefined {
+  switch (level) {
+    case "warn":
+      return colors.palette.yellow100;
+    case "error":
+      return colors.palette.red100;
+    default:
+      return undefined;
+  }
+}
+
+function getStringColor(colors: ThemeColors, level: LogLevel): string {
+  switch (level) {
+    case "warn":
+      return colors.palette.yellow900;
+    case "error":
+      return colors.palette.red900;
+    default:
+      return colors.fg.neutral;
+  }
+}
+
+function getPrimitiveColor(colors: ThemeColors, level: LogLevel): string {
+  switch (level) {
+    case "warn":
+      return colors.palette.yellow900;
+    case "error":
+      return colors.palette.red900;
+    default:
+      return colors.palette.blue600;
+  }
+}
+
 export const LogPanel = ({ logs, clearLogs }: LogPanelProps) => {
+  const colors = useThemeColors();
   const [expandedArgs, setExpandedArgs] = useState(new Set());
   const [code, setCode] = useState("");
   const [enabledLevels, setEnabledLevels] = useState<Set<LogLevel>>(
@@ -139,28 +191,50 @@ export const LogPanel = ({ logs, clearLogs }: LogPanelProps) => {
     const isExpanded = expandedArgs.has(key);
 
     if (arg === null) {
-      return <text className={"cp-argNull"}>null</text>;
+      return (
+        <text style={{ color: colors.fg.neutralSubtle, fontWeight: fontWeight.regular }}>
+          null
+        </text>
+      );
     }
 
     if (arg === undefined) {
-      return <text className={"cp-argUndefined"}>undefined</text>;
+      return (
+        <text style={{ color: colors.fg.neutralSubtle, fontWeight: fontWeight.regular }}>
+          undefined
+        </text>
+      );
     }
 
     if (typeof arg === "string") {
       const MAX_LENGTH = 80;
       const shouldTruncate = arg.length > MAX_LENGTH;
+      const strColor = getStringColor(colors, level);
 
       if (!shouldTruncate) {
-        return <text className={`cp-argString cp-argString--${level}`}>{arg}</text>;
+        return (
+          <text
+            className={"cp-argString"}
+            style={{ color: strColor, fontWeight: fontWeight.regular }}
+          >
+            {arg}
+          </text>
+        );
       }
 
       return (
         <view className={"cp-argObject"}>
           <view className={"cp-argObjectHeader"} bindtap={() => toggleArg(key)}>
-            <text className={"cp-toggleIndicator"}>
+            <text
+              className={"cp-toggleIndicator"}
+              style={{ color: colors.fg.neutralSubtle, fontWeight: fontWeight.regular }}
+            >
               {isExpanded ? "▼" : "▶"}
             </text>
-            <text className={`cp-argString cp-argString--${level}`}>
+            <text
+              className={"cp-argString"}
+              style={{ color: strColor, fontWeight: fontWeight.regular }}
+            >
               {isExpanded ? arg : `${arg.slice(0, MAX_LENGTH)}...`}
             </text>
           </view>
@@ -169,7 +243,14 @@ export const LogPanel = ({ logs, clearLogs }: LogPanelProps) => {
     }
 
     if (typeof arg === "number" || typeof arg === "boolean") {
-      return <text className={`cp-argPrimitive cp-argPrimitive--${level}`}>{String(arg)}</text>;
+      return (
+        <text
+          className={"cp-argPrimitive"}
+          style={{ color: getPrimitiveColor(colors, level), fontWeight: fontWeight.regular }}
+        >
+          {String(arg)}
+        </text>
+      );
     }
 
     if (typeof arg === "object") {
@@ -207,21 +288,41 @@ export const LogPanel = ({ logs, clearLogs }: LogPanelProps) => {
       return (
         <view className={"cp-argObject"}>
           <view className={"cp-argObjectHeader"} bindtap={() => toggleArg(key)}>
-            <text className={"cp-toggleIndicator"}>
+            <text
+              className={"cp-toggleIndicator"}
+              style={{ color: colors.fg.neutralSubtle, fontWeight: fontWeight.regular }}
+            >
               {isExpanded ? "▼" : "▶"}
             </text>
-            <text className={"cp-argObjectPreview"}>{preview}</text>
+            <text
+              className={"cp-argObjectPreview"}
+              style={{ fontWeight: fontWeight.medium, color: colors.fg.neutral }}
+            >
+              {preview}
+            </text>
           </view>
           {isExpanded && (
             <view className={"cp-argObjectContent"}>
-              <text className={"cp-argObjectJson"}>{jsonString}</text>
+              <text
+                className={"cp-argObjectJson"}
+                style={{ fontWeight: fontWeight.regular, color: colors.fg.neutral }}
+              >
+                {jsonString}
+              </text>
             </view>
           )}
         </view>
       );
     }
 
-    return <text className={`cp-argPrimitive cp-argPrimitive--${level}`}>{String(arg)}</text>;
+    return (
+      <text
+        className={"cp-argPrimitive"}
+        style={{ color: getPrimitiveColor(colors, level), fontWeight: fontWeight.regular }}
+      >
+        {String(arg)}
+      </text>
+    );
   };
 
   return (
@@ -233,22 +334,41 @@ export const LogPanel = ({ logs, clearLogs }: LogPanelProps) => {
         <view className={"cp-filterWrapper"}>
           <view
             className={"cp-filterButton"}
+            style={{ backgroundColor: colors.bg.neutralWeak }}
             catchtap={() => setFilterOpen((v) => !v)}
           >
-            <text className={"cp-filterButtonText"}>Filter  ▼</text>
+            <text
+              className={"cp-filterButtonText"}
+              style={{ fontWeight: fontWeight.medium, color: colors.fg.neutralMuted }}
+            >
+              Filter  ▼
+            </text>
           </view>
           {filterOpen && (
-            <view className={"cp-filterDropdown"} catchtap={() => {}}>
+            <view
+              className={"cp-filterDropdown"}
+              style={{
+                backgroundColor: colors.bg.layerFloating,
+                borderColor: colors.stroke.neutralSubtle,
+              }}
+              catchtap={() => {}}
+            >
               {LOG_LEVELS.map((level) => (
                 <view
                   key={level}
                   className={"cp-filterOption"}
                   bindtap={() => toggleLevel(level)}
                 >
-                  <text className={`cp-filterCheckbox cp-filterCheckbox--${level}`}>
+                  <text
+                    className={"cp-filterCheckbox"}
+                    style={{ fontWeight: fontWeight.medium, color: getLevelColor(colors, level) }}
+                  >
                     {enabledLevels.has(level) ? "✅" : "⬜"}
                   </text>
-                  <text className={`cp-filterLabel cp-filterLabel--${level}`}>
+                  <text
+                    className={"cp-filterLabel"}
+                    style={{ fontWeight: fontWeight.medium, color: getLevelColor(colors, level) }}
+                  >
                     {level.toUpperCase()}
                   </text>
                 </view>
@@ -256,11 +376,24 @@ export const LogPanel = ({ logs, clearLogs }: LogPanelProps) => {
             </view>
           )}
         </view>
-        <view className={"cp-searchWrapper"}>
-          <text className={"cp-searchPrompt"}>{"›"}</text>
+        <view
+          className={"cp-searchWrapper"}
+          style={{ borderBottomColor: colors.stroke.neutralSubtle }}
+        >
+          <text
+            className={"cp-searchPrompt"}
+            style={{ fontWeight: fontWeight.medium, color: colors.fg.placeholder }}
+          >
+            {"›"}
+          </text>
           <input
             ref={searchInputRef}
             className={"cp-searchInput"}
+            style={{
+              fontWeight: fontWeight.regular,
+              color: colors.fg.neutral,
+              caretColor: colors.palette.green600,
+            }}
             placeholder="Search logs..."
             bindinput={(e: BaseEvent<"bindinput", InputInputEvent>) =>
               setSearchQuery(e.detail.value)
@@ -276,13 +409,27 @@ export const LogPanel = ({ logs, clearLogs }: LogPanelProps) => {
                   .exec();
               }}
             >
-              <text className={"cp-searchClearText"}>✕</text>
+              <text
+                className={"cp-searchClearText"}
+                style={{ fontWeight: fontWeight.medium, color: colors.fg.placeholder }}
+              >
+                ✕
+              </text>
             </view>
           )}
         </view>
         <view style={{ display: "flex", flexDirection: "row", gap: 8 }}>
-          <view className={"cp-clearButton"} bindtap={clearLogs}>
-            <text className={"cp-clearButtonText"}>🗑</text>
+          <view
+            className={"cp-clearButton"}
+            style={{ backgroundColor: colors.bg.neutralWeak }}
+            bindtap={clearLogs}
+          >
+            <text
+              className={"cp-clearButtonText"}
+              style={{ fontWeight: fontWeight.medium, color: colors.fg.neutralMuted }}
+            >
+              🗑
+            </text>
           </view>
         </view>
       </view>
@@ -295,7 +442,10 @@ export const LogPanel = ({ logs, clearLogs }: LogPanelProps) => {
         {filteredLogs.length === 0 ? (
           <list-item item-key="empty-state">
             <view className={"cp-placeholder"}>
-              <text className={"cp-placeholderText"}>
+              <text
+                className={"cp-placeholderText"}
+                style={{ fontWeight: fontWeight.regular, color: colors.fg.disabled }}
+              >
                 No logs yet. Try console.log("Hello!")
               </text>
             </view>
@@ -304,12 +454,30 @@ export const LogPanel = ({ logs, clearLogs }: LogPanelProps) => {
           filteredLogs.map((log) => {
             return (
               <list-item key={log.id} item-key={log.id}>
-                <view className={`cp-logItem cp-logItem--${log.level}`}>
+                <view
+                  className={"cp-logItem"}
+                  style={{
+                    backgroundColor: getLogItemBg(colors, log.level),
+                    borderBottomColor: colors.stroke.neutralWeak,
+                  }}
+                >
                   <view className={"cp-logItemHeader"}>
-                    <text className={`cp-logLevel cp-logLevel--${log.level}`}>
+                    <text
+                      className={"cp-logLevel"}
+                      style={{
+                        fontWeight: fontWeight.bold,
+                        color: getLevelColor(colors, log.level),
+                      }}
+                    >
                       {log.level.toUpperCase()}
                     </text>
-                    <text className={"cp-logTime"}>
+                    <text
+                      className={"cp-logTime"}
+                      style={{
+                        fontWeight: fontWeight.regular,
+                        color: colors.fg.neutralSubtle,
+                      }}
+                    >
                       {new Date(log.timestamp).toISOString()}
                     </text>
                   </view>
@@ -318,6 +486,7 @@ export const LogPanel = ({ logs, clearLogs }: LogPanelProps) => {
                       <view
                         key={`${log.id}-${index.toString()}`}
                         className={"cp-logArgItem"}
+                        style={{ fontWeight: fontWeight.regular }}
                       >
                         {renderArg(
                           arg,
@@ -334,18 +503,37 @@ export const LogPanel = ({ logs, clearLogs }: LogPanelProps) => {
         )}
       </FadeList>
       <view className={"cp-replInputRow"}>
-        <text className={"cp-replPrompt"}>{"›"}</text>
+        <text
+          className={"cp-replPrompt"}
+          style={{ fontWeight: fontWeight.medium, color: colors.fg.placeholder }}
+        >
+          {"›"}
+        </text>
         <input
           ref={inputRef}
           className={"cp-replInput"}
+          style={{
+            fontWeight: fontWeight.regular,
+            color: colors.fg.neutral,
+            caretColor: colors.palette.green600,
+          }}
           placeholder="enter code..."
           bindinput={(e: BaseEvent<"bindinput", InputInputEvent>) =>
             setCode(e.detail.value)
           }
           bindconfirm={handleRun}
         />
-        <view className={"cp-replRunButton"} bindtap={handleRun}>
-          <text className={"cp-replRunButtonText"}>Run</text>
+        <view
+          className={"cp-replRunButton"}
+          style={{ backgroundColor: colors.palette.green100 }}
+          bindtap={handleRun}
+        >
+          <text
+            className={"cp-replRunButtonText"}
+            style={{ fontWeight: fontWeight.medium, color: colors.palette.green600 }}
+          >
+            Run
+          </text>
         </view>
       </view>
     </view>

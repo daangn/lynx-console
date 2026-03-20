@@ -1,5 +1,7 @@
 import { type ReactNode, useEffect, useState } from "@lynx-js/react";
 import type { BaseTouchEvent, Target } from "@lynx-js/types";
+import { useThemeColors } from "../styles/ThemeContext";
+import { duration, fontWeight } from "../styles/theme";
 import "./BottomSheet.css";
 
 interface BottomSheetProps {
@@ -29,6 +31,7 @@ export default function BottomSheet({
   shouldClose = false,
   safeAreaInsetBottom = "25px",
 }: BottomSheetProps) {
+  const colors = useThemeColors();
   const [sheetHeight, setSheetHeight] = useState(savedHeight ?? DEFAULT_HEIGHT);
   const [tempHeight, setTempHeight] = useState(savedHeight ?? DEFAULT_HEIGHT);
   const [isDragging, setIsDragging] = useState(false);
@@ -100,7 +103,9 @@ export default function BottomSheet({
     <scroll-view
       className="bs-backdrop"
       style={{
+        background: colors.bg.overlay,
         opacity: isOpening || isClosing ? 0 : 1,
+        transition: `opacity ${duration.d6} cubic-bezier(0.4, 0, 0.2, 1)`,
       }}
     >
       <view className="bs-overlay" bindtap={handleClose}>
@@ -108,10 +113,13 @@ export default function BottomSheet({
           className="bs-content"
           catchtap={() => {}}
           style={{
+            background: colors.bg.layerFloating,
             height: `${isDragging ? tempHeight : sheetHeight}px`,
             transform:
               isOpening || isClosing ? "translateY(100%)" : "translateY(0)",
-            transition: isDragging ? "none" : undefined,
+            transition: isDragging
+              ? "none"
+              : `transform ${duration.d6} cubic-bezier(0.4, 0, 0.2, 1)`,
           }}
         >
           {/* catchtap: 이벤트 버블링 차단 */}
@@ -121,10 +129,23 @@ export default function BottomSheet({
             bindtouchmove={handleTouchMove}
             bindtouchend={handleTouchEnd}
           >
-            <view className="bs-handle" />
+            <view
+              className="bs-handle"
+              style={{ backgroundColor: colors.palette.gray400 }}
+            />
           </view>
           <view className="bs-header">
-            {title && <text className="bs-title">{title}</text>}
+            {title && (
+              <text
+                className="bs-title"
+                style={{
+                  fontWeight: fontWeight.bold,
+                  color: colors.fg.neutral,
+                }}
+              >
+                {title}
+              </text>
+            )}
           </view>
           <view
             className="bs-body"

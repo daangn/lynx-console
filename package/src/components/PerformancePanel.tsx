@@ -98,14 +98,6 @@ export const PerformancePanel = ({
             0 entries
           </text>
           <view
-            bindtap={() => {
-              console.log("[PerformancePanel] performances", performances);
-            }}
-            style={{ padding: "10px", backgroundColor: "red" }}
-          >
-            <text>Log</text>
-          </view>
-          <view
             bindtap={clearPerformances}
             className={"pp-clearButton"}
             style={{ backgroundColor: colors.bg.neutralWeak }}

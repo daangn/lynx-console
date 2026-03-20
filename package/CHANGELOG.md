@@ -1,5 +1,11 @@
 # lynx-console
 
+## 0.2.2
+
+### Patch Changes
+
+- 206e58c: CSS 변수(`var()`)를 inline style로 전환하여 Lynx 런타임 호환성 개선
+
 ## 0.2.1
 
 ### Patch Changes

@@ -1,5 +1,7 @@
 import { useState } from "@lynx-js/react";
 import { stringify } from "javascript-stringify";
+import { useThemeColors } from "../styles/ThemeContext";
+import { type ThemeColors, fontWeight } from "../styles/theme";
 import type { PerformanceEntryData } from "../types";
 import { FadeList } from "./FadeList";
 import "./PerformancePanel.css";
@@ -61,16 +63,40 @@ const getPrimaryFcpLabel = (entry: PerformanceEntryData): string => {
   return "";
 };
 
+function getEntryTypeColors(colors: ThemeColors, entryType: string) {
+  switch (entryType) {
+    case "init":
+      return { color: colors.palette.blue600, backgroundColor: colors.palette.blue100 };
+    case "metric":
+      return { color: colors.palette.green600, backgroundColor: colors.palette.green100 };
+    case "pipeline":
+      return { color: colors.palette.purple600, backgroundColor: colors.palette.purple100 };
+    case "resource":
+      return { color: colors.palette.yellow600, backgroundColor: colors.palette.yellow100 };
+    default:
+      return { color: colors.fg.neutral, backgroundColor: colors.bg.neutralWeak };
+  }
+}
+
 export const PerformancePanel = ({
   performances,
   clearPerformances,
 }: PerformancePanelProps) => {
+  const colors = useThemeColors();
   const [selectedId, setSelectedId] = useState<string | null>(null);
   if (performances.length === 0) {
     return (
       <view className={"pp-container"}>
-        <view className={"pp-header"}>
-          <text className={"pp-count"}>0 entries</text>
+        <view
+          className={"pp-header"}
+          style={{ borderBottomColor: colors.stroke.neutralSubtle }}
+        >
+          <text
+            className={"pp-count"}
+            style={{ fontWeight: fontWeight.regular, color: colors.fg.neutralSubtle }}
+          >
+            0 entries
+          </text>
           <view
             bindtap={() => {
               console.log("[PerformancePanel] performances", performances);
@@ -79,12 +105,24 @@ export const PerformancePanel = ({
           >
             <text>Log</text>
           </view>
-          <view bindtap={clearPerformances} className={"pp-clearButton"}>
-            <text className={"pp-clearButtonText"}>🗑</text>
+          <view
+            bindtap={clearPerformances}
+            className={"pp-clearButton"}
+            style={{ backgroundColor: colors.bg.neutralWeak }}
+          >
+            <text
+              className={"pp-clearButtonText"}
+              style={{ fontWeight: fontWeight.medium, color: colors.fg.neutralMuted }}
+            >
+              🗑
+            </text>
           </view>
         </view>
         <view className={"pp-placeholder"}>
-          <text className={"pp-placeholderText"}>
+          <text
+            className={"pp-placeholderText"}
+            style={{ fontWeight: fontWeight.regular, color: colors.fg.disabled }}
+          >
             No performance data yet...
           </text>
         </view>
@@ -94,10 +132,27 @@ export const PerformancePanel = ({
 
   return (
     <view className={"pp-container"}>
-      <view className={"pp-header"}>
-        <text className={"pp-count"}>{performances.length} entries</text>
-        <view bindtap={clearPerformances} className={"pp-clearButton"}>
-          <text className={"pp-clearButtonText"}>🗑</text>
+      <view
+        className={"pp-header"}
+        style={{ borderBottomColor: colors.stroke.neutralSubtle }}
+      >
+        <text
+          className={"pp-count"}
+          style={{ fontWeight: fontWeight.regular, color: colors.fg.neutralSubtle }}
+        >
+          {performances.length} entries
+        </text>
+        <view
+          bindtap={clearPerformances}
+          className={"pp-clearButton"}
+          style={{ backgroundColor: colors.bg.neutralWeak }}
+        >
+          <text
+            className={"pp-clearButtonText"}
+            style={{ fontWeight: fontWeight.medium, color: colors.fg.neutralMuted }}
+          >
+            🗑
+          </text>
         </view>
       </view>
 
@@ -110,18 +165,35 @@ export const PerformancePanel = ({
 
           return (
             <list-item key={perf.id} item-key={perf.id}>
-              <view className={"pp-item"}>
+              <view
+                className={"pp-item"}
+                style={{ borderBottomColor: colors.stroke.neutralWeak }}
+              >
                 <view
                   className={"pp-itemHeader"}
                   bindtap={() =>
                     setSelectedId(selectedId === perf.id ? null : perf.id)
                   }
                 >
-                  <text className={`pp-entryType pp-entryType--${perf.entryType}`}>
+                  <text
+                    className={"pp-entryType"}
+                    style={{
+                      fontWeight: fontWeight.bold,
+                      ...getEntryTypeColors(colors, perf.entryType),
+                    }}
+                  >
                     {perf.entryType}
                   </text>
-                  <text className={"pp-entryName"}>{perf.name}</text>
-                  <text className={"pp-timestamp"}>
+                  <text
+                    className={"pp-entryName"}
+                    style={{ fontWeight: fontWeight.medium, color: colors.fg.neutral }}
+                  >
+                    {perf.name}
+                  </text>
+                  <text
+                    className={"pp-timestamp"}
+                    style={{ fontWeight: fontWeight.regular, color: colors.fg.neutralSubtle }}
+                  >
                     {new Date(perf.timestamp).toISOString()}
                   </text>
                 </view>
@@ -132,7 +204,16 @@ export const PerformancePanel = ({
                   }
                 >
                   {isMetricFcp && primaryFcp && (
-                    <text className={"pp-fcpHighlight"}>{primaryFcp}</text>
+                    <text
+                      className={"pp-fcpHighlight"}
+                      style={{
+                        fontWeight: fontWeight.bold,
+                        color: colors.palette.blue600,
+                        backgroundColor: colors.palette.blue100,
+                      }}
+                    >
+                      {primaryFcp}
+                    </text>
                   )}
                 </view>
 
@@ -141,16 +222,28 @@ export const PerformancePanel = ({
                     {isMetricFcp && fcpMetrics && (
                       <view className={"pp-fcpSection"}>
                         {totalFcp !== undefined && (
-                          <view className={"pp-fcpMetric"}>
+                          <view
+                            className={"pp-fcpMetric"}
+                            style={{ backgroundColor: colors.bg.layerDefault }}
+                          >
                             <view className={"pp-fcpMetricHeader"}>
-                              <text className={"pp-fcpMetricName"}>
+                              <text
+                                className={"pp-fcpMetricName"}
+                                style={{ fontWeight: fontWeight.bold, color: colors.fg.neutral }}
+                              >
                                 전체 FCP
                               </text>
-                              <text className={"pp-fcpMetricValue"}>
+                              <text
+                                className={"pp-fcpMetricValue"}
+                                style={{ fontWeight: fontWeight.bold, color: colors.palette.blue600 }}
+                              >
                                 {formatDuration(totalFcp.duration)}
                               </text>
                             </view>
-                            <text className={"pp-fcpMetricDescription"}>
+                            <text
+                              className={"pp-fcpMetricDescription"}
+                              style={{ fontWeight: fontWeight.regular, color: colors.fg.neutralSubtle }}
+                            >
                               PrepareTemplate Start부터 Paint End 까지 걸리는
                               시간
                             </text>
@@ -158,30 +251,56 @@ export const PerformancePanel = ({
                         )}
 
                         {lynxFcp !== undefined && (
-                          <view className={"pp-fcpMetric"}>
+                          <view
+                            className={"pp-fcpMetric"}
+                            style={{ backgroundColor: colors.bg.layerDefault }}
+                          >
                             <view className={"pp-fcpMetricHeader"}>
-                              <text className={"pp-fcpMetricName"}>LynxFCP</text>
-                              <text className={"pp-fcpMetricValue"}>
+                              <text
+                                className={"pp-fcpMetricName"}
+                                style={{ fontWeight: fontWeight.bold, color: colors.fg.neutral }}
+                              >
+                                LynxFCP
+                              </text>
+                              <text
+                                className={"pp-fcpMetricValue"}
+                                style={{ fontWeight: fontWeight.bold, color: colors.palette.blue600 }}
+                              >
                                 {formatDuration(lynxFcp.duration)}
                               </text>
                             </view>
-                            <text className={"pp-fcpMetricDescription"}>
+                            <text
+                              className={"pp-fcpMetricDescription"}
+                              style={{ fontWeight: fontWeight.regular, color: colors.fg.neutralSubtle }}
+                            >
                               Bundle Load 시작부터 Paint End 까지 걸리는 시간
                             </text>
                           </view>
                         )}
 
                         {fcp !== undefined && (
-                          <view className={"pp-fcpMetric"}>
+                          <view
+                            className={"pp-fcpMetric"}
+                            style={{ backgroundColor: colors.bg.layerDefault }}
+                          >
                             <view className={"pp-fcpMetricHeader"}>
-                              <text className={"pp-fcpMetricName"}>
+                              <text
+                                className={"pp-fcpMetricName"}
+                                style={{ fontWeight: fontWeight.bold, color: colors.fg.neutral }}
+                              >
                                 렌더링 FCP
                               </text>
-                              <text className={"pp-fcpMetricValue"}>
+                              <text
+                                className={"pp-fcpMetricValue"}
+                                style={{ fontWeight: fontWeight.bold, color: colors.palette.blue600 }}
+                              >
                                 {formatDuration(fcp.duration)}
                               </text>
                             </view>
-                            <text className={"pp-fcpMetricDescription"}>
+                            <text
+                              className={"pp-fcpMetricDescription"}
+                              style={{ fontWeight: fontWeight.regular, color: colors.fg.neutralSubtle }}
+                            >
                               TemplateBundle 준비부터 Paint End 까지 걸리는 시간
                             </text>
                           </view>
@@ -190,9 +309,20 @@ export const PerformancePanel = ({
                     )}
 
                     {!!perf.rawEntry && (
-                      <view className={"pp-rawEntrySection"}>
-                        <text className={"pp-detailTitle"}>Raw Entry</text>
-                        <text className={"pp-rawEntry"}>
+                      <view
+                        className={"pp-rawEntrySection"}
+                        style={{ backgroundColor: colors.bg.neutralWeak }}
+                      >
+                        <text
+                          className={"pp-detailTitle"}
+                          style={{ fontWeight: fontWeight.bold, color: colors.fg.neutral }}
+                        >
+                          Raw Entry
+                        </text>
+                        <text
+                          className={"pp-rawEntry"}
+                          style={{ fontWeight: fontWeight.regular, color: colors.fg.neutralSubtle }}
+                        >
                           {String(stringify(perf.rawEntry, null, 2, { references: true }))}
                         </text>
                       </view>

@@ -6,12 +6,10 @@
 
 .tabs-header {
   display: flex;
-  box-shadow: inset 0 -1px 0 0 var(--lynx-console-color-stroke-neutral-subtle);
 }
 
 .tabs-triggerButton {
   flex: 1;
-  color: var(--lynx-console-color-fg-neutral-subtle);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -22,12 +20,6 @@
 .tabs-triggerButtonText {
   font-size: 1rem;
   line-height: 1.375rem;
-  font-weight: var(--lynx-console-font-weight-bold);
-  color: var(--lynx-console-color-fg-neutral-subtle);
-}
-
-.tabs-triggerButtonText--active {
-  color: var(--lynx-console-color-fg-neutral);
 }
 
 .tabs-triggerButtonText--t4 {
@@ -61,7 +53,6 @@
 }
 
 .tabs-triggerIndicatorLine {
-  background-color: var(--lynx-console-color-fg-neutral);
   width: 100%;
   height: 2px;
 }

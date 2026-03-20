@@ -13,28 +13,22 @@
   margin-bottom: 8px;
   padding-bottom: 4px;
   border-bottom-width: 1px;
-  border-bottom-color: var(--lynx-console-color-stroke-neutral-subtle);
   border-bottom-style: solid;
 }
 
 .pp-count {
   font-size: 0.8125rem;
   line-height: 1.125rem;
-  font-weight: var(--lynx-console-font-weight-regular);
-  color: var(--lynx-console-color-fg-neutral-subtle);
 }
 
 .pp-clearButton {
   padding: 3px 6px;
-  background-color: var(--lynx-console-color-bg-neutral-weak);
   border-radius: 4px;
 }
 
 .pp-clearButtonText {
   font-size: 0.8125rem;
   line-height: 1.125rem;
-  font-weight: var(--lynx-console-font-weight-medium);
-  color: var(--lynx-console-color-fg-neutral-muted);
 }
 
 .pp-list {
@@ -51,14 +45,11 @@
 .pp-placeholderText {
   font-size: 0.875rem;
   line-height: 1.1875rem;
-  font-weight: var(--lynx-console-font-weight-regular);
-  color: var(--lynx-console-color-fg-disabled);
 }
 
 .pp-item {
   padding: 8px;
   border-bottom-width: 1px;
-  border-bottom-color: var(--lynx-console-color-stroke-neutral-weak);
   border-bottom-style: solid;
 }
 
@@ -73,45 +64,18 @@
 .pp-entryType {
   font-size: 0.75rem;
   line-height: 1rem;
-  font-weight: var(--lynx-console-font-weight-bold);
   padding: 0 6px;
   border-radius: 2px;
-  color: var(--lynx-console-color-fg-neutral);
-  background-color: var(--lynx-console-color-bg-neutral-weak);
-}
-
-.pp-entryType--init {
-  color: var(--lynx-console-color-palette-blue-600);
-  background-color: var(--lynx-console-color-palette-blue-100);
-}
-
-.pp-entryType--metric {
-  color: var(--lynx-console-color-palette-green-600);
-  background-color: var(--lynx-console-color-palette-green-100);
-}
-
-.pp-entryType--pipeline {
-  color: var(--lynx-console-color-palette-purple-600);
-  background-color: var(--lynx-console-color-palette-purple-100);
-}
-
-.pp-entryType--resource {
-  color: var(--lynx-console-color-palette-yellow-600);
-  background-color: var(--lynx-console-color-palette-yellow-100);
 }
 
 .pp-entryName {
   font-size: 0.75rem;
   line-height: 1rem;
-  font-weight: var(--lynx-console-font-weight-medium);
-  color: var(--lynx-console-color-fg-neutral);
 }
 
 .pp-timestamp {
   font-size: 0.75rem;
   line-height: 1rem;
-  font-weight: var(--lynx-console-font-weight-regular);
-  color: var(--lynx-console-color-fg-neutral-subtle);
 }
 
 .pp-fcpMetricHeader {
@@ -124,9 +88,6 @@
 .pp-fcpHighlight {
   font-size: 0.8125rem;
   line-height: 1.125rem;
-  font-weight: var(--lynx-console-font-weight-bold);
-  color: var(--lynx-console-color-palette-blue-600);
-  background-color: var(--lynx-console-color-palette-blue-100);
   padding: 4px 8px;
   border-radius: 4px;
   margin-top: 4px;
@@ -145,15 +106,12 @@
   align-items: center;
   gap: 8px;
   padding: 4px 8px;
-  background-color: var(--lynx-console-color-bg-neutral-weak);
   border-radius: 2px;
 }
 
 .pp-metricName {
   font-size: 0.8125rem;
   line-height: 1.125rem;
-  font-weight: var(--lynx-console-font-weight-medium);
-  color: var(--lynx-console-color-fg-neutral-subtle);
   min-width: 100px;
   flex-shrink: 0;
 }
@@ -161,8 +119,6 @@
 .pp-metricValue {
   font-size: 0.8125rem;
   line-height: 1.125rem;
-  font-weight: var(--lynx-console-font-weight-bold);
-  color: var(--lynx-console-color-palette-green-600);
   flex: 1;
 }
 
@@ -182,13 +138,10 @@
 .pp-fcpSectionDescription {
   font-size: 0.8125rem;
   line-height: 1.125rem;
-  font-weight: var(--lynx-console-font-weight-regular);
-  color: var(--lynx-console-color-fg-neutral-subtle);
   margin-bottom: 4px;
 }
 
 .pp-fcpMetric {
-  background-color: var(--lynx-console-color-bg-layer-default);
   border-radius: 4px;
   display: flex;
   flex-direction: column;
@@ -198,51 +151,38 @@
 .pp-fcpMetricName {
   font-size: 0.75rem;
   line-height: 1rem;
-  font-weight: var(--lynx-console-font-weight-bold);
-  color: var(--lynx-console-color-fg-neutral);
 }
 
 .pp-fcpMetricValue {
   font-size: 0.6875rem;
   line-height: 0.9375rem;
-  font-weight: var(--lynx-console-font-weight-bold);
-  color: var(--lynx-console-color-palette-blue-600);
 }
 
 .pp-fcpMetricDescription {
   font-size: 0.8125rem;
   line-height: 1.125rem;
-  font-weight: var(--lynx-console-font-weight-regular);
-  color: var(--lynx-console-color-fg-neutral-subtle);
 }
 
 .pp-fcpMetricFormula {
   font-size: 0.875rem;
   line-height: 1.1875rem;
-  font-weight: var(--lynx-console-font-weight-regular);
-  color: var(--lynx-console-color-fg-disabled);
   font-family: monospace;
 }
 
 .pp-rawEntrySection {
   padding: 12px;
-  background-color: var(--lynx-console-color-bg-neutral-weak);
   border-radius: 4px;
 }
 
 .pp-detailTitle {
   font-size: 0.8125rem;
   line-height: 1.125rem;
-  font-weight: var(--lynx-console-font-weight-bold);
-  color: var(--lynx-console-color-fg-neutral);
   margin-bottom: 8px;
 }
 
 .pp-rawEntry {
   font-size: 0.8125rem;
   line-height: 1.125rem;
-  font-weight: var(--lynx-console-font-weight-regular);
-  color: var(--lynx-console-color-fg-neutral-subtle);
   font-family: monospace;
   white-space: pre-wrap;
   word-break: break-all;

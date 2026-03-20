@@ -1,5 +1,3 @@
-import "./styles/vars/index.css";
-import "./styles/global.css";
 import {
   type ForwardedRef,
   forwardRef,
@@ -12,6 +10,8 @@ import { ConsolePanel } from "./components/ConsolePanel.jsx";
 import "./components/FloatingButton.css";
 import { FloatingButton } from "./components/FloatingButton.jsx";
 import { usePerformance } from "./hooks/usePerformance";
+import { ThemeProvider } from "./styles/ThemeContext";
+import { getColors } from "./styles/theme";
 import type { CustomTab } from "./types";
 
 export interface LynxConsoleHandle {
@@ -45,6 +45,7 @@ const LynxConsole = forwardRef<LynxConsoleHandle, LynxConsoleProps>(
     const [isOpen, setIsOpen] = useState(false);
     const [shouldClose, setShouldClose] = useState(false);
     const { performances } = usePerformance();
+    const colors = useMemo(() => getColors(theme), [theme]);
 
     const latestFcp = useMemo(() => {
       for (let i = performances.length - 1; i >= 0; i--) {
@@ -84,28 +85,33 @@ const LynxConsole = forwardRef<LynxConsoleHandle, LynxConsoleProps>(
       setShouldClose(false);
     };
 
-    const themeClass = `data-lynx-console-color-mode__${theme}-only`;
-
     return (
-      <view className={themeClass}>
-        <FloatingButton bindtap={handleOpenBottomSheet}>
-          <text className="fb-title">LynxConsole</text>
-          <text className="fb-subtitle">
-            {`${latestFcp?.name ?? "FCP"}: ${latestFcp?.duration ? latestFcp.duration.toFixed(2) : "--"}ms`}
-          </text>
-        </FloatingButton>
-        {isOpen && (
-          <BottomSheet
-            isOpen={isOpen}
-            shouldClose={shouldClose}
-            onClose={handleCloseBottomSheet}
-            title="Lynx Console"
-            safeAreaInsetBottom={safeAreaInsetBottom}
-          >
-            <ConsolePanel customTabs={customTabs} />
-          </BottomSheet>
-        )}
-      </view>
+      <ThemeProvider value={colors}>
+        <view
+          style={{
+            backgroundColor: colors.bg.layerDefault,
+            color: colors.fg.neutral,
+          }}
+        >
+          <FloatingButton bindtap={handleOpenBottomSheet}>
+            <text className="fb-title" style={{ fontWeight: "400", color: colors.palette.staticWhite }}>LynxConsole</text>
+            <text className="fb-subtitle" style={{ fontWeight: "400", color: colors.palette.staticWhite }}>
+              {`${latestFcp?.name ?? "FCP"}: ${latestFcp?.duration ? latestFcp.duration.toFixed(2) : "--"}ms`}
+            </text>
+          </FloatingButton>
+          {isOpen && (
+            <BottomSheet
+              isOpen={isOpen}
+              shouldClose={shouldClose}
+              onClose={handleCloseBottomSheet}
+              title="Lynx Console"
+              safeAreaInsetBottom={safeAreaInsetBottom}
+            >
+              <ConsolePanel customTabs={customTabs} />
+            </BottomSheet>
+          )}
+        </view>
+      </ThemeProvider>
     );
   },
 );

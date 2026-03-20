@@ -1,5 +1,7 @@
 import { type ReactNode, useRef, useState } from "@lynx-js/react";
 import type { ListSnapEvent, NodesRef } from "@lynx-js/types";
+import { useThemeColors } from "../styles/ThemeContext";
+import { fontWeight } from "../styles/theme";
 import "./Tabs.css";
 
 type TabsProps = {
@@ -12,6 +14,7 @@ type TabsProps = {
 };
 
 export default function Tabs(props: TabsProps) {
+  const colors = useThemeColors();
   const tabContentsRef = useRef<NodesRef>(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const tabSize =
@@ -21,7 +24,12 @@ export default function Tabs(props: TabsProps) {
 
   return (
     <view className={"tabs-root"}>
-      <view className={"tabs-header"}>
+      <view
+        className={"tabs-header"}
+        style={{
+          boxShadow: `inset 0 -1px 0 0 ${colors.stroke.neutralSubtle}`,
+        }}
+      >
         {props.items.map((item, i) => (
           <view
             key={item.key}
@@ -42,7 +50,14 @@ export default function Tabs(props: TabsProps) {
             }}
           >
             <text
-              className={`tabs-triggerButtonText${i === activeIndex ? " tabs-triggerButtonText--active" : ""}${tabSize ? ` tabs-triggerButtonText--${tabSize}` : ""}`}
+              className={`tabs-triggerButtonText${tabSize ? ` tabs-triggerButtonText--${tabSize}` : ""}`}
+              style={{
+                fontWeight: fontWeight.bold,
+                color:
+                  i === activeIndex
+                    ? colors.fg.neutral
+                    : colors.fg.neutralSubtle,
+              }}
             >
               {item.label}
             </text>
@@ -51,7 +66,10 @@ export default function Tabs(props: TabsProps) {
                 className={"tabs-triggerIndicator"}
                 style={{ transform: `translateX(${activeIndex * 100}%)` }}
               >
-                <view className={"tabs-triggerIndicatorLine"} />
+                <view
+                  className={"tabs-triggerIndicatorLine"}
+                  style={{ backgroundColor: colors.fg.neutral }}
+                />
               </view>
             )}
           </view>

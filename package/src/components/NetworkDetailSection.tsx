@@ -20,7 +20,7 @@ export const NetworkDetailSection = ({
       {/* Headers */}
       <view className={"np-detailSection"}>
         <text
-          className={"np-detailSectionTitle"}
+          className={"np-detailSectionTitle t3"}
           style={{ fontWeight: fontWeight.bold, color: colors.fg.neutral }}
         >
           Headers
@@ -34,13 +34,13 @@ export const NetworkDetailSection = ({
                 style={{ backgroundColor: colors.bg.neutralWeak }}
               >
                 <text
-                  className={"np-tableKey"}
+                  className={"np-tableKey t3"}
                   style={{ fontWeight: fontWeight.bold, color: colors.fg.neutralSubtle }}
                 >
                   {key}
                 </text>
                 <text
-                  className={"np-tableValue"}
+                  className={"np-tableValue t3"}
                   style={{ fontWeight: fontWeight.regular, color: colors.fg.neutral }}
                 >
                   {value}
@@ -50,7 +50,7 @@ export const NetworkDetailSection = ({
           </view>
         ) : (
           <text
-            className={"np-emptyText"}
+            className={"np-emptyText t3"}
             style={{ fontWeight: fontWeight.regular, color: colors.fg.disabled }}
           >
             No headers
@@ -61,14 +61,14 @@ export const NetworkDetailSection = ({
       {/* Body */}
       <view className={"np-detailSection"}>
         <text
-          className={"np-detailSectionTitle"}
+          className={"np-detailSectionTitle t3"}
           style={{ fontWeight: fontWeight.bold, color: colors.fg.neutral }}
         >
           Body
         </text>
         {error && (
           <text
-            className={"np-errorText"}
+            className={"np-errorText t3"}
             style={{
               fontWeight: fontWeight.regular,
               color: colors.palette.red600,
@@ -80,7 +80,7 @@ export const NetworkDetailSection = ({
         )}
         {body && (
           <text
-            className={"np-bodyText"}
+            className={"np-bodyText t3"}
             style={{
               fontWeight: fontWeight.regular,
               color: colors.fg.neutral,
@@ -92,7 +92,7 @@ export const NetworkDetailSection = ({
         )}
         {!error && !body && (
           <text
-            className={"np-emptyText"}
+            className={"np-emptyText t3"}
             style={{ fontWeight: fontWeight.regular, color: colors.fg.disabled }}
           >
             No body

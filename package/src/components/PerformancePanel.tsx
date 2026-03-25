@@ -1,9 +1,8 @@
 import { useState } from "@lynx-js/react";
 import { stringify } from "javascript-stringify";
 import { useThemeColors } from "../styles/ThemeContext";
-import { type ThemeColors, fontWeight } from "../styles/theme";
+import { fontWeight, type ThemeColors } from "../styles/theme";
 import type { PerformanceEntryData } from "../types";
-import { FadeList } from "./FadeList";
 import "./PerformancePanel.css";
 
 interface PerformancePanelProps {
@@ -66,15 +65,30 @@ const getPrimaryFcpLabel = (entry: PerformanceEntryData): string => {
 function getEntryTypeColors(colors: ThemeColors, entryType: string) {
   switch (entryType) {
     case "init":
-      return { color: colors.palette.blue600, backgroundColor: colors.palette.blue100 };
+      return {
+        color: colors.palette.blue600,
+        backgroundColor: colors.palette.blue100,
+      };
     case "metric":
-      return { color: colors.palette.green600, backgroundColor: colors.palette.green100 };
+      return {
+        color: colors.palette.green600,
+        backgroundColor: colors.palette.green100,
+      };
     case "pipeline":
-      return { color: colors.palette.purple600, backgroundColor: colors.palette.purple100 };
+      return {
+        color: colors.palette.purple600,
+        backgroundColor: colors.palette.purple100,
+      };
     case "resource":
-      return { color: colors.palette.yellow600, backgroundColor: colors.palette.yellow100 };
+      return {
+        color: colors.palette.yellow600,
+        backgroundColor: colors.palette.yellow100,
+      };
     default:
-      return { color: colors.fg.neutral, backgroundColor: colors.bg.neutralWeak };
+      return {
+        color: colors.fg.neutral,
+        backgroundColor: colors.bg.neutralWeak,
+      };
   }
 }
 
@@ -92,8 +106,11 @@ export const PerformancePanel = ({
           style={{ borderBottomColor: colors.stroke.neutralSubtle }}
         >
           <text
-            className={"pp-count"}
-            style={{ fontWeight: fontWeight.regular, color: colors.fg.neutralSubtle }}
+            className={"pp-count t3"}
+            style={{
+              fontWeight: fontWeight.regular,
+              color: colors.fg.neutralSubtle,
+            }}
           >
             0 entries
           </text>
@@ -103,8 +120,11 @@ export const PerformancePanel = ({
             style={{ backgroundColor: colors.bg.neutralWeak }}
           >
             <text
-              className={"pp-clearButtonText"}
-              style={{ fontWeight: fontWeight.medium, color: colors.fg.neutralMuted }}
+              className={"pp-clearButtonText t3"}
+              style={{
+                fontWeight: fontWeight.medium,
+                color: colors.fg.neutralMuted,
+              }}
             >
               🗑
             </text>
@@ -112,8 +132,11 @@ export const PerformancePanel = ({
         </view>
         <view className={"pp-placeholder"}>
           <text
-            className={"pp-placeholderText"}
-            style={{ fontWeight: fontWeight.regular, color: colors.fg.disabled }}
+            className={"pp-placeholderText t4"}
+            style={{
+              fontWeight: fontWeight.regular,
+              color: colors.fg.disabled,
+            }}
           >
             No performance data yet...
           </text>
@@ -129,8 +152,11 @@ export const PerformancePanel = ({
         style={{ borderBottomColor: colors.stroke.neutralSubtle }}
       >
         <text
-          className={"pp-count"}
-          style={{ fontWeight: fontWeight.regular, color: colors.fg.neutralSubtle }}
+          className={"pp-count t3"}
+          style={{
+            fontWeight: fontWeight.regular,
+            color: colors.fg.neutralSubtle,
+          }}
         >
           {performances.length} entries
         </text>
@@ -140,15 +166,18 @@ export const PerformancePanel = ({
           style={{ backgroundColor: colors.bg.neutralWeak }}
         >
           <text
-            className={"pp-clearButtonText"}
-            style={{ fontWeight: fontWeight.medium, color: colors.fg.neutralMuted }}
+            className={"pp-clearButtonText t3"}
+            style={{
+              fontWeight: fontWeight.medium,
+              color: colors.fg.neutralMuted,
+            }}
           >
             🗑
           </text>
         </view>
       </view>
 
-      <FadeList className={"pp-list"}>
+      <list scroll-orientation="vertical" className={"pp-list"}>
         {performances.map((perf) => {
           const isMetricFcp = isMetricFcpEntry(perf);
           const fcpMetrics = extractFcpMetrics(perf);
@@ -168,7 +197,7 @@ export const PerformancePanel = ({
                   }
                 >
                   <text
-                    className={"pp-entryType"}
+                    className={"pp-entryType t2"}
                     style={{
                       fontWeight: fontWeight.bold,
                       ...getEntryTypeColors(colors, perf.entryType),
@@ -177,14 +206,20 @@ export const PerformancePanel = ({
                     {perf.entryType}
                   </text>
                   <text
-                    className={"pp-entryName"}
-                    style={{ fontWeight: fontWeight.medium, color: colors.fg.neutral }}
+                    className={"pp-entryName t2"}
+                    style={{
+                      fontWeight: fontWeight.medium,
+                      color: colors.fg.neutral,
+                    }}
                   >
                     {perf.name}
                   </text>
                   <text
-                    className={"pp-timestamp"}
-                    style={{ fontWeight: fontWeight.regular, color: colors.fg.neutralSubtle }}
+                    className={"pp-timestamp t2"}
+                    style={{
+                      fontWeight: fontWeight.regular,
+                      color: colors.fg.neutralSubtle,
+                    }}
                   >
                     {new Date(perf.timestamp).toISOString()}
                   </text>
@@ -197,7 +232,7 @@ export const PerformancePanel = ({
                 >
                   {isMetricFcp && primaryFcp && (
                     <text
-                      className={"pp-fcpHighlight"}
+                      className={"pp-fcpHighlight t3"}
                       style={{
                         fontWeight: fontWeight.bold,
                         color: colors.palette.blue600,
@@ -220,21 +255,30 @@ export const PerformancePanel = ({
                           >
                             <view className={"pp-fcpMetricHeader"}>
                               <text
-                                className={"pp-fcpMetricName"}
-                                style={{ fontWeight: fontWeight.bold, color: colors.fg.neutral }}
+                                className={"pp-fcpMetricName t2"}
+                                style={{
+                                  fontWeight: fontWeight.bold,
+                                  color: colors.fg.neutral,
+                                }}
                               >
                                 전체 FCP
                               </text>
                               <text
-                                className={"pp-fcpMetricValue"}
-                                style={{ fontWeight: fontWeight.bold, color: colors.palette.blue600 }}
+                                className={"pp-fcpMetricValue t1"}
+                                style={{
+                                  fontWeight: fontWeight.bold,
+                                  color: colors.palette.blue600,
+                                }}
                               >
                                 {formatDuration(totalFcp.duration)}
                               </text>
                             </view>
                             <text
-                              className={"pp-fcpMetricDescription"}
-                              style={{ fontWeight: fontWeight.regular, color: colors.fg.neutralSubtle }}
+                              className={"pp-fcpMetricDescription t3"}
+                              style={{
+                                fontWeight: fontWeight.regular,
+                                color: colors.fg.neutralSubtle,
+                              }}
                             >
                               PrepareTemplate Start부터 Paint End 까지 걸리는
                               시간
@@ -249,21 +293,30 @@ export const PerformancePanel = ({
                           >
                             <view className={"pp-fcpMetricHeader"}>
                               <text
-                                className={"pp-fcpMetricName"}
-                                style={{ fontWeight: fontWeight.bold, color: colors.fg.neutral }}
+                                className={"pp-fcpMetricName t2"}
+                                style={{
+                                  fontWeight: fontWeight.bold,
+                                  color: colors.fg.neutral,
+                                }}
                               >
                                 LynxFCP
                               </text>
                               <text
-                                className={"pp-fcpMetricValue"}
-                                style={{ fontWeight: fontWeight.bold, color: colors.palette.blue600 }}
+                                className={"pp-fcpMetricValue t1"}
+                                style={{
+                                  fontWeight: fontWeight.bold,
+                                  color: colors.palette.blue600,
+                                }}
                               >
                                 {formatDuration(lynxFcp.duration)}
                               </text>
                             </view>
                             <text
-                              className={"pp-fcpMetricDescription"}
-                              style={{ fontWeight: fontWeight.regular, color: colors.fg.neutralSubtle }}
+                              className={"pp-fcpMetricDescription t3"}
+                              style={{
+                                fontWeight: fontWeight.regular,
+                                color: colors.fg.neutralSubtle,
+                              }}
                             >
                               Bundle Load 시작부터 Paint End 까지 걸리는 시간
                             </text>
@@ -277,21 +330,30 @@ export const PerformancePanel = ({
                           >
                             <view className={"pp-fcpMetricHeader"}>
                               <text
-                                className={"pp-fcpMetricName"}
-                                style={{ fontWeight: fontWeight.bold, color: colors.fg.neutral }}
+                                className={"pp-fcpMetricName t2"}
+                                style={{
+                                  fontWeight: fontWeight.bold,
+                                  color: colors.fg.neutral,
+                                }}
                               >
                                 렌더링 FCP
                               </text>
                               <text
-                                className={"pp-fcpMetricValue"}
-                                style={{ fontWeight: fontWeight.bold, color: colors.palette.blue600 }}
+                                className={"pp-fcpMetricValue t1"}
+                                style={{
+                                  fontWeight: fontWeight.bold,
+                                  color: colors.palette.blue600,
+                                }}
                               >
                                 {formatDuration(fcp.duration)}
                               </text>
                             </view>
                             <text
-                              className={"pp-fcpMetricDescription"}
-                              style={{ fontWeight: fontWeight.regular, color: colors.fg.neutralSubtle }}
+                              className={"pp-fcpMetricDescription t3"}
+                              style={{
+                                fontWeight: fontWeight.regular,
+                                color: colors.fg.neutralSubtle,
+                              }}
                             >
                               TemplateBundle 준비부터 Paint End 까지 걸리는 시간
                             </text>
@@ -306,16 +368,26 @@ export const PerformancePanel = ({
                         style={{ backgroundColor: colors.bg.neutralWeak }}
                       >
                         <text
-                          className={"pp-detailTitle"}
-                          style={{ fontWeight: fontWeight.bold, color: colors.fg.neutral }}
+                          className={"pp-detailTitle t3"}
+                          style={{
+                            fontWeight: fontWeight.bold,
+                            color: colors.fg.neutral,
+                          }}
                         >
                           Raw Entry
                         </text>
                         <text
-                          className={"pp-rawEntry"}
-                          style={{ fontWeight: fontWeight.regular, color: colors.fg.neutralSubtle }}
+                          className={"pp-rawEntry t3"}
+                          style={{
+                            fontWeight: fontWeight.regular,
+                            color: colors.fg.neutralSubtle,
+                          }}
                         >
-                          {String(stringify(perf.rawEntry, null, 2, { references: true }))}
+                          {String(
+                            stringify(perf.rawEntry, null, 2, {
+                              references: true,
+                            })
+                          )}
                         </text>
                       </view>
                     )}
@@ -325,7 +397,7 @@ export const PerformancePanel = ({
             </list-item>
           );
         })}
-      </FadeList>
+      </list>
     </view>
   );
 };

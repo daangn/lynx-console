@@ -11,11 +11,6 @@
   height: 100%;
 }
 
-.cp-placeholderText {
-  font-size: 0.875rem;
-  line-height: 1.1875rem;
-}
-
 .cp-logContainer {
   display: flex;
   flex-direction: column;
@@ -43,11 +38,6 @@
   border-radius: 4px;
 }
 
-.cp-filterButtonText {
-  font-size: 0.8125rem;
-  line-height: 1.125rem;
-}
-
 .cp-filterDropdown {
   position: absolute;
   top: 100%;
@@ -70,14 +60,7 @@
 }
 
 .cp-filterCheckbox {
-  font-size: 0.8125rem;
-  line-height: 1.125rem;
   width: 16px;
-}
-
-.cp-filterLabel {
-  font-size: 0.8125rem;
-  line-height: 1.125rem;
 }
 
 .cp-searchWrapper {
@@ -92,34 +75,17 @@
   gap: 8px;
 }
 
-.cp-searchPrompt {
-  font-size: 1.125rem;
-  line-height: 1.5rem;
-}
-
 .cp-searchInput {
   flex: 1;
-  font-size: 0.8125rem;
-  line-height: 1.125rem;
 }
 
 .cp-searchClear {
   padding: 2px 4px;
 }
 
-.cp-searchClearText {
-  font-size: 0.8125rem;
-  line-height: 1.125rem;
-}
-
 .cp-clearButton {
   padding: 3px 6px;
   border-radius: 4px;
-}
-
-.cp-clearButtonText {
-  font-size: 0.8125rem;
-  line-height: 1.125rem;
 }
 
 .cp-logList {
@@ -142,26 +108,15 @@
 }
 
 .cp-logLevel {
-  font-size: 0.75rem;
-  line-height: 1rem;
   margin-right: 8px;
 }
 
-.cp-logTime {
-  font-size: 0.75rem;
-  line-height: 1rem;
-}
-
 .cp-toggleIndicator {
-  font-size: 0.75rem;
-  line-height: 1rem;
   margin-left: 4px;
   align-self: flex-start;
 }
 
 .cp-logMessage {
-  font-size: 0.8125rem;
-  line-height: 1.125rem;
   word-break: break-all;
 }
 
@@ -170,21 +125,6 @@
   flex-direction: row;
   flex-wrap: wrap;
   gap: 8px;
-}
-
-.cp-logArgItem {
-  font-size: 0.8125rem;
-  line-height: 1.125rem;
-}
-
-.cp-argString {
-  font-size: 0.8125rem;
-  line-height: 1.125rem;
-}
-
-.cp-argPrimitive {
-  font-size: 0.8125rem;
-  line-height: 1.125rem;
 }
 
 .cp-argObject {
@@ -197,11 +137,6 @@
   flex-direction: row;
   align-items: center;
   gap: 4px;
-}
-
-.cp-argObjectPreview {
-  font-size: 0.8125rem;
-  line-height: 1.125rem;
 }
 
 .cp-argObjectContent {
@@ -217,16 +152,6 @@
   align-items: flex-start;
 }
 
-.cp-argObjectKey {
-  font-size: 0.8125rem;
-  line-height: 1.125rem;
-}
-
-.cp-argObjectJson {
-  font-size: 0.8125rem;
-  line-height: 1.125rem;
-}
-
 .cp-replInputRow {
   display: flex;
   flex-direction: row;
@@ -237,15 +162,11 @@
 }
 
 .cp-replPrompt {
-  font-size: 1.625rem;
-  line-height: 2.1875rem;
   padding-bottom: 8px;
 }
 
 .cp-replInput {
   flex: 1;
-  font-size: 1rem;
-  line-height: 1.375rem;
   padding-bottom: 8px;
 }
 
@@ -253,9 +174,4 @@
   padding: 4px 10px;
   border-radius: 4px;
   margin-bottom: 8px;
-}
-
-.cp-replRunButtonText {
-  font-size: 0.8125rem;
-  line-height: 1.125rem;
 }

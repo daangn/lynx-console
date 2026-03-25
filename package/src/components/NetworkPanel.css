@@ -14,19 +14,9 @@
   padding-bottom: 4px;
 }
 
-.np-count {
-  font-size: 0.8125rem;
-  line-height: 1.125rem;
-}
-
 .np-clearButton {
   padding: 3px 6px;
   border-radius: 4px;
-}
-
-.np-clearButtonText {
-  font-size: 0.8125rem;
-  line-height: 1.125rem;
 }
 
 .np-list {
@@ -38,11 +28,6 @@
   align-items: center;
   justify-content: center;
   height: 100%;
-}
-
-.np-placeholderText {
-  font-size: 0.875rem;
-  line-height: 1.1875rem;
 }
 
 .np-item {
@@ -60,41 +45,20 @@
 }
 
 .np-method {
-  font-size: 0.75rem;
-  line-height: 1rem;
   padding: 0 4px;
   border-radius: 2px;
 }
 
-.np-statusCode {
-  font-size: 0.75rem;
-  line-height: 1rem;
-}
-
-.np-time {
-  font-size: 0.75rem;
-  line-height: 1rem;
-}
-
 .np-url {
-  font-size: 0.8125rem;
-  line-height: 1.125rem;
   word-break: break-all;
   margin-bottom: 4px;
 }
 
 .np-path {
-  font-size: 0.8125rem;
-  line-height: 1.125rem;
   word-break: break-all;
   white-space: pre-wrap;
   overflow: visible;
   margin-bottom: 4px;
-}
-
-.np-details {
-  font-size: 0.8125rem;
-  line-height: 1.125rem;
 }
 
 .np-detailsContainer {
@@ -117,11 +81,6 @@
   cursor: pointer;
 }
 
-.np-tabText {
-  font-size: 0.875rem;
-  line-height: 1.1875rem;
-}
-
 .np-tabContent {
   padding-top: 8px;
 }
@@ -131,8 +90,6 @@
 }
 
 .np-detailSectionTitle {
-  font-size: 0.8125rem;
-  line-height: 1.125rem;
   margin-bottom: 8px;
 }
 
@@ -151,22 +108,16 @@
 }
 
 .np-tableKey {
-  font-size: 0.8125rem;
-  line-height: 1.125rem;
   min-width: 70px;
   flex-shrink: 0;
 }
 
 .np-tableValue {
-  font-size: 0.8125rem;
-  line-height: 1.125rem;
   word-break: break-all;
   flex: 1;
 }
 
 .np-bodyText {
-  font-size: 0.8125rem;
-  line-height: 1.125rem;
   padding: 8px;
   border-radius: 4px;
   word-break: break-all;
@@ -174,16 +125,12 @@
 }
 
 .np-errorText {
-  font-size: 0.8125rem;
-  line-height: 1.125rem;
   padding: 8px;
   border-radius: 4px;
   word-break: break-all;
 }
 
 .np-emptyText {
-  font-size: 0.8125rem;
-  line-height: 1.125rem;
   text-align: center;
   padding: 16px 0;
 }

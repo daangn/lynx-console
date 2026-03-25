@@ -1,5 +1,5 @@
 import { createContext, useContext } from "@lynx-js/react";
-import { type ThemeColors, getColors } from "./theme";
+import { getColors, type ThemeColors } from "./theme";
 
 const ThemeContext = createContext<ThemeColors>(getColors("light"));
 

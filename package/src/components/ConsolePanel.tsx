@@ -1,7 +1,8 @@
+import type { ReactNode } from "@lynx-js/react";
 import { useConsole, useNetwork, usePerformance } from "../hooks";
 import type { CustomTab } from "../types";
 import "./ConsolePanel.css";
-import { LogPanel, dismissFilterDropdown } from "./LogPanel";
+import { dismissFilterDropdown, LogPanel } from "./LogPanel";
 import { NetworkPanel } from "./NetworkPanel";
 import { PerformancePanel } from "./PerformancePanel";
 import Tabs from "./Tabs";
@@ -20,7 +21,7 @@ export const ConsolePanel = ({ customTabs }: ConsolePanelProps) => {
   const items: Array<{
     key: string;
     label: string;
-    renderContent: () => ReturnType<typeof LogPanel>;
+    renderContent: () => ReactNode;
   }> = [];
 
   if (state?.logs) {

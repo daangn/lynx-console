@@ -8,6 +8,7 @@ import {
 import BottomSheet from "./components/BottomSheet.jsx";
 import { ConsolePanel } from "./components/ConsolePanel.jsx";
 import "./components/FloatingButton.css";
+import "./styles/tokens.css";
 import { FloatingButton } from "./components/FloatingButton.jsx";
 import { usePerformance } from "./hooks/usePerformance";
 import { ThemeProvider } from "./styles/ThemeContext";
@@ -94,8 +95,8 @@ const LynxConsole = forwardRef<LynxConsoleHandle, LynxConsoleProps>(
           }}
         >
           <FloatingButton bindtap={handleOpenBottomSheet}>
-            <text className="fb-title" style={{ fontWeight: "400", color: colors.palette.staticWhite }}>LynxConsole</text>
-            <text className="fb-subtitle" style={{ fontWeight: "400", color: colors.palette.staticWhite }}>
+            <text className="fb-title t4" style={{ fontWeight: "400", color: colors.palette.staticWhite }}>LynxConsole</text>
+            <text className="fb-subtitle t3" style={{ fontWeight: "400", color: colors.palette.staticWhite }}>
               {`${latestFcp?.name ?? "FCP"}: ${latestFcp?.duration ? latestFcp.duration.toFixed(2) : "--"}ms`}
             </text>
           </FloatingButton>

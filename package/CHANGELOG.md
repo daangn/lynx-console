@@ -1,5 +1,15 @@
 # lynx-console
 
+## 0.3.0
+
+### Minor Changes
+
+- ad9ce9c: update lynx-js version
+
+### Patch Changes
+
+- bbd62f5: refactor style
+
 ## 0.2.3
 
 ### Patch Changes

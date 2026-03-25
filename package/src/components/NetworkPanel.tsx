@@ -49,7 +49,7 @@ function getMethodColors(colors: ThemeColors, method: string) {
 
 function getStatusCodeColor(
   colors: ThemeColors,
-  variant: "success" | "error" | "pending"
+  variant: "success" | "error" | "pending",
 ): string {
   switch (variant) {
     case "success":
@@ -120,7 +120,7 @@ export const NetworkPanel = ({
 
   const getStatusCodeVariant = (
     status: string,
-    statusCode?: number
+    statusCode?: number,
   ): "success" | "error" | "pending" => {
     if (status === "pending") return "pending";
     if (status === "error") return "error";
@@ -204,8 +204,8 @@ export const NetworkPanel = ({
                           colors,
                           getStatusCodeVariant(
                             network.status,
-                            network.statusCode
-                          )
+                            network.statusCode,
+                          ),
                         ),
                       }}
                     >

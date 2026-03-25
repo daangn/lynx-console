@@ -20,7 +20,7 @@ export default function Tabs(props: TabsProps) {
   const tabSize =
     props.items.length < 4
       ? undefined
-      : (`t${Math.max(1, 5 - (props.items.length - 3))}`);
+      : `t${Math.max(1, 5 - (props.items.length - 3))}`;
 
   return (
     <view className={"tabs-root"}>

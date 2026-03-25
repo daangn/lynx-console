@@ -48,7 +48,7 @@ function getLevelColor(colors: ThemeColors, level: LogLevel): string {
 
 function getLogItemBg(
   colors: ThemeColors,
-  level: LogLevel
+  level: LogLevel,
 ): string | undefined {
   switch (level) {
     case "warn":
@@ -87,7 +87,7 @@ export const LogPanel = ({ logs, clearLogs }: LogPanelProps) => {
   const [expandedArgs, setExpandedArgs] = useState(new Set());
   const [code, setCode] = useState("");
   const [enabledLevels, setEnabledLevels] = useState<Set<LogLevel>>(
-    () => savedEnabledLevels ?? new Set(LOG_LEVELS)
+    () => savedEnabledLevels ?? new Set(LOG_LEVELS),
   );
   const [filterOpen, setFilterOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState(savedSearchQuery);
@@ -125,12 +125,12 @@ export const LogPanel = ({ logs, clearLogs }: LogPanelProps) => {
         if (searchQuery) {
           const query = searchQuery.toLowerCase();
           return log.args.some((arg) =>
-            String(arg).toLowerCase().includes(query)
+            String(arg).toLowerCase().includes(query),
           );
         }
         return true;
       }),
-    [logs, enabledLevels, searchQuery]
+    [logs, enabledLevels, searchQuery],
   );
   const logsRef = useRef(filteredLogs);
   logsRef.current = filteredLogs;
@@ -188,7 +188,7 @@ export const LogPanel = ({ logs, clearLogs }: LogPanelProps) => {
   const renderArg = (
     arg: unknown,
     parentKey: string,
-    level: "log" | "info" | "warn" | "error"
+    level: "log" | "info" | "warn" | "error",
   ): React.ReactNode => {
     const key = parentKey;
     const isExpanded = expandedArgs.has(key);
@@ -293,7 +293,7 @@ export const LogPanel = ({ logs, clearLogs }: LogPanelProps) => {
       let jsonString: string;
       if (arg instanceof Map) {
         const entries = Array.from(arg.entries()).map(
-          ([k, v]) => `  [${stringify(k)}, ${stringify(v)}]`
+          ([k, v]) => `  [${stringify(k)}, ${stringify(v)}]`,
         );
         jsonString = `{\n${entries.join(",\n")}\n}`;
       } else if (arg instanceof Set) {
@@ -546,7 +546,7 @@ export const LogPanel = ({ logs, clearLogs }: LogPanelProps) => {
                         {renderArg(
                           arg,
                           `${log.id}-${index.toString()}`,
-                          log.level
+                          log.level,
                         )}
                       </view>
                     ))}

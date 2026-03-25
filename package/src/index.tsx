@@ -95,8 +95,16 @@ const LynxConsole = forwardRef<LynxConsoleHandle, LynxConsoleProps>(
           }}
         >
           <FloatingButton bindtap={handleOpenBottomSheet}>
-            <text className="fb-title t4" style={{ fontWeight: "400", color: colors.palette.staticWhite }}>LynxConsole</text>
-            <text className="fb-subtitle t3" style={{ fontWeight: "400", color: colors.palette.staticWhite }}>
+            <text
+              className="fb-title t4"
+              style={{ fontWeight: "400", color: colors.palette.staticWhite }}
+            >
+              LynxConsole
+            </text>
+            <text
+              className="fb-subtitle t3"
+              style={{ fontWeight: "400", color: colors.palette.staticWhite }}
+            >
               {`${latestFcp?.name ?? "FCP"}: ${latestFcp?.duration ? latestFcp.duration.toFixed(2) : "--"}ms`}
             </text>
           </FloatingButton>

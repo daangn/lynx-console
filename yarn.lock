@@ -907,46 +907,46 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@lynx-js/react-alias-rsbuild-plugin@npm:0.12.9":
-  version: 0.12.9
-  resolution: "@lynx-js/react-alias-rsbuild-plugin@npm:0.12.9"
-  checksum: 10c0/44ef52edf274bda781dab7929e47aaf45ec3a6d5e7f6e389123a94de03e5049475c4a12b003c1f886934ab1074f5a7418c87c40929be15a34d851f645741b0cb
+"@lynx-js/react-alias-rsbuild-plugin@npm:0.13.0":
+  version: 0.13.0
+  resolution: "@lynx-js/react-alias-rsbuild-plugin@npm:0.13.0"
+  checksum: 10c0/fedad95beb7d0214cde6197f35363f5be8dfee16ab34206bb9a6616862d0a7289f5d5c6f447b45e713053c50d6e3f200e72505cf91d5fc92c21397e6f899a162
   languageName: node
   linkType: hard
 
-"@lynx-js/react-refresh-webpack-plugin@npm:0.3.4":
-  version: 0.3.4
-  resolution: "@lynx-js/react-refresh-webpack-plugin@npm:0.3.4"
+"@lynx-js/react-refresh-webpack-plugin@npm:0.3.5":
+  version: 0.3.5
+  resolution: "@lynx-js/react-refresh-webpack-plugin@npm:0.3.5"
   peerDependencies:
-    "@lynx-js/react-webpack-plugin": ^0.3.0 || ^0.4.0 || ^0.5.0 || ^0.6.0 || ^0.7.0
-  checksum: 10c0/1afada06b05fcb9c60d1c6413e2fde8a61542bd792ae73d09b0ccbf3a86e2de530a743f14b175ddf78de939222a9c8a9c9a939ee7dae0c3a1669636ea705aa30
+    "@lynx-js/react-webpack-plugin": ^0.3.0 || ^0.4.0 || ^0.5.0 || ^0.6.0 || ^0.7.0 || ^0.8.0
+  checksum: 10c0/3e218b247488731a11e9dd6400c8e218e571dd2b852186e1ee214e3d8a92bc038c37b58af234444e0c1f1098331da11c934384dce6fc9f50826a8b512a3db566
   languageName: node
   linkType: hard
 
-"@lynx-js/react-rsbuild-plugin@npm:^0.12.7":
-  version: 0.12.9
-  resolution: "@lynx-js/react-rsbuild-plugin@npm:0.12.9"
+"@lynx-js/react-rsbuild-plugin@npm:^0.13.0":
+  version: 0.13.0
+  resolution: "@lynx-js/react-rsbuild-plugin@npm:0.13.0"
   dependencies:
     "@lynx-js/css-extract-webpack-plugin": "npm:0.7.0"
-    "@lynx-js/react-alias-rsbuild-plugin": "npm:0.12.9"
-    "@lynx-js/react-refresh-webpack-plugin": "npm:0.3.4"
-    "@lynx-js/react-webpack-plugin": "npm:0.7.4"
+    "@lynx-js/react-alias-rsbuild-plugin": "npm:0.13.0"
+    "@lynx-js/react-refresh-webpack-plugin": "npm:0.3.5"
+    "@lynx-js/react-webpack-plugin": "npm:0.8.0"
     "@lynx-js/runtime-wrapper-webpack-plugin": "npm:0.1.3"
-    "@lynx-js/template-webpack-plugin": "npm:0.10.4"
+    "@lynx-js/template-webpack-plugin": "npm:0.10.6"
     "@lynx-js/use-sync-external-store": "npm:1.5.0"
     background-only: "npm:^0.0.1"
   peerDependencies:
-    "@lynx-js/react": ^0.103.0 || ^0.104.0 || ^0.105.0 || ^0.106.0 || ^0.107.0 || ^0.108.0 || ^0.109.0 || ^0.110.0 || ^0.111.0 || ^0.112.0 || ^0.113.0 || ^0.114.0 || ^0.115.0 || ^0.116.0
+    "@lynx-js/react": ^0.103.0 || ^0.104.0 || ^0.105.0 || ^0.106.0 || ^0.107.0 || ^0.108.0 || ^0.109.0 || ^0.110.0 || ^0.111.0 || ^0.112.0 || ^0.113.0 || ^0.114.0 || ^0.115.0 || ^0.116.0 || ^0.117.0
   peerDependenciesMeta:
     "@lynx-js/react":
       optional: true
-  checksum: 10c0/03da644ef7d7db62d86ff8011533f8bed8d0494d8d147c3017b617f6c2bc2a2e39c1a274575946fe8ec6a4a1389d7b01b79e8a8bac4a397b6e19ee3d2e023cb9
+  checksum: 10c0/cc1cb96a55f8214c0ba1f9554b8d96979e0e9c7a130609db3ac566b5a4e66386fba55264bbb369915896f7504d539a97b9eeac04c635f0dce27e587dfc58b35c
   languageName: node
   linkType: hard
 
-"@lynx-js/react-webpack-plugin@npm:0.7.4":
-  version: 0.7.4
-  resolution: "@lynx-js/react-webpack-plugin@npm:0.7.4"
+"@lynx-js/react-webpack-plugin@npm:0.8.0":
+  version: 0.8.0
+  resolution: "@lynx-js/react-webpack-plugin@npm:0.8.0"
   dependencies:
     "@lynx-js/webpack-runtime-globals": "npm:0.0.6"
     tiny-invariant: "npm:^1.3.3"
@@ -955,22 +955,22 @@ __metadata:
   peerDependenciesMeta:
     "@lynx-js/react":
       optional: true
-  checksum: 10c0/326347b5fe2f2597588e28f77cfb425f96ed9186e4f415885f52ef26a18aada8c41c28db003106db0c0ca3082250a9929d54939e57c482d300e5b7a848ed6d6c
+  checksum: 10c0/0ba86709cbe853010c7e6176167dafea1e83fa496d1c3700314cbfcaabdd3cdd841bcdf210144174fb2364c3f8aef39ad7f53ba173d24dfb6e4887d995acde41
   languageName: node
   linkType: hard
 
-"@lynx-js/react@npm:^0.114.3":
-  version: 0.114.5
-  resolution: "@lynx-js/react@npm:0.114.5"
+"@lynx-js/react@npm:^0.116.0":
+  version: 0.116.5
+  resolution: "@lynx-js/react@npm:0.116.5"
   dependencies:
-    preact: "npm:@hongzhiyuan/preact@10.24.0-00213bad"
+    preact: "npm:@hongzhiyuan/preact@10.28.0-fc4af453"
   peerDependencies:
     "@lynx-js/types": "*"
     "@types/react": ^18
   peerDependenciesMeta:
     "@lynx-js/types":
       optional: true
-  checksum: 10c0/ccde6f77c931a84e887217671488d374f716374422c393c31a7fa7ef0f2b316a923263819a4bb70bc244eed063f3a3b112c26d1d2336b4a57ac16de68f4d88bc
+  checksum: 10c0/e745e968466ccddbd1e2da85e7fd10999a92ac0f721bba1c6b0d10392eb48731ca6557d30a45fa480fc8a1cb0224c3fd14af748ee884c45c2a5344b3f85f034c
   languageName: node
   linkType: hard
 
@@ -1006,37 +1006,29 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@lynx-js/tasm@npm:0.0.20":
-  version: 0.0.20
-  resolution: "@lynx-js/tasm@npm:0.0.20"
-  checksum: 10c0/3be78fad610e3fa3c46a0fbf49b1c83fcfaf90d8432f2399d43ffd4c730d554a0aa20a31f9d7cb78bd703f5052f117b957bf61bb798eb0c498c6d5ac409ccefc
+"@lynx-js/tasm@npm:0.0.26":
+  version: 0.0.26
+  resolution: "@lynx-js/tasm@npm:0.0.26"
+  checksum: 10c0/57e920c88893444fd12ddabc0f2df348f40d8c0157dc9384429102cff99fd0b6223565508202fb41370cf324fec330195939ee88439244d6c07105fc71e8f5f5
   languageName: node
   linkType: hard
 
-"@lynx-js/template-webpack-plugin@npm:0.10.4":
-  version: 0.10.4
-  resolution: "@lynx-js/template-webpack-plugin@npm:0.10.4"
+"@lynx-js/template-webpack-plugin@npm:0.10.6":
+  version: 0.10.6
+  resolution: "@lynx-js/template-webpack-plugin@npm:0.10.6"
   dependencies:
     "@lynx-js/css-serializer": "npm:0.1.4"
-    "@lynx-js/tasm": "npm:0.0.20"
+    "@lynx-js/tasm": "npm:0.0.26"
+    "@lynx-js/web-core-wasm": "npm:0.0.6"
     "@lynx-js/webpack-runtime-globals": "npm:^0.0.6"
     "@rspack/lite-tapable": "npm:1.1.0"
     css-tree: "npm:^3.1.0"
     object.groupby: "npm:^1.0.3"
-  checksum: 10c0/138ab99cf55d4c1c8320eb38c9785ce50a6decb7952fb6672daa71cb180cac8baa2c5590bc5c1b554b2b076d57abf7f30bf9af65e93f03327b473536fdf8ac87
+  checksum: 10c0/c0d9ff28a3cdaaec2a64ab8931fd384226b920c117b4df3acc28168be6eace81564cd15a8959ed578845563b68bc4c1a16264bdbc5c385e98b2d242e395295ce
   languageName: node
   linkType: hard
 
-"@lynx-js/types@npm:3.6.0":
-  version: 3.6.0
-  resolution: "@lynx-js/types@npm:3.6.0"
-  dependencies:
-    csstype: "npm:3.1.3"
-  checksum: 10c0/f96ba09705173e106410b72145434d0b4e9cf47ad69b9bd02e625aa03f2eb895aff26dca7890e53fc8bf64dd181d8abb59c42415731966083fede7d1fdb48501
-  languageName: node
-  linkType: hard
-
-"@lynx-js/types@npm:^3.6.0":
+"@lynx-js/types@npm:^3.7.0":
   version: 3.7.0
   resolution: "@lynx-js/types@npm:3.7.0"
   dependencies:
@@ -1054,10 +1046,47 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@lynx-js/web-core-wasm@npm:0.0.6":
+  version: 0.0.6
+  resolution: "@lynx-js/web-core-wasm@npm:0.0.6"
+  dependencies:
+    "@lynx-js/web-elements": "npm:0.12.0"
+    "@lynx-js/web-worker-rpc": "npm:0.19.9"
+  peerDependencies:
+    "@lynx-js/css-serializer": 0.1.4
+    "@lynx-js/lynx-core": 0.1.3
+    tslib: ^2.5.0
+  peerDependenciesMeta:
+    "@lynx-js/css-serializer":
+      optional: true
+    "@lynx-js/lynx-core":
+      optional: true
+    tslib:
+      optional: true
+  checksum: 10c0/73f6138c13b5d33de6b7c1c943603ed16b59f50f099f872ef932ca1c08abd7102ed960afd5179dc883dfcd265ef7fb6343dbf63cbbd994390871148bfb67996d
+  languageName: node
+  linkType: hard
+
+"@lynx-js/web-elements@npm:0.12.0":
+  version: 0.12.0
+  resolution: "@lynx-js/web-elements@npm:0.12.0"
+  peerDependencies:
+    tslib: ^2.5.0
+  checksum: 10c0/ee36facf80b5305259cf36da4ca334650ea94f8142980a702a09961836f9901bd15911242fb36fbad3820a81c841e674047a1f2e3890a8b7d8ce02d1710cb39c
+  languageName: node
+  linkType: hard
+
 "@lynx-js/web-rsbuild-server-middleware@npm:0.19.8":
   version: 0.19.8
   resolution: "@lynx-js/web-rsbuild-server-middleware@npm:0.19.8"
   checksum: 10c0/04cdaf4be7cccea84001c6daa15b09ee3a54d5723970799a33c7253154f9c07840f513e47ce2eec9ad81a03210c1b0ae388ead25f7ec416a2db299324c9f9c27
+  languageName: node
+  linkType: hard
+
+"@lynx-js/web-worker-rpc@npm:0.19.9":
+  version: 0.19.9
+  resolution: "@lynx-js/web-worker-rpc@npm:0.19.9"
+  checksum: 10c0/6b636813ce5e31b81f852ded60b7000e5442782b932c3eb68fb2b10a74b464b3d7b9cd60037cd3919bbaf5e3a8648517478ef4827b0cb1498424ccdc1082c5b4
   languageName: node
   linkType: hard
 
@@ -4311,10 +4340,10 @@ __metadata:
     "@biomejs/biome": "npm:2.2.3"
     "@lynx-js/preact-devtools": "npm:^5.0.1-cf9aef5"
     "@lynx-js/qrcode-rsbuild-plugin": "npm:^0.4.6"
-    "@lynx-js/react": "npm:^0.114.3"
-    "@lynx-js/react-rsbuild-plugin": "npm:^0.12.7"
+    "@lynx-js/react": "npm:^0.116.0"
+    "@lynx-js/react-rsbuild-plugin": "npm:^0.13.0"
     "@lynx-js/rspeedy": "npm:^0.13.3"
-    "@lynx-js/types": "npm:3.6.0"
+    "@lynx-js/types": "npm:^3.7.0"
     "@rsbuild/plugin-type-check": "npm:1.3.3"
     "@types/react": "npm:^18.3.28"
     lynx-console: "workspace:*"
@@ -4326,16 +4355,16 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "lynx-console@workspace:package"
   dependencies:
-    "@lynx-js/react": "npm:^0.114.3"
-    "@lynx-js/types": "npm:^3.6.0"
+    "@lynx-js/react": "npm:^0.116.0"
+    "@lynx-js/types": "npm:^3.7.0"
     "@types/react": "npm:^18.3.28"
     javascript-stringify: "npm:^2.1.0"
     react: "npm:^18.3.1"
     tsdown: "npm:^0.20.1"
     typescript: "npm:^5.9.3"
   peerDependencies:
-    "@lynx-js/react": ^0.114.3
-    "@lynx-js/types": ^3.6.0
+    "@lynx-js/react": ^0.116.0
+    "@lynx-js/types": ^3.7.0
     "@types/react": ^18
   languageName: unknown
   linkType: soft
@@ -5232,10 +5261,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"preact@npm:@hongzhiyuan/preact@10.24.0-00213bad":
-  version: 10.24.0-00213bad
-  resolution: "@hongzhiyuan/preact@npm:10.24.0-00213bad"
-  checksum: 10c0/ec2c7eadc7ac5e957b61346c31458f09d7ec440bf5396fd9437cfa20dc3093310ef2437fbaf827123945eb90a19147a926df939eb7290a89b001e93300d9b6c3
+"preact@npm:@hongzhiyuan/preact@10.28.0-fc4af453":
+  version: 10.28.0-fc4af453
+  resolution: "@hongzhiyuan/preact@npm:10.28.0-fc4af453"
+  checksum: 10c0/16f1b5ed30392190e4f04aedb343dd71adda8fb9fd65353561fe5f256218444268b3d833a31bc65637e475afc5408e14ebeb9304b0d8d327017ed9ed235637e5
   languageName: node
   linkType: hard
 

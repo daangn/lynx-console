@@ -26,14 +26,10 @@ const SHINE_STYLES = {
   },
 } as const;
 
-export const FloatingButton = ({
-  bindtap,
-  children,
-}: FloatingButtonProps) => {
+export const FloatingButton = ({ bindtap, children }: FloatingButtonProps) => {
   const colors = useThemeColors();
   const { phase, right, bottom, clearTimer, handlers } =
     useLongPressDrag(bindtap);
-
 
   const handleReload = () => {
     try {
@@ -48,39 +44,37 @@ export const FloatingButton = ({
   const isDragging = phase === "dragging";
 
   return (
-    <>
+    <view
+      className={"fb-wrapper"}
+      consume-slide-event={[[-180, 180]]}
+      style={{
+        right: `${right}px`,
+        bottom: `${bottom}px`,
+        transform: isDragging ? "scale(1.05)" : "scale(1)",
+        transition: `transform ${duration.d4} cubic-bezier(0.4, 0, 0.2, 1)`,
+      }}
+      {...handlers}
+    >
       <view
-        className={"fb-wrapper"}
-        consume-slide-event={[[-180, 180]]}
-        style={{
-          right: `${right}px`,
-          bottom: `${bottom}px`,
-          transform: isDragging ? "scale(1.05)" : "scale(1)",
-          transition: `transform ${duration.d4} cubic-bezier(0.4, 0, 0.2, 1)`,
-        }}
-        {...handlers}
+        className={"fb-button"}
+        style={{ backgroundColor: colors.palette.green600 }}
       >
-        <view
-          className={"fb-button"}
-          style={{ backgroundColor: colors.palette.green600 }}
-        >
-          {children}
-          <view className={"fb-shineOverlay"} style={SHINE_STYLES[phase]} />
-        </view>
-        <view
-          className={"fb-reloadButton"}
-          style={{ backgroundColor: colors.palette.green600 }}
-          catchtouchstart={() => clearTimer()}
-          bindtap={handleReload}
-        >
-          <text
-            className={"fb-reloadIcon"}
-            style={{ color: colors.palette.staticWhite }}
-          >
-            {"\u21BB"}
-          </text>
-        </view>
+        {children}
+        <view className={"fb-shineOverlay"} style={SHINE_STYLES[phase]} />
       </view>
-    </>
+      <view
+        className={"fb-reloadButton"}
+        style={{ backgroundColor: colors.palette.green600 }}
+        catchtouchstart={() => clearTimer()}
+        bindtap={handleReload}
+      >
+        <text
+          className={"fb-reloadIcon"}
+          style={{ color: colors.palette.staticWhite }}
+        >
+          {"\u21BB"}
+        </text>
+      </view>
+    </view>
   );
 };

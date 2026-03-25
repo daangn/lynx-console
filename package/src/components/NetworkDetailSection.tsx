@@ -35,13 +35,19 @@ export const NetworkDetailSection = ({
               >
                 <text
                   className={"np-tableKey t3"}
-                  style={{ fontWeight: fontWeight.bold, color: colors.fg.neutralSubtle }}
+                  style={{
+                    fontWeight: fontWeight.bold,
+                    color: colors.fg.neutralSubtle,
+                  }}
                 >
                   {key}
                 </text>
                 <text
                   className={"np-tableValue t3"}
-                  style={{ fontWeight: fontWeight.regular, color: colors.fg.neutral }}
+                  style={{
+                    fontWeight: fontWeight.regular,
+                    color: colors.fg.neutral,
+                  }}
                 >
                   {value}
                 </text>
@@ -51,7 +57,10 @@ export const NetworkDetailSection = ({
         ) : (
           <text
             className={"np-emptyText t3"}
-            style={{ fontWeight: fontWeight.regular, color: colors.fg.disabled }}
+            style={{
+              fontWeight: fontWeight.regular,
+              color: colors.fg.disabled,
+            }}
           >
             No headers
           </text>
@@ -93,7 +102,10 @@ export const NetworkDetailSection = ({
         {!error && !body && (
           <text
             className={"np-emptyText t3"}
-            style={{ fontWeight: fontWeight.regular, color: colors.fg.disabled }}
+            style={{
+              fontWeight: fontWeight.regular,
+              color: colors.fg.disabled,
+            }}
           >
             No body
           </text>

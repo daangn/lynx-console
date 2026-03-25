@@ -386,7 +386,7 @@ export const PerformancePanel = ({
                           {String(
                             stringify(perf.rawEntry, null, 2, {
                               references: true,
-                            })
+                            }),
                           )}
                         </text>
                       </view>

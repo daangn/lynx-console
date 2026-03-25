@@ -90,20 +90,6 @@ export const duration = {
   d6: "300ms",
 } as const;
 
-export const dimension = {
-  x2: "8px",
-  x3: "12px",
-  x4: "16px",
-  x6: "24px",
-  spacingX: {
-    globalGutter: "16px",
-  },
-} as const;
-
-export const radius = {
-  r6: "24px",
-} as const;
-
 export function getColors(theme: Theme) {
   return colorMap[theme];
 }

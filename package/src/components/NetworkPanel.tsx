@@ -1,8 +1,7 @@
 import { useState } from "@lynx-js/react";
 import { useThemeColors } from "../styles/ThemeContext";
-import { type ThemeColors, fontWeight } from "../styles/theme";
+import { fontWeight, type ThemeColors } from "../styles/theme";
 import type { NetworkEntry } from "../types";
-import { FadeList } from "./FadeList";
 import { NetworkDetailSection } from "./NetworkDetailSection";
 import "./NetworkPanel.css";
 
@@ -16,23 +15,41 @@ type TabType = "general" | "request" | "response";
 function getMethodColors(colors: ThemeColors, method: string) {
   switch (method) {
     case "GET":
-      return { color: colors.palette.blue600, backgroundColor: colors.palette.blue100 };
+      return {
+        color: colors.palette.blue600,
+        backgroundColor: colors.palette.blue100,
+      };
     case "POST":
-      return { color: colors.palette.green600, backgroundColor: colors.palette.green100 };
+      return {
+        color: colors.palette.green600,
+        backgroundColor: colors.palette.green100,
+      };
     case "PUT":
-      return { color: colors.palette.yellow600, backgroundColor: colors.palette.yellow100 };
+      return {
+        color: colors.palette.yellow600,
+        backgroundColor: colors.palette.yellow100,
+      };
     case "PATCH":
-      return { color: colors.palette.purple600, backgroundColor: colors.palette.purple100 };
+      return {
+        color: colors.palette.purple600,
+        backgroundColor: colors.palette.purple100,
+      };
     case "DELETE":
-      return { color: colors.palette.red600, backgroundColor: colors.palette.red100 };
+      return {
+        color: colors.palette.red600,
+        backgroundColor: colors.palette.red100,
+      };
     default:
-      return { color: colors.fg.neutral, backgroundColor: colors.bg.neutralWeak };
+      return {
+        color: colors.fg.neutral,
+        backgroundColor: colors.bg.neutralWeak,
+      };
   }
 }
 
 function getStatusCodeColor(
   colors: ThemeColors,
-  variant: "success" | "error" | "pending",
+  variant: "success" | "error" | "pending"
 ): string {
   switch (variant) {
     case "success":
@@ -103,7 +120,7 @@ export const NetworkPanel = ({
 
   const getStatusCodeVariant = (
     status: string,
-    statusCode?: number,
+    statusCode?: number
   ): "success" | "error" | "pending" => {
     if (status === "pending") return "pending";
     if (status === "error") return "error";
@@ -115,8 +132,11 @@ export const NetworkPanel = ({
     <view className={"np-container"}>
       <view className={"np-header"}>
         <text
-          className={"np-count"}
-          style={{ fontWeight: fontWeight.regular, color: colors.fg.neutralSubtle }}
+          className={"np-count t3"}
+          style={{
+            fontWeight: fontWeight.regular,
+            color: colors.fg.neutralSubtle,
+          }}
         >
           Total: {networks.length} requests
         </text>
@@ -126,8 +146,11 @@ export const NetworkPanel = ({
           bindtap={clearNetworks}
         >
           <text
-            className={"np-clearButtonText"}
-            style={{ fontWeight: fontWeight.medium, color: colors.fg.neutralMuted }}
+            className={"np-clearButtonText t3"}
+            style={{
+              fontWeight: fontWeight.medium,
+              color: colors.fg.neutralMuted,
+            }}
           >
             🗑
           </text>
@@ -137,14 +160,17 @@ export const NetworkPanel = ({
       {networks.length === 0 ? (
         <view className={"np-placeholder"}>
           <text
-            className={"np-placeholderText"}
-            style={{ fontWeight: fontWeight.regular, color: colors.fg.disabled }}
+            className={"np-placeholderText t4"}
+            style={{
+              fontWeight: fontWeight.regular,
+              color: colors.fg.disabled,
+            }}
           >
             No network requests yet
           </text>
         </view>
       ) : (
-        <FadeList className={"np-list"}>
+        <list scroll-orientation="vertical" className={"np-list"}>
           {networks.map((network) => (
             <list-item key={network.id} item-key={network.id}>
               <view
@@ -161,7 +187,7 @@ export const NetworkPanel = ({
                   }
                 >
                   <text
-                    className={"np-method"}
+                    className={"np-method t2"}
                     style={{
                       fontWeight: fontWeight.bold,
                       ...getMethodColors(colors, network.method),
@@ -171,12 +197,15 @@ export const NetworkPanel = ({
                   </text>
                   {network.statusCode && (
                     <text
-                      className={"np-statusCode"}
+                      className={"np-statusCode t2"}
                       style={{
                         fontWeight: fontWeight.bold,
                         color: getStatusCodeColor(
                           colors,
-                          getStatusCodeVariant(network.status, network.statusCode),
+                          getStatusCodeVariant(
+                            network.status,
+                            network.statusCode
+                          )
                         ),
                       }}
                     >
@@ -185,7 +214,7 @@ export const NetworkPanel = ({
                   )}
                   {network.status === "pending" && (
                     <text
-                      className={"np-statusCode"}
+                      className={"np-statusCode t2"}
                       style={{
                         fontWeight: fontWeight.bold,
                         color: colors.fg.neutralSubtle,
@@ -195,22 +224,31 @@ export const NetworkPanel = ({
                     </text>
                   )}
                   <text
-                    className={"np-time"}
-                    style={{ fontWeight: fontWeight.regular, color: colors.fg.neutralSubtle }}
+                    className={"np-time t2"}
+                    style={{
+                      fontWeight: fontWeight.regular,
+                      color: colors.fg.neutralSubtle,
+                    }}
                   >
                     {formatDuration(network.duration)}
                   </text>
                   <text
-                    className={"np-time"}
-                    style={{ fontWeight: fontWeight.regular, color: colors.fg.neutralSubtle }}
+                    className={"np-time t2"}
+                    style={{
+                      fontWeight: fontWeight.regular,
+                      color: colors.fg.neutralSubtle,
+                    }}
                   >
                     {new Date(network.startTime).toISOString()}
                   </text>
                 </view>
 
                 <text
-                  className={"np-path"}
-                  style={{ fontWeight: fontWeight.regular, color: colors.fg.neutral }}
+                  className={"np-path t3"}
+                  style={{
+                    fontWeight: fontWeight.regular,
+                    color: colors.fg.neutral,
+                  }}
                   bindtap={() =>
                     setSelectedId(selectedId === network.id ? null : network.id)
                   }
@@ -229,12 +267,14 @@ export const NetworkPanel = ({
                         className={"np-tab"}
                         style={{
                           backgroundColor:
-                            activeTab === "general" ? colors.bg.neutralWeak : undefined,
+                            activeTab === "general"
+                              ? colors.bg.neutralWeak
+                              : undefined,
                         }}
                         bindtap={() => setActiveTab("general")}
                       >
                         <text
-                          className={"np-tabText"}
+                          className={"np-tabText t4"}
                           style={{
                             fontWeight: fontWeight.medium,
                             color:
@@ -250,12 +290,14 @@ export const NetworkPanel = ({
                         className={"np-tab"}
                         style={{
                           backgroundColor:
-                            activeTab === "request" ? colors.bg.neutralWeak : undefined,
+                            activeTab === "request"
+                              ? colors.bg.neutralWeak
+                              : undefined,
                         }}
                         bindtap={() => setActiveTab("request")}
                       >
                         <text
-                          className={"np-tabText"}
+                          className={"np-tabText t4"}
                           style={{
                             fontWeight: fontWeight.medium,
                             color:
@@ -271,12 +313,14 @@ export const NetworkPanel = ({
                         className={"np-tab"}
                         style={{
                           backgroundColor:
-                            activeTab === "response" ? colors.bg.neutralWeak : undefined,
+                            activeTab === "response"
+                              ? colors.bg.neutralWeak
+                              : undefined,
                         }}
                         bindtap={() => setActiveTab("response")}
                       >
                         <text
-                          className={"np-tabText"}
+                          className={"np-tabText t4"}
                           style={{
                             fontWeight: fontWeight.medium,
                             color:
@@ -301,7 +345,7 @@ export const NetworkPanel = ({
                               style={{ backgroundColor: colors.bg.neutralWeak }}
                             >
                               <text
-                                className={"np-tableKey"}
+                                className={"np-tableKey t3"}
                                 style={{
                                   fontWeight: fontWeight.bold,
                                   color: colors.fg.neutralSubtle,
@@ -310,7 +354,7 @@ export const NetworkPanel = ({
                                 {item.key}
                               </text>
                               <text
-                                className={"np-tableValue"}
+                                className={"np-tableValue t3"}
                                 style={{
                                   fontWeight: fontWeight.regular,
                                   color: colors.fg.neutral,
@@ -343,7 +387,7 @@ export const NetworkPanel = ({
               </view>
             </list-item>
           ))}
-        </FadeList>
+        </list>
       )}
     </view>
   );

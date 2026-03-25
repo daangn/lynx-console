@@ -2,10 +2,9 @@ import { useEffect, useMemo, useRef, useState } from "@lynx-js/react";
 import type { BaseEvent, InputInputEvent, NodesRef } from "@lynx-js/types";
 import { stringify } from "javascript-stringify";
 import { useThemeColors } from "../styles/ThemeContext";
-import { type ThemeColors, fontWeight } from "../styles/theme";
+import { fontWeight, type ThemeColors } from "../styles/theme";
 import type { LogEntry, LogLevel } from "../types";
 import "./ConsolePanel.css";
-import { FadeList } from "./FadeList";
 
 const LOG_LEVELS: LogLevel[] = ["log", "info", "warn", "error"];
 
@@ -49,7 +48,7 @@ function getLevelColor(colors: ThemeColors, level: LogLevel): string {
 
 function getLogItemBg(
   colors: ThemeColors,
-  level: LogLevel,
+  level: LogLevel
 ): string | undefined {
   switch (level) {
     case "warn":
@@ -88,7 +87,7 @@ export const LogPanel = ({ logs, clearLogs }: LogPanelProps) => {
   const [expandedArgs, setExpandedArgs] = useState(new Set());
   const [code, setCode] = useState("");
   const [enabledLevels, setEnabledLevels] = useState<Set<LogLevel>>(
-    () => savedEnabledLevels ?? new Set(LOG_LEVELS),
+    () => savedEnabledLevels ?? new Set(LOG_LEVELS)
   );
   const [filterOpen, setFilterOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState(savedSearchQuery);
@@ -114,7 +113,9 @@ export const LogPanel = ({ logs, clearLogs }: LogPanelProps) => {
 
   useEffect(() => {
     closeFilterDropdown = () => setFilterOpen(false);
-    return () => { closeFilterDropdown = null; };
+    return () => {
+      closeFilterDropdown = null;
+    };
   }, []);
 
   const filteredLogs = useMemo(
@@ -123,11 +124,13 @@ export const LogPanel = ({ logs, clearLogs }: LogPanelProps) => {
         if (!enabledLevels.has(log.level)) return false;
         if (searchQuery) {
           const query = searchQuery.toLowerCase();
-          return log.args.some((arg) => String(arg).toLowerCase().includes(query));
+          return log.args.some((arg) =>
+            String(arg).toLowerCase().includes(query)
+          );
         }
         return true;
       }),
-    [logs, enabledLevels, searchQuery],
+    [logs, enabledLevels, searchQuery]
   );
   const logsRef = useRef(filteredLogs);
   logsRef.current = filteredLogs;
@@ -185,14 +188,19 @@ export const LogPanel = ({ logs, clearLogs }: LogPanelProps) => {
   const renderArg = (
     arg: unknown,
     parentKey: string,
-    level: "log" | "info" | "warn" | "error",
+    level: "log" | "info" | "warn" | "error"
   ): React.ReactNode => {
     const key = parentKey;
     const isExpanded = expandedArgs.has(key);
 
     if (arg === null) {
       return (
-        <text style={{ color: colors.fg.neutralSubtle, fontWeight: fontWeight.regular }}>
+        <text
+          style={{
+            color: colors.fg.neutralSubtle,
+            fontWeight: fontWeight.regular,
+          }}
+        >
           null
         </text>
       );
@@ -200,7 +208,12 @@ export const LogPanel = ({ logs, clearLogs }: LogPanelProps) => {
 
     if (arg === undefined) {
       return (
-        <text style={{ color: colors.fg.neutralSubtle, fontWeight: fontWeight.regular }}>
+        <text
+          style={{
+            color: colors.fg.neutralSubtle,
+            fontWeight: fontWeight.regular,
+          }}
+        >
           undefined
         </text>
       );
@@ -214,7 +227,7 @@ export const LogPanel = ({ logs, clearLogs }: LogPanelProps) => {
       if (!shouldTruncate) {
         return (
           <text
-            className={"cp-argString"}
+            className={"cp-argString t3"}
             style={{ color: strColor, fontWeight: fontWeight.regular }}
           >
             {arg}
@@ -226,13 +239,16 @@ export const LogPanel = ({ logs, clearLogs }: LogPanelProps) => {
         <view className={"cp-argObject"}>
           <view className={"cp-argObjectHeader"} bindtap={() => toggleArg(key)}>
             <text
-              className={"cp-toggleIndicator"}
-              style={{ color: colors.fg.neutralSubtle, fontWeight: fontWeight.regular }}
+              className={"cp-toggleIndicator t2"}
+              style={{
+                color: colors.fg.neutralSubtle,
+                fontWeight: fontWeight.regular,
+              }}
             >
               {isExpanded ? "▼" : "▶"}
             </text>
             <text
-              className={"cp-argString"}
+              className={"cp-argString t3"}
               style={{ color: strColor, fontWeight: fontWeight.regular }}
             >
               {isExpanded ? arg : `${arg.slice(0, MAX_LENGTH)}...`}
@@ -245,8 +261,11 @@ export const LogPanel = ({ logs, clearLogs }: LogPanelProps) => {
     if (typeof arg === "number" || typeof arg === "boolean") {
       return (
         <text
-          className={"cp-argPrimitive"}
-          style={{ color: getPrimitiveColor(colors, level), fontWeight: fontWeight.regular }}
+          className={"cp-argPrimitive t3"}
+          style={{
+            color: getPrimitiveColor(colors, level),
+            fontWeight: fontWeight.regular,
+          }}
         >
           {String(arg)}
         </text>
@@ -274,7 +293,7 @@ export const LogPanel = ({ logs, clearLogs }: LogPanelProps) => {
       let jsonString: string;
       if (arg instanceof Map) {
         const entries = Array.from(arg.entries()).map(
-          ([k, v]) => `  [${stringify(k)}, ${stringify(v)}]`,
+          ([k, v]) => `  [${stringify(k)}, ${stringify(v)}]`
         );
         jsonString = `{\n${entries.join(",\n")}\n}`;
       } else if (arg instanceof Set) {
@@ -289,14 +308,20 @@ export const LogPanel = ({ logs, clearLogs }: LogPanelProps) => {
         <view className={"cp-argObject"}>
           <view className={"cp-argObjectHeader"} bindtap={() => toggleArg(key)}>
             <text
-              className={"cp-toggleIndicator"}
-              style={{ color: colors.fg.neutralSubtle, fontWeight: fontWeight.regular }}
+              className={"cp-toggleIndicator t2"}
+              style={{
+                color: colors.fg.neutralSubtle,
+                fontWeight: fontWeight.regular,
+              }}
             >
               {isExpanded ? "▼" : "▶"}
             </text>
             <text
-              className={"cp-argObjectPreview"}
-              style={{ fontWeight: fontWeight.medium, color: colors.fg.neutral }}
+              className={"cp-argObjectPreview t3"}
+              style={{
+                fontWeight: fontWeight.medium,
+                color: colors.fg.neutral,
+              }}
             >
               {preview}
             </text>
@@ -304,8 +329,11 @@ export const LogPanel = ({ logs, clearLogs }: LogPanelProps) => {
           {isExpanded && (
             <view className={"cp-argObjectContent"}>
               <text
-                className={"cp-argObjectJson"}
-                style={{ fontWeight: fontWeight.regular, color: colors.fg.neutral }}
+                className={"cp-argObjectJson t3"}
+                style={{
+                  fontWeight: fontWeight.regular,
+                  color: colors.fg.neutral,
+                }}
               >
                 {jsonString}
               </text>
@@ -317,8 +345,11 @@ export const LogPanel = ({ logs, clearLogs }: LogPanelProps) => {
 
     return (
       <text
-        className={"cp-argPrimitive"}
-        style={{ color: getPrimitiveColor(colors, level), fontWeight: fontWeight.regular }}
+        className={"cp-argPrimitive t3"}
+        style={{
+          color: getPrimitiveColor(colors, level),
+          fontWeight: fontWeight.regular,
+        }}
       >
         {String(arg)}
       </text>
@@ -328,7 +359,9 @@ export const LogPanel = ({ logs, clearLogs }: LogPanelProps) => {
   return (
     <view
       className={"cp-logContainer"}
-      bindtap={() => { if (filterOpen) setFilterOpen(false); }}
+      bindtap={() => {
+        if (filterOpen) setFilterOpen(false);
+      }}
     >
       <view className={"cp-logHeader"}>
         <view className={"cp-filterWrapper"}>
@@ -338,10 +371,13 @@ export const LogPanel = ({ logs, clearLogs }: LogPanelProps) => {
             catchtap={() => setFilterOpen((v) => !v)}
           >
             <text
-              className={"cp-filterButtonText"}
-              style={{ fontWeight: fontWeight.medium, color: colors.fg.neutralMuted }}
+              className={"cp-filterButtonText t3"}
+              style={{
+                fontWeight: fontWeight.medium,
+                color: colors.fg.neutralMuted,
+              }}
             >
-              Filter  ▼
+              Filter ▼
             </text>
           </view>
           {filterOpen && (
@@ -360,14 +396,20 @@ export const LogPanel = ({ logs, clearLogs }: LogPanelProps) => {
                   bindtap={() => toggleLevel(level)}
                 >
                   <text
-                    className={"cp-filterCheckbox"}
-                    style={{ fontWeight: fontWeight.medium, color: getLevelColor(colors, level) }}
+                    className={"cp-filterCheckbox t3"}
+                    style={{
+                      fontWeight: fontWeight.medium,
+                      color: getLevelColor(colors, level),
+                    }}
                   >
                     {enabledLevels.has(level) ? "✅" : "⬜"}
                   </text>
                   <text
-                    className={"cp-filterLabel"}
-                    style={{ fontWeight: fontWeight.medium, color: getLevelColor(colors, level) }}
+                    className={"cp-filterLabel t3"}
+                    style={{
+                      fontWeight: fontWeight.medium,
+                      color: getLevelColor(colors, level),
+                    }}
                   >
                     {level.toUpperCase()}
                   </text>
@@ -381,14 +423,17 @@ export const LogPanel = ({ logs, clearLogs }: LogPanelProps) => {
           style={{ borderBottomColor: colors.stroke.neutralSubtle }}
         >
           <text
-            className={"cp-searchPrompt"}
-            style={{ fontWeight: fontWeight.medium, color: colors.fg.placeholder }}
+            className={"cp-searchPrompt t6"}
+            style={{
+              fontWeight: fontWeight.medium,
+              color: colors.fg.placeholder,
+            }}
           >
             {"›"}
           </text>
           <input
             ref={searchInputRef}
-            className={"cp-searchInput"}
+            className={"cp-searchInput t3"}
             style={{
               fontWeight: fontWeight.regular,
               color: colors.fg.neutral,
@@ -410,8 +455,11 @@ export const LogPanel = ({ logs, clearLogs }: LogPanelProps) => {
               }}
             >
               <text
-                className={"cp-searchClearText"}
-                style={{ fontWeight: fontWeight.medium, color: colors.fg.placeholder }}
+                className={"cp-searchClearText t3"}
+                style={{
+                  fontWeight: fontWeight.medium,
+                  color: colors.fg.placeholder,
+                }}
               >
                 ✕
               </text>
@@ -425,16 +473,20 @@ export const LogPanel = ({ logs, clearLogs }: LogPanelProps) => {
             bindtap={clearLogs}
           >
             <text
-              className={"cp-clearButtonText"}
-              style={{ fontWeight: fontWeight.medium, color: colors.fg.neutralMuted }}
+              className={"cp-clearButtonText t3"}
+              style={{
+                fontWeight: fontWeight.medium,
+                color: colors.fg.neutralMuted,
+              }}
             >
               🗑
             </text>
           </view>
         </view>
       </view>
-      <FadeList
-        listRef={listRef}
+      <list
+        ref={listRef}
+        scroll-orientation="vertical"
         className={"cp-logList"}
         preload-buffer-count={10}
         initial-scroll-index={Math.max(0, filteredLogs.length - 1)}
@@ -443,8 +495,11 @@ export const LogPanel = ({ logs, clearLogs }: LogPanelProps) => {
           <list-item item-key="empty-state">
             <view className={"cp-placeholder"}>
               <text
-                className={"cp-placeholderText"}
-                style={{ fontWeight: fontWeight.regular, color: colors.fg.disabled }}
+                className={"cp-placeholderText t4"}
+                style={{
+                  fontWeight: fontWeight.regular,
+                  color: colors.fg.disabled,
+                }}
               >
                 No logs yet. Try console.log("Hello!")
               </text>
@@ -463,7 +518,7 @@ export const LogPanel = ({ logs, clearLogs }: LogPanelProps) => {
                 >
                   <view className={"cp-logItemHeader"}>
                     <text
-                      className={"cp-logLevel"}
+                      className={"cp-logLevel t2"}
                       style={{
                         fontWeight: fontWeight.bold,
                         color: getLevelColor(colors, log.level),
@@ -472,7 +527,7 @@ export const LogPanel = ({ logs, clearLogs }: LogPanelProps) => {
                       {log.level.toUpperCase()}
                     </text>
                     <text
-                      className={"cp-logTime"}
+                      className={"cp-logTime t2"}
                       style={{
                         fontWeight: fontWeight.regular,
                         color: colors.fg.neutralSubtle,
@@ -491,7 +546,7 @@ export const LogPanel = ({ logs, clearLogs }: LogPanelProps) => {
                         {renderArg(
                           arg,
                           `${log.id}-${index.toString()}`,
-                          log.level,
+                          log.level
                         )}
                       </view>
                     ))}
@@ -501,17 +556,20 @@ export const LogPanel = ({ logs, clearLogs }: LogPanelProps) => {
             );
           })
         )}
-      </FadeList>
+      </list>
       <view className={"cp-replInputRow"}>
         <text
-          className={"cp-replPrompt"}
-          style={{ fontWeight: fontWeight.medium, color: colors.fg.placeholder }}
+          className={"cp-replPrompt t10"}
+          style={{
+            fontWeight: fontWeight.medium,
+            color: colors.fg.placeholder,
+          }}
         >
           {"›"}
         </text>
         <input
           ref={inputRef}
-          className={"cp-replInput"}
+          className={"cp-replInput t5"}
           style={{
             fontWeight: fontWeight.regular,
             color: colors.fg.neutral,
@@ -529,8 +587,11 @@ export const LogPanel = ({ logs, clearLogs }: LogPanelProps) => {
           bindtap={handleRun}
         >
           <text
-            className={"cp-replRunButtonText"}
-            style={{ fontWeight: fontWeight.medium, color: colors.palette.green600 }}
+            className={"cp-replRunButtonText t3"}
+            style={{
+              fontWeight: fontWeight.medium,
+              color: colors.palette.green600,
+            }}
           >
             Run
           </text>

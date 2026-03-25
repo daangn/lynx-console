@@ -50,7 +50,7 @@ export default function Tabs(props: TabsProps) {
             }}
           >
             <text
-              className={`tabs-triggerButtonText${tabSize ? ` tabs-triggerButtonText--${tabSize}` : ""}`}
+              className={`tabs-triggerButtonText${tabSize ? ` ${tabSize}` : ""}`}
               style={{
                 fontWeight: fontWeight.bold,
                 color:

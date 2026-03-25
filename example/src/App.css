@@ -43,82 +43,14 @@
   white-space: pre-wrap;
 }
 
-.app-consoleButton {
-  padding: 12px 16px;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #F7FAFC;
-}
+.app-consoleButton { background-color: #F7FAFC; }
+.app-getButton     { background-color: #EBF8FF; }
+.app-postButton    { background-color: #F0FFF4; }
+.app-patchButton   { background-color: #FAF5FF; }
+.app-deleteButton  { background-color: #FFF5F5; }
 
-.app-consoleButtonText {
-  font-size: 14px;
-  font-weight: 500;
-  text-align: center;
-  color: #4A5568;
-}
-
-.app-getButton {
-  padding: 12px 16px;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #EBF8FF;
-}
-
-.app-getButtonText {
-  font-size: 14px;
-  font-weight: 500;
-  text-align: center;
-  color: #3182CE;
-}
-
-.app-postButton {
-  padding: 12px 16px;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #F0FFF4;
-}
-
-.app-postButtonText {
-  font-size: 14px;
-  font-weight: 500;
-  text-align: center;
-  color: #38A169;
-}
-
-.app-patchButton {
-  padding: 12px 16px;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #FAF5FF;
-}
-
-.app-patchButtonText {
-  font-size: 14px;
-  font-weight: 500;
-  text-align: center;
-  color: #805AD5;
-}
-
-.app-deleteButton {
-  padding: 12px 16px;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #FFF5F5;
-}
-
-.app-deleteButtonText {
-  font-size: 14px;
-  font-weight: 500;
-  text-align: center;
-  color: #E53E3E;
-}
+.app-consoleButtonText { color: #4A5568; }
+.app-getButtonText     { color: #3182CE; }
+.app-postButtonText    { color: #38A169; }
+.app-patchButtonText   { color: #805AD5; }
+.app-deleteButtonText  { color: #E53E3E; }

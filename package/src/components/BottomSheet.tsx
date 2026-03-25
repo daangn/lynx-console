@@ -137,7 +137,7 @@ export default function BottomSheet({
           <view className="bs-header">
             {title && (
               <text
-                className="bs-title"
+                className="bs-title t7"
                 style={{
                   fontWeight: fontWeight.bold,
                   color: colors.fg.neutral,

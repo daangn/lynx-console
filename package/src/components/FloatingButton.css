@@ -11,10 +11,7 @@
 .fb-button {
   position: relative;
   overflow: hidden;
-  padding-left: 8px;
-  padding-right: 8px;
-  padding-top: 4px;
-  padding-bottom: 4px;
+  padding: 4px 8px;
   border-radius: 12px;
   display: flex;
   flex-direction: column;
@@ -35,14 +32,10 @@
 }
 
 .fb-title {
-  font-size: 0.875rem;
-  line-height: 1.1875rem;
   text-align: center;
 }
 
 .fb-subtitle {
-  font-size: 0.8125rem;
-  line-height: 1.125rem;
   text-align: center;
 }
 

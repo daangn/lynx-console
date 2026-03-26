@@ -2,6 +2,11 @@
 
 An in-app developer console that can be embedded in Lynx apps. View console logs, network requests, and performance metrics in real time.
 
+## Demo
+
+<img width="450" height="450" alt="lynx_bundle_qrcode_fullscreen" src="https://github.com/user-attachments/assets/8bbb9bfe-df2b-436d-ad17-6e4eb4b672c9" />
+
+
 ## Features
 
 - **Console Logs** — View output from `console.log`, `console.error`, and more in real time

@@ -4,6 +4,8 @@ An in-app developer console that can be embedded in Lynx apps. View console logs
 
 ## Demo
 
+https://github.com/user-attachments/assets/edda4778-ab8d-4cb9-a3c5-bd8c42c81bde
+
 <img width="450" height="450" alt="lynx_bundle_qrcode_fullscreen" src="https://github.com/user-attachments/assets/8bbb9bfe-df2b-436d-ad17-6e4eb4b672c9" />
 
 Scan the QR code above with the [Lynx Explorer](https://lynxjs.org/guide/start/quick-start.html#via-lynx-explorer-app) app to try the demo.
@@ -12,8 +14,17 @@ Scan the QR code above with the [Lynx Explorer](https://lynxjs.org/guide/start/q
 
 - **Console Logs** — View output from `console.log`, `console.error`, and more in real time. Supports level filtering, keyword search, log clearing, and a built-in REPL
 - **Main Thread Console** — Capture logs from the main thread alongside background thread logs
+
+https://github.com/user-attachments/assets/539fe31a-aca4-468d-b673-3b070b21cd08
+
 - **Network Monitor** — Inspect method, status, headers, request body, and response of `fetch` requests
+
+https://github.com/user-attachments/assets/edda4778-ab8d-4cb9-a3c5-bd8c42c81bde
+
 - **Performance Monitor** — Track FCP (First Contentful Paint) and other performance metrics with raw entry details
+
+https://github.com/user-attachments/assets/d231bdf5-71bb-483f-9bdb-5843279c1308
+
 - **Floating Button** — Displays the latest FCP value; tap to open the console, long-press and drag to reposition it
 - **Resizable Panel** — Drag the handle to resize the console panel (200–700px); swipe down to dismiss
 - **Tab Visibility** — Only tabs for initialized monitors are shown; uninitialized monitors are automatically hidden
@@ -148,33 +159,33 @@ You can also integrate it with a back press handler so that the console closes w
 
 ### `LynxConsole` Props
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `theme` | `"light" \| "dark"` | `"light"` | Console UI theme |
-| `safeAreaInsetBottom` | `string` | `"50px"` | Bottom safe area inset |
-| `customTabs` | `CustomTab[]` | `undefined` | Additional custom tabs to display in the console |
+| Prop                  | Type                | Default     | Description                                      |
+| --------------------- | ------------------- | ----------- | ------------------------------------------------ |
+| `theme`               | `"light" \| "dark"` | `"light"`   | Console UI theme                                 |
+| `safeAreaInsetBottom` | `string`            | `"50px"`    | Bottom safe area inset                           |
+| `customTabs`          | `CustomTab[]`       | `undefined` | Additional custom tabs to display in the console |
 
 ### `CustomTab`
 
-| Property | Type | Description |
-|----------|------|-------------|
-| `key` | `string` | Unique identifier for the tab |
-| `label` | `string` | Tab label text |
+| Property        | Type              | Description                           |
+| --------------- | ----------------- | ------------------------------------- |
+| `key`           | `string`          | Unique identifier for the tab         |
+| `label`         | `string`          | Tab label text                        |
 | `renderContent` | `() => ReactNode` | Function that renders the tab content |
 
 ### `LynxConsoleHandle`
 
-| Method | Description |
-|--------|-------------|
-| `open()` | Opens the console |
-| `close()` | Closes the console |
+| Method     | Description                         |
+| ---------- | ----------------------------------- |
+| `open()`   | Opens the console                   |
+| `close()`  | Closes the console                  |
 | `isOpen()` | Returns whether the console is open |
 
 ### Monitor Initialization Functions
 
-| Function | Description |
-|----------|-------------|
-| `initLogMonitor()` | Captures `console.log`, `console.error`, etc. |
-| `initMainThreadConsole()` | Captures console output from the main thread |
-| `initNetworkMonitor()` | Intercepts and records `fetch` requests |
-| `initPerformanceMonitor()` | Collects performance metrics |
+| Function                   | Description                                   |
+| -------------------------- | --------------------------------------------- |
+| `initLogMonitor()`         | Captures `console.log`, `console.error`, etc. |
+| `initMainThreadConsole()`  | Captures console output from the main thread  |
+| `initNetworkMonitor()`     | Intercepts and records `fetch` requests       |
+| `initPerformanceMonitor()` | Collects performance metrics                  |

@@ -6,7 +6,7 @@ An in-app developer console that can be embedded in Lynx apps. View console logs
 
 ## Demo
 
-https://github.com/user-attachments/assets/edda4778-ab8d-4cb9-a3c5-bd8c42c81bde
+https://github.com/user-attachments/assets/dcd874bf-ff2e-4a98-ae03-d83de5fae31c
 
 <img width="450" height="450" alt="lynx_bundle_qrcode_fullscreen" src="https://github.com/user-attachments/assets/8bbb9bfe-df2b-436d-ad17-6e4eb4b672c9" />
 

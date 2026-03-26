@@ -1,3 +1,5 @@
+[한국어](https://github.com/daangn/lynx-console/blob/main/package/README_ko.md) | English
+
 # lynx-console
 
 An in-app developer console that can be embedded in Lynx apps. View console logs, network requests, and performance metrics in real time.

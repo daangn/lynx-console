@@ -1,3 +1,5 @@
+한국어 | [English](https://github.com/daangn/lynx-console/blob/main/package/README.md)
+
 # lynx-console
 
 Lynx 앱에 내장할 수 있는 인앱 개발자 콘솔이에요. 콘솔 로그, 네트워크 요청, 성능 지표를 실시간으로 확인할 수 있어요.

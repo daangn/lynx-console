@@ -50,6 +50,22 @@ yarn add -D @types/react
 
 ## Usage
 
+### 0. Configure Build (Required for iOS)
+
+On iOS, the Lynx runtime (JSC) injects a separate `console` object that is different from `globalThis.console`. This means patches applied by `initLogMonitor()` won't take effect on iOS unless you explicitly replace the `console` identifier with `globalThis.console` at build time.
+
+Add the following to your `lynx.config.ts`:
+
+```typescript
+export default defineConfig({
+  source: {
+    define: {
+      console: "globalThis.console",
+    },
+  },
+});
+```
+
 ### 1. Initialize Monitors
 
 Call the monitoring functions at your app's entry point. This setup must run **before** the `LynxConsole` component is rendered.

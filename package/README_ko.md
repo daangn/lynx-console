@@ -50,6 +50,22 @@ yarn add -D @types/react
 
 ## 사용법
 
+### 0. 빌드 설정 (iOS 지원을 위해 필수)
+
+iOS에서는 Lynx 런타임(JSC)이 `globalThis.console`과는 별개의 `console` 객체를 주입해요. 이 때문에 `initLogMonitor()`가 패치한 내용이 iOS에서는 적용되지 않아요. 빌드 타임에 `console` 식별자를 `globalThis.console`로 치환해야 해요.
+
+`lynx.config.ts`에 다음을 추가해요:
+
+```typescript
+export default defineConfig({
+  source: {
+    define: {
+      console: "globalThis.console",
+    },
+  },
+});
+```
+
 ### 1. 모니터 초기화
 
 앱 진입점에서 모니터링 함수를 호출해요. 이 설정은 `LynxConsole` 컴포넌트보다 **먼저** 실행되어야 해요.

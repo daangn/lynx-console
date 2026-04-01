@@ -38,11 +38,10 @@ const _setupMainThreadConsole = (): void => {
 
     // devalue 문자열을 원래 타입으로 복원
     entry.args = entry.args.map((arg) => {
-      try {
-        return devalueParse(arg as string);
-      } catch {
-        return arg;
+      if (typeof arg !== "string") {
+        throw new Error(`[LynxConsole] Expected devalue string, got ${typeof arg}`);
       }
+      return devalueParse(arg);
     });
 
     state.logs?.push(entry);

@@ -1,10 +1,11 @@
 import { runOnBackground } from "@lynx-js/react";
+import { parse as devalueParse } from "devalue";
+import { stringify as devalueStringify } from "devalue" with { runtime: "shared" };
 import type { LogEntry, LogLevel } from "../types";
 
 const _setupMainThreadConsole = (): void => {
   "main thread";
 
-  //IMPORTANT: do not use external functions in main thread
   if (!globalThis.__LYNX_CONSOLE__) globalThis.__LYNX_CONSOLE__ = {};
   const lynxConsole = globalThis.__LYNX_CONSOLE__;
 
@@ -16,13 +17,12 @@ const _setupMainThreadConsole = (): void => {
   const LOG_METHODS: LogLevel[] = ["log", "warn", "error", "info"];
   const LOG_ID_PREFIX = "main-thread";
 
-  const serializeArgs = (args: unknown[]): unknown[] => {
+  const serializeArgs = (args: unknown[]): string[] => {
     return args.map((arg) => {
       try {
-        JSON.stringify(arg);
-        return arg;
+        return devalueStringify(arg);
       } catch {
-        return String(arg);
+        return devalueStringify(String(arg));
       }
     });
   };
@@ -35,6 +35,15 @@ const _setupMainThreadConsole = (): void => {
   const sendLogToBackground = runOnBackground((entry: LogEntry): void => {
     const state = globalThis.__LYNX_CONSOLE__?.state;
     if (!state) return;
+
+    // devalue 문자열을 원래 타입으로 복원
+    entry.args = entry.args.map((arg) => {
+      try {
+        return devalueParse(arg as string);
+      } catch {
+        return arg;
+      }
+    });
 
     state.logs?.push(entry);
     state.logListeners?.forEach((listener) => {

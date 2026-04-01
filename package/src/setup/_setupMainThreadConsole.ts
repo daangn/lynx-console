@@ -6,6 +6,7 @@ import type { LogEntry, LogLevel } from "../types";
 const _setupMainThreadConsole = (): void => {
   "main thread";
 
+  //IMPORTANT: do not use external functions in main thread
   if (!globalThis.__LYNX_CONSOLE__) globalThis.__LYNX_CONSOLE__ = {};
   const lynxConsole = globalThis.__LYNX_CONSOLE__;
 

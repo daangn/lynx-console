@@ -1,6 +1,8 @@
 import { runOnBackground } from "@lynx-js/react";
+import { stringify as devalueStringify } from "devalue" with {
+  runtime: "shared",
+};
 import { parse as devalueParse } from "devalue";
-import { stringify as devalueStringify } from "devalue" with { runtime: "shared" };
 import type { LogEntry, LogLevel } from "../types";
 
 const _setupMainThreadConsole = (): void => {
@@ -40,7 +42,9 @@ const _setupMainThreadConsole = (): void => {
     // devalue 문자열을 원래 타입으로 복원
     entry.args = entry.args.map((arg) => {
       if (typeof arg !== "string") {
-        throw new Error(`[LynxConsole] Expected devalue string, got ${typeof arg}`);
+        throw new Error(
+          `[LynxConsole] Expected devalue string, got ${typeof arg}`,
+        );
       }
       return devalueParse(arg);
     });

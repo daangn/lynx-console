@@ -17,7 +17,14 @@ const App = () => {
 
   const testConsoleLogInMainThread = () => {
     'main thread';
-    console.log('This is a log message in main thread');
+    console.log(
+      'This is a log message in main thread',
+      {
+        data: 'test',
+      },
+      new Map([['key', 'value']]),
+      new Set([1, 2, 3]),
+    );
   };
 
   const testGetRequest = async () => {

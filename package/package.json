@@ -3,8 +3,7 @@
   "version": "0.3.0",
   "type": "module",
   "sideEffects": [
-    "**/*.css",
-    "dist/index.css"
+    "**/*.css"
   ],
   "exports": {
     ".": {
@@ -16,8 +15,7 @@
       "types": "./dist/setup.d.mts",
       "import": "./dist/setup.mjs",
       "require": "./dist/setup.cjs"
-    },
-    "./style.css": "./dist/index.css"
+    }
   },
   "main": "dist/index.mjs",
   "types": "dist/index.d.mts",

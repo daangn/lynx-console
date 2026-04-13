@@ -36,8 +36,8 @@
     "typescript": "^5.9.3"
   },
   "peerDependencies": {
-    "@lynx-js/react": "^0.116.0",
-    "@lynx-js/types": "^3.7.0",
+    "@lynx-js/react": "^0.110.0",
+    "@lynx-js/types": "^3.6.0",
     "@types/react": "^18"
   },
   "dependencies": {

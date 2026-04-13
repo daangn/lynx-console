@@ -4371,8 +4371,8 @@ __metadata:
     tsdown: "npm:^0.20.1"
     typescript: "npm:^5.9.3"
   peerDependencies:
-    "@lynx-js/react": ^0.116.0
-    "@lynx-js/types": ^3.7.0
+    "@lynx-js/react": ^0.110.0
+    "@lynx-js/types": ^3.6.0
     "@types/react": ^18
   languageName: unknown
   linkType: soft

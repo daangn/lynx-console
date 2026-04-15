@@ -182,7 +182,6 @@ export const LogPanel = ({ logs, clearLogs }: LogPanelProps) => {
       ?.invoke({ method: "setValue", params: { value: "" } })
       .exec();
     runCode(trimmed);
-    setTimeout(() => scrollToBottom(false), 100);
   };
 
   const renderArg = (

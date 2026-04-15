@@ -1,5 +1,15 @@
 # lynx-console
 
+## 0.3.1
+
+### Patch Changes
+
+- 8dd20cf: Remove duplicate scrollToBottom call that caused iOS scroll error
+- 57962db: fix: main thread에서 Map/Set 등 비-JSON 타입 로깅 시 데이터 손실 수정
+- 65adfef: Lower peerDependencies: @lynx-js/react ^0.110.0, @lynx-js/types ^3.6.0
+- 2d7384e: Remove `./style.css` export to fix CSS breakage when using dist package in Lynx apps
+- 296b3db: Remove unused tokens.json
+
 ## 0.3.0
 
 ### Minor Changes

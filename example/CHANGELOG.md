@@ -1,5 +1,16 @@
 # lynx-console-test
 
+## 0.0.10
+
+### Patch Changes
+
+- Updated dependencies [8dd20cf]
+- Updated dependencies [57962db]
+- Updated dependencies [65adfef]
+- Updated dependencies [2d7384e]
+- Updated dependencies [296b3db]
+  - lynx-console@0.3.1
+
 ## 0.0.9
 
 ### Patch Changes

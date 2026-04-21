@@ -4,6 +4,7 @@ import { stringify } from "javascript-stringify";
 import { useThemeColors } from "../styles/ThemeContext";
 import { fontWeight, type ThemeColors } from "../styles/theme";
 import type { LogEntry, LogLevel } from "../types";
+import { parseConsoleArgs } from "../utils/parseFormat";
 import "./ConsolePanel.css";
 
 const LOG_LEVELS: LogLevel[] = ["log", "info", "warn", "error"];
@@ -536,19 +537,46 @@ export const LogPanel = ({ logs, clearLogs }: LogPanelProps) => {
                     </text>
                   </view>
                   <view className={"cp-logArgsContainer"}>
-                    {log.args.map((arg, index) => (
-                      <view
-                        key={`${log.id}-${index.toString()}`}
-                        className={"cp-logArgItem"}
-                        style={{ fontWeight: fontWeight.regular }}
-                      >
-                        {renderArg(
-                          arg,
-                          `${log.id}-${index.toString()}`,
-                          log.level,
-                        )}
-                      </view>
-                    ))}
+                    {(() => {
+                      const { segments, rest } = parseConsoleArgs(log.args);
+                      const baseTextStyle = {
+                        color: getStringColor(colors, log.level),
+                        fontWeight: fontWeight.regular,
+                      };
+                      const wrap = (key: string, content: React.ReactNode) => (
+                        <view
+                          key={key}
+                          className={"cp-logArgItem"}
+                          style={{ fontWeight: fontWeight.regular }}
+                        >
+                          {content}
+                        </view>
+                      );
+                      return (
+                        <>
+                          {segments.map((seg, index) => {
+                            const key = `${log.id}-seg-${index.toString()}`;
+                            return wrap(
+                              key,
+                              seg.type === "text" ? (
+                                <text
+                                  className={"cp-argString t3"}
+                                  style={{ ...baseTextStyle, ...seg.style }}
+                                >
+                                  {seg.text}
+                                </text>
+                              ) : (
+                                renderArg(seg.value, key, log.level)
+                              ),
+                            );
+                          })}
+                          {rest.map((arg, index) => {
+                            const key = `${log.id}-rest-${index.toString()}`;
+                            return wrap(key, renderArg(arg, key, log.level));
+                          })}
+                        </>
+                      );
+                    })()}
                   </view>
                 </view>
               </list-item>

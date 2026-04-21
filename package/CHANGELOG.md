@@ -1,5 +1,11 @@
 # lynx-console
 
+## 0.4.0
+
+### Minor Changes
+
+- d088e07: Support console format specifiers (`%c`, `%s`, `%d`, `%i`, `%f`, `%o`, `%O`, `%%`) in log rendering. `%c` applies inline CSS styles to subsequent text segments, mirroring Chrome DevTools behavior.
+
 ## 0.3.1
 
 ### Patch Changes

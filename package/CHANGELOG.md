@@ -1,5 +1,11 @@
 # lynx-console
 
+## 0.5.0
+
+### Minor Changes
+
+- 081666a: Add keyboard avoidance for inputs inside `BottomSheet`. When the on-screen keyboard appears, the sheet expands by the keyboard height (capped at the max) and adds matching bottom padding so `<input>` elements (e.g. search, REPL) stay visible above the keyboard on iOS and Android.
+
 ## 0.4.0
 
 ### Minor Changes

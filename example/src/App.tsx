@@ -15,6 +15,17 @@ const App = () => {
     );
   };
 
+  const testCssConsoleLog = () => {
+    console.log(
+      '%c [Css Test] %cscreen:home/tab:feed',
+      'background: #222; color: #ff69b4; padding: 2px 4px; border-radius: 2px',
+      'color: #ff6f00; font-weight: bold',
+    );
+    console.log('mixed format: %s got %d points (%ffps)', 'alice', 42, 59.95);
+    console.log('with object %o and tail', { user: 'alice', id: 1 }, 'end');
+    console.log('escaped %% percent');
+  };
+
   const testConsoleLogInMainThread = () => {
     'main thread';
     console.log(
@@ -108,6 +119,14 @@ const App = () => {
             >
               <text className="app-buttonText app-consoleButtonText">
                 Test Console Log
+              </text>
+            </view>
+            <view
+              bindtap={testCssConsoleLog}
+              className="app-baseButton app-consoleButton"
+            >
+              <text className="app-buttonText app-consoleButtonText">
+                Test CSS Console Log
               </text>
             </view>
             <view

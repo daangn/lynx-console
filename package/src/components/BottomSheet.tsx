@@ -1,5 +1,6 @@
 import { type ReactNode, useEffect, useState } from "@lynx-js/react";
 import type { BaseTouchEvent, Target } from "@lynx-js/types";
+import { useKeyboardHeight } from "../hooks/useKeyboardHeight";
 import { useThemeColors } from "../styles/ThemeContext";
 import { duration, fontWeight } from "../styles/theme";
 import "./BottomSheet.css";
@@ -41,6 +42,7 @@ export default function BottomSheet({
   );
   const [isOpening, setIsOpening] = useState(true);
   const [isClosing, setIsClosing] = useState(false);
+  const keyboardHeight = useKeyboardHeight();
 
   // 닫기 애니메이션 처리
   const handleClose = () => {
@@ -114,12 +116,21 @@ export default function BottomSheet({
           catchtap={() => {}}
           style={{
             background: colors.bg.layerFloating,
-            height: `${isDragging ? tempHeight : sheetHeight}px`,
+            height: `${
+              keyboardHeight > 0
+                ? Math.min(
+                    MAX_HEIGHT,
+                    (isDragging ? tempHeight : sheetHeight) + keyboardHeight,
+                  )
+                : isDragging
+                  ? tempHeight
+                  : sheetHeight
+            }px`,
             transform:
               isOpening || isClosing ? "translateY(100%)" : "translateY(0)",
             transition: isDragging
               ? "none"
-              : `transform ${duration.d6} cubic-bezier(0.4, 0, 0.2, 1)`,
+              : `transform ${duration.d6} cubic-bezier(0.4, 0, 0.2, 1), height ${duration.d6} cubic-bezier(0.4, 0, 0.2, 1)`,
           }}
         >
           {/* catchtap: 이벤트 버블링 차단 */}
@@ -150,7 +161,10 @@ export default function BottomSheet({
           <view
             className="bs-body"
             style={{
-              paddingBottom: safeAreaInsetBottom,
+              paddingBottom:
+                keyboardHeight > 0
+                  ? `${keyboardHeight}px`
+                  : safeAreaInsetBottom,
             }}
           >
             {children}

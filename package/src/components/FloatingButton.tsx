@@ -7,6 +7,8 @@ import "./FloatingButton.css";
 interface FloatingButtonProps {
   bindtap: () => void;
   children: ReactNode;
+  initialRight?: number;
+  initialBottom?: number;
 }
 
 const SHINE_STYLES = {
@@ -26,10 +28,17 @@ const SHINE_STYLES = {
   },
 } as const;
 
-export const FloatingButton = ({ bindtap, children }: FloatingButtonProps) => {
+export const FloatingButton = ({
+  bindtap,
+  children,
+  initialRight,
+  initialBottom,
+}: FloatingButtonProps) => {
   const colors = useThemeColors();
-  const { phase, right, bottom, clearTimer, handlers } =
-    useLongPressDrag(bindtap);
+  const { phase, right, bottom, clearTimer, handlers } = useLongPressDrag(
+    bindtap,
+    { initialRight, initialBottom },
+  );
 
   const handleReload = () => {
     try {

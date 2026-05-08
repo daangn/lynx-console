@@ -7,15 +7,26 @@ const MOVE_THRESHOLD = 5;
 const DEFAULT_RIGHT = 16;
 const DEFAULT_BOTTOM = 84;
 
-let savedRight = DEFAULT_RIGHT;
-let savedBottom = DEFAULT_BOTTOM;
+let savedRight: number | null = null;
+let savedBottom: number | null = null;
 
-export function useLongPressDrag(onTap: () => void) {
-  const [right, setRight] = useState(savedRight);
-  const [bottom, setBottom] = useState(savedBottom);
+interface UseLongPressDragOptions {
+  initialRight?: number;
+  initialBottom?: number;
+}
+
+export function useLongPressDrag(
+  onTap: () => void,
+  options?: UseLongPressDragOptions,
+) {
+  const initialRight = options?.initialRight ?? DEFAULT_RIGHT;
+  const initialBottom = options?.initialBottom ?? DEFAULT_BOTTOM;
+
+  const [right, setRight] = useState(savedRight ?? initialRight);
+  const [bottom, setBottom] = useState(savedBottom ?? initialBottom);
   const [phase, setPhase] = useState<"idle" | "dragging" | "releasing">("idle");
-  const [tempRight, setTempRight] = useState(savedRight);
-  const [tempBottom, setTempBottom] = useState(savedBottom);
+  const [tempRight, setTempRight] = useState(savedRight ?? initialRight);
+  const [tempBottom, setTempBottom] = useState(savedBottom ?? initialBottom);
 
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const draggingRef = useRef(false);

@@ -1,5 +1,8 @@
 import type { ReactNode } from "@lynx-js/react";
-import { useLongPressDrag } from "../hooks/useLongPressDrag";
+import {
+  type InitialPosition,
+  useLongPressDrag,
+} from "../hooks/useLongPressDrag";
 import { useThemeColors } from "../styles/ThemeContext";
 import { duration } from "../styles/theme";
 import "./FloatingButton.css";
@@ -7,8 +10,7 @@ import "./FloatingButton.css";
 interface FloatingButtonProps {
   bindtap: () => void;
   children: ReactNode;
-  initialRight?: number;
-  initialBottom?: number;
+  initialPosition?: InitialPosition;
 }
 
 const SHINE_STYLES = {
@@ -31,13 +33,12 @@ const SHINE_STYLES = {
 export const FloatingButton = ({
   bindtap,
   children,
-  initialRight,
-  initialBottom,
+  initialPosition,
 }: FloatingButtonProps) => {
   const colors = useThemeColors();
-  const { phase, right, bottom, clearTimer, handlers } = useLongPressDrag(
+  const { phase, positionStyle, clearTimer, handlers } = useLongPressDrag(
     bindtap,
-    { initialRight, initialBottom },
+    { initialPosition },
   );
 
   const handleReload = () => {
@@ -57,8 +58,7 @@ export const FloatingButton = ({
       className={"fb-wrapper"}
       consume-slide-event={[[-180, 180]]}
       style={{
-        right: `${right}px`,
-        bottom: `${bottom}px`,
+        ...positionStyle,
         transform: isDragging ? "scale(1.05)" : "scale(1)",
         transition: `transform ${duration.d4} cubic-bezier(0.4, 0, 0.2, 1)`,
       }}

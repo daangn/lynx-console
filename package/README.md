@@ -182,7 +182,7 @@ You can also integrate it with a back press handler so that the console closes w
 | `theme`               | `"light" \| "dark"` | `"light"`   | Console UI theme                                 |
 | `safeAreaInsetBottom` | `string`            | `"50px"`    | Bottom safe area inset                           |
 | `customTabs`          | `CustomTab[]`       | `undefined` | Additional custom tabs to display in the console |
-| `initialPosition`     | `{ right?: number; bottom?: number }` | `{ right: 16, bottom: 84 }` | Initial position (px) of the floating button. Once the user drags the button, the new position is remembered and overrides this value. |
+| `initialPosition`     | `{ top?: number; left?: number; right?: number; bottom?: number }` | `{ right: 16, bottom: 84 }` | Initial position (px) of the floating button. Each side is independent, so you can anchor it to any corner (e.g. `{ top: 50, left: 16 }`). When both `top` and `bottom` (or both `left` and `right`) are set, `top`/`left` win. Once the user drags the button, the saved position takes precedence. |
 
 ### `CustomTab`
 

@@ -26,6 +26,8 @@ export interface LynxConsoleProps {
   safeAreaInsetBottom?: string;
   customTabs?: CustomTab[];
   initialPosition?: {
+    top?: number;
+    left?: number;
     right?: number;
     bottom?: number;
   };
@@ -105,8 +107,7 @@ const LynxConsole = forwardRef<LynxConsoleHandle, LynxConsoleProps>(
         >
           <FloatingButton
             bindtap={handleOpenBottomSheet}
-            initialRight={initialPosition?.right}
-            initialBottom={initialPosition?.bottom}
+            initialPosition={initialPosition}
           >
             <text
               className="fb-title t4"

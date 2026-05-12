@@ -25,6 +25,12 @@ export interface LynxConsoleProps {
   theme?: "light" | "dark";
   safeAreaInsetBottom?: string;
   customTabs?: CustomTab[];
+  initialPosition?: {
+    top?: number;
+    left?: number;
+    right?: number;
+    bottom?: number;
+  };
 }
 
 interface FcpMetric {
@@ -40,7 +46,12 @@ interface MetricFcpEntry {
 
 const LynxConsole = forwardRef<LynxConsoleHandle, LynxConsoleProps>(
   (
-    { theme = "light", safeAreaInsetBottom = "50px", customTabs },
+    {
+      theme = "light",
+      safeAreaInsetBottom = "50px",
+      customTabs,
+      initialPosition,
+    },
     ref: ForwardedRef<LynxConsoleHandle>,
   ) => {
     const [isOpen, setIsOpen] = useState(false);
@@ -94,7 +105,10 @@ const LynxConsole = forwardRef<LynxConsoleHandle, LynxConsoleProps>(
             color: colors.fg.neutral,
           }}
         >
-          <FloatingButton bindtap={handleOpenBottomSheet}>
+          <FloatingButton
+            bindtap={handleOpenBottomSheet}
+            initialPosition={initialPosition}
+          >
             <text
               className="fb-title t4"
               style={{ fontWeight: "400", color: colors.palette.staticWhite }}

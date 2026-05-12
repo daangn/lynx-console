@@ -217,6 +217,7 @@ const App = () => {
         <LynxConsole
           safeAreaInsetBottom="0px"
           theme="light"
+          initialPosition={{ right: 30, bottom: 200 }}
           customTabs={[
             {
               key: 'custom',

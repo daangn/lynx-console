@@ -10,7 +10,7 @@ import { ConsolePanel } from "./components/ConsolePanel.jsx";
 import "./components/FloatingButton.css";
 import "./styles/tokens.css";
 import { FloatingButton } from "./components/FloatingButton.jsx";
-import { usePerformance } from "./hooks/usePerformance";
+import { useLatestFcp } from "./hooks/useLatestFcp";
 import { ThemeProvider } from "./styles/ThemeContext";
 import { getColors } from "./styles/theme";
 import type { CustomTab } from "./types";
@@ -33,17 +33,6 @@ export interface LynxConsoleProps {
   };
 }
 
-interface FcpMetric {
-  name: string;
-  duration: number;
-}
-
-interface MetricFcpEntry {
-  totalFcp?: FcpMetric;
-  lynxFcp?: FcpMetric;
-  fcp?: FcpMetric;
-}
-
 const LynxConsole = forwardRef<LynxConsoleHandle, LynxConsoleProps>(
   (
     {
@@ -56,25 +45,8 @@ const LynxConsole = forwardRef<LynxConsoleHandle, LynxConsoleProps>(
   ) => {
     const [isOpen, setIsOpen] = useState(false);
     const [shouldClose, setShouldClose] = useState(false);
-    const { performances } = usePerformance();
+    const latestFcp = useLatestFcp();
     const colors = useMemo(() => getColors(theme), [theme]);
-
-    const latestFcp = useMemo(() => {
-      for (let i = performances.length - 1; i >= 0; i--) {
-        const perf = performances[i];
-        if (perf && perf.entryType === "metric" && perf.name === "fcp") {
-          const metricEntry = perf.rawEntry as MetricFcpEntry | undefined;
-          // totalFcp를 먼저 시도하고, 없으면 lynxFcp 반환
-          if (metricEntry?.totalFcp?.duration !== undefined) {
-            return metricEntry.totalFcp;
-          }
-          if (metricEntry?.lynxFcp?.duration !== undefined) {
-            return metricEntry.lynxFcp;
-          }
-        }
-      }
-      return undefined;
-    }, [performances]);
 
     useImperativeHandle(ref, () => ({
       open: () => {

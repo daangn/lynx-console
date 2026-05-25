@@ -22,8 +22,7 @@ const pickFcp = (entry: PerformanceEntryData): FcpMetric | undefined => {
 
 export const useLatestFcp = (): FcpMetric | undefined => {
   const [fcp, setFcp] = useState<FcpMetric | undefined>(() => {
-    const performances =
-      globalThis.__LYNX_CONSOLE__?.state?.performances ?? [];
+    const performances = globalThis.__LYNX_CONSOLE__?.state?.performances ?? [];
     for (let i = performances.length - 1; i >= 0; i--) {
       const entry = performances[i];
       if (!entry) continue;

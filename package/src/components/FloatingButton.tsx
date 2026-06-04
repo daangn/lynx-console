@@ -56,7 +56,6 @@ export const FloatingButton = ({
   return (
     <view
       className={"fb-wrapper"}
-      consume-slide-event={[[-180, 180]]}
       style={{
         ...positionStyle,
         transform: isDragging ? "scale(1.05)" : "scale(1)",

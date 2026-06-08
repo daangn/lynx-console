@@ -1,5 +1,23 @@
 # lynx-console
 
+## 0.6.1
+
+### Patch Changes
+
+- d3a124a: `LynxConsole`에서 `usePerformance`로 전체 `performances` 배열을 컴포넌트 상태에 복사해 들고 있던 패턴을, FCP만 구독하는 `useLatestFcp` 훅으로 분리.
+
+  - 불필요한 컴포넌트 상태 제거 — `performances` 원본은 `__LYNX_CONSOLE__.state`에 그대로 있어 이중 보관할 필요가 없었음
+  - 매 호출마다 새 배열이 들어와 사실상 무효였던 `useMemo` 제거
+  - `useState` lazy initializer로 마운트 시점 FCP 값을 첫 렌더에 잡도록 변경 (기존엔 `useEffect` 후에야 채워짐)
+
+- 4eaa62a: `FloatingButton`에서 `consume-slide-event={[[-180, 180]]}` 속성 제거.
+
+  이 속성이 한 군데라도 set되면 iOS는 `UIPanGestureRecognizer`를 LynxView의 root view에 attach해요. 이 root-level recognizer가 UIKit gesture arena에서 list의 `UIScrollView` scroll recognizer와 협상하면서 `shouldBeRequiredToFailByGestureRecognizer: YES` 때문에 list scroll이 매 gesture 시작마다 Lynx pan recognizer의 fail을 기다리게 돼요. 결과적으로 `<list>` 페이지에서 스크롤 시작이 끈적한 느낌을 줘요. (Android는 MotionEvent 인터셉트 방식이라 동일 문제 없음.)
+
+  FloatingButton의 드래그는 `useLongPressDrag`의 long-press 임계로 list scroll과 자연스럽게 구분되므로 이 속성 없이도 동작에 큰 영향 없을 것으로 예상.
+
+- 1409a2a: Add a `fail` handler to the `scrollToPosition` invoke in `LogPanel` to suppress the harmless warning that occurs when an in-progress smooth scroll is interrupted by consecutive logs.
+
 ## 0.6.0
 
 ### Minor Changes

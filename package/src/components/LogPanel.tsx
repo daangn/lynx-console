@@ -154,6 +154,8 @@ export const LogPanel = ({ logs, clearLogs }: LogPanelProps) => {
       ?.invoke({
         method: "scrollToPosition",
         params: { position: logsRef.current.length - 1, smooth },
+        // 연속 로그로 진행 중이던 smooth 스크롤이 중단될 때 나는 무해한 경고를 무시
+        fail: () => {},
       })
       .exec();
   };

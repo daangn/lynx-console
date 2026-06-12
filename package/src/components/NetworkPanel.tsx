@@ -3,7 +3,7 @@ import type { BaseEvent, InputInputEvent, NodesRef } from "@lynx-js/types";
 import { useThemeColors } from "../styles/ThemeContext";
 import { fontWeight, type ThemeColors } from "../styles/theme";
 import type { NetworkEntry } from "../types";
-import { HighlightText, textIncludes } from "./HighlightText";
+import { countOccurrences, HighlightText } from "./HighlightText";
 import { NetworkDetailSection } from "./NetworkDetailSection";
 import "./NetworkPanel.css";
 
@@ -13,6 +13,15 @@ interface NetworkPanelProps {
 }
 
 type TabType = "general" | "request" | "response";
+
+// 검색어의 개별 등장(매치) 하나를 가리킨다
+interface SearchMatch {
+  entryId: string;
+  entryIndex: number;
+  tab: TabType;
+  // 해당 필드 텍스트 안에서의 0-based 등장 순번
+  localIndex: number;
+}
 
 // 패널이 다시 마운트돼도 검색어를 유지
 let savedSearchQuery = "";
@@ -86,11 +95,15 @@ export const NetworkPanel = ({
   // 항목별 탭 선택 상태(검색 일치 항목은 일치한 탭이 기본값)
   const [tabOverrides, setTabOverrides] = useState<Record<string, TabType>>({});
   const [searchQuery, setSearchQuery] = useState(savedSearchQuery);
+  // 현재 선택된 매치 인덱스(전체 매치 배열 기준, 음수/초과는 wrap 처리)
+  const [currentMatchIndex, setCurrentMatchIndex] = useState(0);
   const searchInputRef = useRef<NodesRef>(null);
   const listRef = useRef<NodesRef>(null);
 
   useEffect(() => {
     savedSearchQuery = searchQuery;
+    // 검색어가 바뀌면 첫 매치부터 다시 시작
+    setCurrentMatchIndex(0);
   }, [searchQuery]);
 
   useEffect(() => {
@@ -101,51 +114,84 @@ export const NetworkPanel = ({
     }
   }, []);
 
-  // 검색 일치 정보: 일치한 항목 id 집합과 항목별로 펼칠 탭
-  const matchInfo = useMemo(() => {
-    const ids = new Set<string>();
-    const matchedTab = new Map<string, TabType>();
-    if (!searchQuery.trim()) return { ids, matchedTab };
-
-    for (const network of networks) {
-      const inResponse = textIncludes(network.responseBody, searchQuery);
-      const inRequest = textIncludes(network.requestBody, searchQuery);
-      const inUrl = textIncludes(network.url, searchQuery);
-      if (inResponse || inRequest || inUrl) {
-        ids.add(network.id);
-        // response를 가장 우선해 자동으로 펼친다
-        matchedTab.set(
-          network.id,
-          inResponse ? "response" : inRequest ? "request" : "general",
-        );
+  // url / request body / response body 안의 모든 등장을 평탄한 매치 배열로 만든다
+  const matches = useMemo<SearchMatch[]>(() => {
+    if (!searchQuery.trim()) return [];
+    const result: SearchMatch[] = [];
+    networks.forEach((network, entryIndex) => {
+      const fields: { tab: TabType; text?: string }[] = [
+        { tab: "general", text: network.url },
+        { tab: "request", text: network.requestBody },
+        { tab: "response", text: network.responseBody },
+      ];
+      for (const { tab, text } of fields) {
+        const occurrences = countOccurrences(text, searchQuery);
+        for (let localIndex = 0; localIndex < occurrences; localIndex++) {
+          result.push({ entryId: network.id, entryIndex, tab, localIndex });
+        }
       }
-    }
-    return { ids, matchedTab };
+    });
+    return result;
   }, [networks, searchQuery]);
 
+  // wrap-around: 음수/초과 인덱스를 항상 유효 범위로 정규화
+  const activeIndex =
+    matches.length > 0
+      ? ((currentMatchIndex % matches.length) + matches.length) % matches.length
+      : 0;
+  const activeMatch = matches[activeIndex];
+
+  // 일치한 항목 id 집합과 항목별 기본 탭(첫 매치 기준)
+  const { matchedIds, defaultTabByEntry } = useMemo(() => {
+    const ids = new Set<string>();
+    const tabByEntry = new Map<string, TabType>();
+    for (const match of matches) {
+      ids.add(match.entryId);
+      if (!tabByEntry.has(match.entryId)) {
+        tabByEntry.set(match.entryId, match.tab);
+      }
+    }
+    return { matchedIds: ids, defaultTabByEntry: tabByEntry };
+  }, [matches]);
+
   const isExpanded = (id: string): boolean =>
-    selectedId === id || matchInfo.ids.has(id);
+    selectedId === id || matchedIds.has(id);
 
   const getActiveTab = (id: string): TabType =>
-    tabOverrides[id] ?? matchInfo.matchedTab.get(id) ?? "general";
+    tabOverrides[id] ?? defaultTabByEntry.get(id) ?? "general";
 
-  // 검색어가 바뀌면 첫 번째 일치 항목으로 스크롤 포커스
-  const firstMatchIndex = useMemo(() => {
-    if (!searchQuery.trim()) return -1;
-    return networks.findIndex((network) => matchInfo.ids.has(network.id));
-  }, [networks, matchInfo, searchQuery]);
+  // 이 항목/탭에서 현재 활성 매치의 등장 순번(아니면 -1)
+  const getActiveOccurrence = (id: string, tab: TabType): number =>
+    activeMatch && activeMatch.entryId === id && activeMatch.tab === tab
+      ? activeMatch.localIndex
+      : -1;
 
+  const goToMatch = (delta: number) => {
+    if (matches.length === 0) return;
+    setCurrentMatchIndex((prev) => prev + delta);
+  };
+
+  // 현재 매치가 바뀌면 해당 항목으로 스크롤하고 그 항목의 탭을 매치 위치로 전환
+  const activeEntryId = activeMatch?.entryId;
+  const activeEntryIndex = activeMatch?.entryIndex;
+  const activeTabForScroll = activeMatch?.tab;
   useEffect(() => {
-    if (firstMatchIndex < 0) return;
+    if (activeEntryId === undefined || activeEntryIndex === undefined) return;
     listRef.current
       ?.invoke({
         method: "scrollToPosition",
-        params: { position: firstMatchIndex, smooth: true },
+        params: { position: activeEntryIndex, smooth: true },
         // 스크롤 도중 목록이 갱신되며 나는 무해한 경고를 무시
         fail: () => {},
       })
       .exec();
-  }, [firstMatchIndex]);
+    if (activeTabForScroll) {
+      setTabOverrides((prev) => ({
+        ...prev,
+        [activeEntryId]: activeTabForScroll,
+      }));
+    }
+  }, [activeEntryId, activeEntryIndex, activeTabForScroll, activeIndex]);
 
   const formatDuration = (duration?: number): string => {
     if (!duration) return "-";
@@ -225,6 +271,57 @@ export const NetworkPanel = ({
               setSearchQuery(e.detail.value)
             }
           />
+          {searchQuery.trim().length > 0 && (
+            <view className={"np-matchNav"}>
+              <text
+                className={"np-matchCount t2"}
+                style={{
+                  fontWeight: fontWeight.medium,
+                  color: colors.fg.neutralSubtle,
+                }}
+              >
+                {matches.length > 0
+                  ? `${activeIndex + 1}/${matches.length}`
+                  : "0/0"}
+              </text>
+              <view
+                className={"np-matchNavButton"}
+                style={{ backgroundColor: colors.bg.neutralWeak }}
+                bindtap={() => goToMatch(-1)}
+              >
+                <text
+                  className={"np-matchNavText t3"}
+                  style={{
+                    fontWeight: fontWeight.bold,
+                    color:
+                      matches.length > 0
+                        ? colors.fg.neutralMuted
+                        : colors.fg.disabled,
+                  }}
+                >
+                  ▲
+                </text>
+              </view>
+              <view
+                className={"np-matchNavButton"}
+                style={{ backgroundColor: colors.bg.neutralWeak }}
+                bindtap={() => goToMatch(1)}
+              >
+                <text
+                  className={"np-matchNavText t3"}
+                  style={{
+                    fontWeight: fontWeight.bold,
+                    color:
+                      matches.length > 0
+                        ? colors.fg.neutralMuted
+                        : colors.fg.disabled,
+                  }}
+                >
+                  ▼
+                </text>
+              </view>
+            </view>
+          )}
           {searchQuery.length > 0 && (
             <view
               className={"np-searchClear"}
@@ -273,7 +370,7 @@ export const NetworkPanel = ({
           }}
         >
           {searchQuery.trim()
-            ? `${matchInfo.ids.size} / ${networks.length} requests`
+            ? `${matchedIds.size} / ${networks.length} requests`
             : `Total: ${networks.length} requests`}
         </text>
       </view>
@@ -446,15 +543,31 @@ export const NetworkPanel = ({
                               >
                                 {item.key}
                               </text>
-                              <HighlightText
-                                text={item.value}
-                                query={searchQuery}
-                                className={"np-tableValue t3"}
-                                style={{
-                                  fontWeight: fontWeight.regular,
-                                  color: colors.fg.neutral,
-                                }}
-                              />
+                              {item.key === "URL" ? (
+                                <HighlightText
+                                  text={item.value}
+                                  query={searchQuery}
+                                  activeOccurrence={getActiveOccurrence(
+                                    network.id,
+                                    "general",
+                                  )}
+                                  className={"np-tableValue t3"}
+                                  style={{
+                                    fontWeight: fontWeight.regular,
+                                    color: colors.fg.neutral,
+                                  }}
+                                />
+                              ) : (
+                                <text
+                                  className={"np-tableValue t3"}
+                                  style={{
+                                    fontWeight: fontWeight.regular,
+                                    color: colors.fg.neutral,
+                                  }}
+                                >
+                                  {item.value}
+                                </text>
+                              )}
                             </view>
                           ))}
                         </view>
@@ -465,6 +578,10 @@ export const NetworkPanel = ({
                           headers={network.requestHeaders}
                           body={network.requestBody}
                           highlightQuery={searchQuery}
+                          activeOccurrence={getActiveOccurrence(
+                            network.id,
+                            "request",
+                          )}
                         />
                       )}
 
@@ -474,6 +591,10 @@ export const NetworkPanel = ({
                           body={network.responseBody}
                           error={network.error}
                           highlightQuery={searchQuery}
+                          activeOccurrence={getActiveOccurrence(
+                            network.id,
+                            "response",
+                          )}
                         />
                       )}
                     </view>

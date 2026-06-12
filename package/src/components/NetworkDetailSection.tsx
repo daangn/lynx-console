@@ -8,6 +8,7 @@ interface NetworkDetailSectionProps {
   body?: string | undefined;
   error?: string | undefined;
   highlightQuery?: string | undefined;
+  activeOccurrence?: number | undefined;
 }
 
 export const NetworkDetailSection = ({
@@ -15,6 +16,7 @@ export const NetworkDetailSection = ({
   body = "",
   error = "",
   highlightQuery = "",
+  activeOccurrence = -1,
 }: NetworkDetailSectionProps) => {
   const colors = useThemeColors();
 
@@ -94,6 +96,7 @@ export const NetworkDetailSection = ({
           <HighlightText
             text={body}
             query={highlightQuery}
+            activeOccurrence={activeOccurrence}
             className={"np-bodyText t3"}
             style={{
               fontWeight: fontWeight.regular,

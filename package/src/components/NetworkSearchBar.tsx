@@ -60,6 +60,7 @@ export const NetworkSearchBar = ({
           bindinput={(e: BaseEvent<"bindinput", InputInputEvent>) =>
             setSearchQuery(e.detail.value)
           }
+          bindconfirm={() => goToMatch(1)}
         />
         {hasQuery && (
           <view className={"np-matchNav"}>

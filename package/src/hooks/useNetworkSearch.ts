@@ -94,7 +94,9 @@ export function useNetworkSearch(networks: NetworkEntry[]) {
     listRef.current
       ?.invoke({
         method: "scrollToPosition",
-        params: { position: activeEntryIndex, smooth: true },
+        // middle: 매치 항목을 "완전히 보이도록" 화면 중앙에 정렬한다.
+        // top 정렬은 상단 헤더에 가리거나 목록 끝 근처 항목을 못 올리는 문제가 있음
+        params: { position: activeEntryIndex, alignTo: "middle", smooth: true },
         // 스크롤 도중 목록이 갱신되며 나는 무해한 경고를 무시
         fail: () => {},
       })

@@ -1,17 +1,20 @@
 import { useThemeColors } from "../styles/ThemeContext";
 import { fontWeight } from "../styles/theme";
+import { HighlightText } from "./HighlightText";
 import "./NetworkPanel.css";
 
 interface NetworkDetailSectionProps {
   headers?: Record<string, string> | undefined;
   body?: string | undefined;
   error?: string | undefined;
+  highlightQuery?: string | undefined;
 }
 
 export const NetworkDetailSection = ({
   headers = {},
   body = "",
   error = "",
+  highlightQuery = "",
 }: NetworkDetailSectionProps) => {
   const colors = useThemeColors();
 
@@ -88,16 +91,16 @@ export const NetworkDetailSection = ({
           </text>
         )}
         {body && (
-          <text
+          <HighlightText
+            text={body}
+            query={highlightQuery}
             className={"np-bodyText t3"}
             style={{
               fontWeight: fontWeight.regular,
               color: colors.fg.neutral,
               backgroundColor: colors.bg.neutralWeak,
             }}
-          >
-            {body}
-          </text>
+          />
         )}
         {!error && !body && (
           <text

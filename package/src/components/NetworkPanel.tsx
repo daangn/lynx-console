@@ -1,16 +1,23 @@
 import { useState } from "@lynx-js/react";
+import { type NetworkTab, useNetworkSearch } from "../hooks/useNetworkSearch";
 import { useThemeColors } from "../styles/ThemeContext";
 import { fontWeight, type ThemeColors } from "../styles/theme";
 import type { NetworkEntry } from "../types";
+import { HighlightText } from "./HighlightText";
 import { NetworkDetailSection } from "./NetworkDetailSection";
 import "./NetworkPanel.css";
+import { NetworkSearchBar } from "./NetworkSearchBar";
 
 interface NetworkPanelProps {
   networks: NetworkEntry[];
   clearNetworks: () => void;
 }
 
-type TabType = "general" | "request" | "response";
+const TABS: { tab: NetworkTab; label: string }[] = [
+  { tab: "general", label: "General" },
+  { tab: "request", label: "Request" },
+  { tab: "response", label: "Response" },
+];
 
 function getMethodColors(colors: ThemeColors, method: string) {
   switch (method) {
@@ -78,7 +85,14 @@ export const NetworkPanel = ({
 }: NetworkPanelProps) => {
   const colors = useThemeColors();
   const [selectedId, setSelectedId] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<TabType>("general");
+  const search = useNetworkSearch(networks);
+
+  const isExpanded = (id: string): boolean =>
+    selectedId === id || search.isMatched(id);
+
+  const toggleExpanded = (id: string) =>
+    setSelectedId(isExpanded(id) ? null : id);
+
   const formatDuration = (duration?: number): string => {
     if (!duration) return "-";
     if (duration < 1000) return `${duration}ms`;
@@ -130,7 +144,17 @@ export const NetworkPanel = ({
 
   return (
     <view className={"np-container"}>
-      <view className={"np-header"}>
+      <NetworkSearchBar
+        searchQuery={search.searchQuery}
+        setSearchQuery={search.setSearchQuery}
+        searchInputRef={search.searchInputRef}
+        totalMatches={search.totalMatches}
+        activeIndex={search.activeIndex}
+        goToMatch={search.goToMatch}
+        clearNetworks={clearNetworks}
+      />
+
+      <view className={"np-countRow"}>
         <text
           className={"np-count t3"}
           style={{
@@ -138,23 +162,10 @@ export const NetworkPanel = ({
             color: colors.fg.neutralSubtle,
           }}
         >
-          Total: {networks.length} requests
+          {search.searchQuery.trim()
+            ? `${search.matchedCount} / ${networks.length} requests`
+            : `Total: ${networks.length} requests`}
         </text>
-        <view
-          className={"np-clearButton"}
-          style={{ backgroundColor: colors.bg.neutralWeak }}
-          bindtap={clearNetworks}
-        >
-          <text
-            className={"np-clearButtonText t3"}
-            style={{
-              fontWeight: fontWeight.medium,
-              color: colors.fg.neutralMuted,
-            }}
-          >
-            🗑
-          </text>
-        </view>
       </view>
 
       {networks.length === 0 ? (
@@ -170,223 +181,207 @@ export const NetworkPanel = ({
           </text>
         </view>
       ) : (
-        <list scroll-orientation="vertical" className={"np-list"}>
-          {networks.map((network) => (
-            <list-item key={network.id} item-key={network.id}>
-              <view
-                className={"np-item"}
-                style={{
-                  backgroundColor: getItemBg(colors, network.status),
-                  borderBottomColor: colors.stroke.neutralWeak,
-                }}
-              >
+        <list
+          ref={search.listRef}
+          scroll-orientation="vertical"
+          className={"np-list"}
+        >
+          {networks.map((network) => {
+            const activeTab = search.getActiveTab(network.id);
+            return (
+              <list-item key={network.id} item-key={network.id}>
                 <view
-                  className={"np-itemHeader"}
-                  bindtap={() =>
-                    setSelectedId(selectedId === network.id ? null : network.id)
-                  }
+                  className={"np-item"}
+                  style={{
+                    backgroundColor: getItemBg(colors, network.status),
+                    borderBottomColor: colors.stroke.neutralWeak,
+                  }}
                 >
-                  <text
-                    className={"np-method t2"}
-                    style={{
-                      fontWeight: fontWeight.bold,
-                      ...getMethodColors(colors, network.method),
-                    }}
+                  <view
+                    className={"np-itemHeader"}
+                    bindtap={() => toggleExpanded(network.id)}
                   >
-                    {network.method}
-                  </text>
-                  {network.statusCode && (
                     <text
-                      className={"np-statusCode t2"}
+                      className={"np-method t2"}
                       style={{
                         fontWeight: fontWeight.bold,
-                        color: getStatusCodeColor(
-                          colors,
-                          getStatusCodeVariant(
-                            network.status,
-                            network.statusCode,
-                          ),
-                        ),
+                        ...getMethodColors(colors, network.method),
                       }}
                     >
-                      {network.statusCode}
+                      {network.method}
                     </text>
-                  )}
-                  {network.status === "pending" && (
+                    {network.statusCode && (
+                      <text
+                        className={"np-statusCode t2"}
+                        style={{
+                          fontWeight: fontWeight.bold,
+                          color: getStatusCodeColor(
+                            colors,
+                            getStatusCodeVariant(
+                              network.status,
+                              network.statusCode,
+                            ),
+                          ),
+                        }}
+                      >
+                        {network.statusCode}
+                      </text>
+                    )}
+                    {network.status === "pending" && (
+                      <text
+                        className={"np-statusCode t2"}
+                        style={{
+                          fontWeight: fontWeight.bold,
+                          color: colors.fg.neutralSubtle,
+                        }}
+                      >
+                        Pending...
+                      </text>
+                    )}
                     <text
-                      className={"np-statusCode t2"}
+                      className={"np-time t2"}
                       style={{
-                        fontWeight: fontWeight.bold,
+                        fontWeight: fontWeight.regular,
                         color: colors.fg.neutralSubtle,
                       }}
                     >
-                      Pending...
+                      {formatDuration(network.duration)}
                     </text>
-                  )}
-                  <text
-                    className={"np-time t2"}
-                    style={{
-                      fontWeight: fontWeight.regular,
-                      color: colors.fg.neutralSubtle,
-                    }}
-                  >
-                    {formatDuration(network.duration)}
-                  </text>
-                  <text
-                    className={"np-time t2"}
-                    style={{
-                      fontWeight: fontWeight.regular,
-                      color: colors.fg.neutralSubtle,
-                    }}
-                  >
-                    {new Date(network.startTime).toISOString()}
-                  </text>
-                </view>
+                    <text
+                      className={"np-time t2"}
+                      style={{
+                        fontWeight: fontWeight.regular,
+                        color: colors.fg.neutralSubtle,
+                      }}
+                    >
+                      {new Date(network.startTime).toISOString()}
+                    </text>
+                  </view>
 
-                <text
-                  className={"np-path t3"}
-                  style={{
-                    fontWeight: fontWeight.regular,
-                    color: colors.fg.neutral,
-                  }}
-                  bindtap={() =>
-                    setSelectedId(selectedId === network.id ? null : network.id)
-                  }
-                >
-                  {extractPath(network.url)}
-                </text>
+                  <view bindtap={() => toggleExpanded(network.id)}>
+                    <HighlightText
+                      text={extractPath(network.url)}
+                      query={search.searchQuery}
+                      className={"np-path t3"}
+                      style={{
+                        fontWeight: fontWeight.regular,
+                        color: colors.fg.neutral,
+                      }}
+                    />
+                  </view>
 
-                {selectedId === network.id && (
-                  <view
-                    className={"np-detailsContainer"}
-                    style={{ borderTopColor: colors.stroke.neutralSubtle }}
-                  >
-                    {/* Tabs */}
-                    <view className={"np-tabs"}>
-                      <view
-                        className={"np-tab"}
-                        style={{
-                          backgroundColor:
-                            activeTab === "general"
-                              ? colors.bg.neutralWeak
-                              : undefined,
-                        }}
-                        bindtap={() => setActiveTab("general")}
-                      >
-                        <text
-                          className={"np-tabText t4"}
-                          style={{
-                            fontWeight: fontWeight.medium,
-                            color:
-                              activeTab === "general"
-                                ? colors.fg.neutral
-                                : colors.fg.neutralSubtle,
-                          }}
-                        >
-                          General
-                        </text>
-                      </view>
-                      <view
-                        className={"np-tab"}
-                        style={{
-                          backgroundColor:
-                            activeTab === "request"
-                              ? colors.bg.neutralWeak
-                              : undefined,
-                        }}
-                        bindtap={() => setActiveTab("request")}
-                      >
-                        <text
-                          className={"np-tabText t4"}
-                          style={{
-                            fontWeight: fontWeight.medium,
-                            color:
-                              activeTab === "request"
-                                ? colors.fg.neutral
-                                : colors.fg.neutralSubtle,
-                          }}
-                        >
-                          Request
-                        </text>
-                      </view>
-                      <view
-                        className={"np-tab"}
-                        style={{
-                          backgroundColor:
-                            activeTab === "response"
-                              ? colors.bg.neutralWeak
-                              : undefined,
-                        }}
-                        bindtap={() => setActiveTab("response")}
-                      >
-                        <text
-                          className={"np-tabText t4"}
-                          style={{
-                            fontWeight: fontWeight.medium,
-                            color:
-                              activeTab === "response"
-                                ? colors.fg.neutral
-                                : colors.fg.neutralSubtle,
-                          }}
-                        >
-                          Response
-                        </text>
-                      </view>
-                    </view>
-
-                    {/* Tab Content */}
-                    <view className={"np-tabContent"}>
-                      {activeTab === "general" && (
-                        <view className={"np-table"}>
-                          {getGeneralInfo(network).map((item) => (
+                  {isExpanded(network.id) && (
+                    <view
+                      className={"np-detailsContainer"}
+                      style={{ borderTopColor: colors.stroke.neutralSubtle }}
+                    >
+                      {/* Tabs */}
+                      <view className={"np-tabs"}>
+                        {TABS.map(({ tab, label }) => {
+                          const isActive = activeTab === tab;
+                          return (
                             <view
-                              key={item.key}
-                              className={"np-tableRow"}
-                              style={{ backgroundColor: colors.bg.neutralWeak }}
+                              key={tab}
+                              className={"np-tab"}
+                              style={{
+                                backgroundColor: isActive
+                                  ? colors.bg.neutralWeak
+                                  : undefined,
+                              }}
+                              bindtap={() => search.selectTab(network.id, tab)}
                             >
                               <text
-                                className={"np-tableKey t3"}
+                                className={"np-tabText t4"}
                                 style={{
-                                  fontWeight: fontWeight.bold,
-                                  color: colors.fg.neutralSubtle,
+                                  fontWeight: fontWeight.medium,
+                                  color: isActive
+                                    ? colors.fg.neutral
+                                    : colors.fg.neutralSubtle,
                                 }}
                               >
-                                {item.key}
-                              </text>
-                              <text
-                                className={"np-tableValue t3"}
-                                style={{
-                                  fontWeight: fontWeight.regular,
-                                  color: colors.fg.neutral,
-                                }}
-                              >
-                                {item.value}
+                                {label}
                               </text>
                             </view>
-                          ))}
-                        </view>
-                      )}
+                          );
+                        })}
+                      </view>
 
-                      {activeTab === "request" && (
-                        <NetworkDetailSection
-                          headers={network.requestHeaders}
-                          body={network.requestBody}
-                        />
-                      )}
+                      {/* Tab Content */}
+                      <view className={"np-tabContent"}>
+                        {activeTab === "general" && (
+                          <view className={"np-table"}>
+                            {getGeneralInfo(network).map((item) => (
+                              <view
+                                key={item.key}
+                                className={"np-tableRow"}
+                                style={{
+                                  backgroundColor: colors.bg.neutralWeak,
+                                }}
+                              >
+                                <text
+                                  className={"np-tableKey t3"}
+                                  style={{
+                                    fontWeight: fontWeight.bold,
+                                    color: colors.fg.neutralSubtle,
+                                  }}
+                                >
+                                  {item.key}
+                                </text>
+                                <HighlightText
+                                  text={item.value}
+                                  query={
+                                    item.key === "URL" ? search.searchQuery : ""
+                                  }
+                                  activeOccurrence={
+                                    item.key === "URL"
+                                      ? search.getActiveOccurrence(
+                                          network.id,
+                                          "general",
+                                        )
+                                      : -1
+                                  }
+                                  className={"np-tableValue t3"}
+                                  style={{
+                                    fontWeight: fontWeight.regular,
+                                    color: colors.fg.neutral,
+                                  }}
+                                />
+                              </view>
+                            ))}
+                          </view>
+                        )}
 
-                      {activeTab === "response" && (
-                        <NetworkDetailSection
-                          headers={network.responseHeaders}
-                          body={network.responseBody}
-                          error={network.error}
-                        />
-                      )}
+                        {activeTab === "request" && (
+                          <NetworkDetailSection
+                            headers={network.requestHeaders}
+                            body={network.requestBody}
+                            highlightQuery={search.searchQuery}
+                            activeOccurrence={search.getActiveOccurrence(
+                              network.id,
+                              "request",
+                            )}
+                          />
+                        )}
+
+                        {activeTab === "response" && (
+                          <NetworkDetailSection
+                            headers={network.responseHeaders}
+                            body={network.responseBody}
+                            error={network.error}
+                            highlightQuery={search.searchQuery}
+                            activeOccurrence={search.getActiveOccurrence(
+                              network.id,
+                              "response",
+                            )}
+                          />
+                        )}
+                      </view>
                     </view>
-                  </view>
-                )}
-              </view>
-            </list-item>
-          ))}
+                  )}
+                </view>
+              </list-item>
+            );
+          })}
         </list>
       )}
     </view>

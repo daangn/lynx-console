@@ -10,8 +10,51 @@
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
+  padding-bottom: 3px;
+}
+
+.np-searchWrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex: 1;
+  margin-right: 8px;
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+  gap: 8px;
+}
+
+.np-searchInput {
+  flex: 1;
+}
+
+.np-searchClear {
+  padding: 2px 4px;
+}
+
+.np-matchNav {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 4px;
+}
+
+.np-matchCount {
+  min-width: 28px;
+  text-align: right;
+}
+
+.np-matchNavButton {
+  padding: 1px 5px;
+  border-radius: 4px;
+}
+
+.np-countRow {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
   margin-bottom: 8px;
-  padding-bottom: 4px;
+  padding-top: 4px;
 }
 
 .np-clearButton {

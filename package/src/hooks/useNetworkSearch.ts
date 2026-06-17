@@ -9,6 +9,28 @@ import type { NodesRef } from "@lynx-js/types";
 import { countOccurrences } from "../components/HighlightText";
 import type { NetworkEntry } from "../types";
 
+// Lynx invoke 콜백을 Promise로 래핑 — 콜백 중첩 없이 await로 순차 호출 가능
+function invokeAsync<T = void>(
+  ref: NodesRef | null | undefined,
+  method: string,
+  params?: Record<string, unknown>,
+): Promise<T> {
+  return new Promise<T>((resolve, reject) => {
+    if (!ref) {
+      reject(new Error("ref is null"));
+      return;
+    }
+    ref
+      .invoke({
+        method,
+        params,
+        success: (res: T) => resolve(res),
+        fail: () => reject(new Error("invoke failed")),
+      })
+      .exec();
+  });
+}
+
 export type NetworkTab = "general" | "request" | "response";
 type Section = "request" | "response";
 
@@ -131,51 +153,33 @@ export function useNetworkSearch(networks: NetworkEntry[]) {
   const activeEntryIndex = activeMatch?.entryIndex;
   useEffect(() => {
     if (activeEntryId === undefined || activeEntryIndex === undefined) return;
-    // effect 시작 시점의 노드를 스냅샷으로 캡처 — 콜백 내부에서 읽으면
+    // effect 시작 시점에 스냅샷 캡처 — 비동기 콜백 내부에서 읽으면
     // 빠른 연속 이동 시 이미 다른 노드를 가리킬 수 있다
     const nodeRef = activeNodeRef.current;
-    // 1) 항목을 즉시 상단으로 스크롤(smooth:false → success 콜백 시점에 레이아웃 확정)
-    listRef.current
-      ?.invoke({
-        method: "scrollToPosition",
-        params: { index: activeEntryIndex, alignTo: "top", smooth: false },
-        success: () => {
-          if (!nodeRef) return;
+    const listNode = listRef.current;
 
-          // 2) 매치 노드의 뷰포트 기준 위치 조회
-          nodeRef
-            .invoke({
-              method: "boundingClientRect",
-              params: {},
-              success: (nodeRect) => {
-                // 3) 리스트 자체의 뷰포트 기준 위치 조회
-                listRef.current
-                  ?.invoke({
-                    method: "boundingClientRect",
-                    params: {},
-                    success: (listRect) => {
-                      // 노드가 리스트 상단보다 아래에 있는 만큼 추가 스크롤
-                      const offset = nodeRect.top - listRect.top;
-                      if (offset <= 0) return;
-                      listRef.current
-                        ?.invoke({
-                          method: "scrollBy",
-                          params: { offset },
-                          fail: () => {},
-                        })
-                        .exec();
-                    },
-                    fail: () => {},
-                  })
-                  .exec();
-              },
-              fail: () => {},
-            })
-            .exec();
-        },
-        fail: () => {},
-      })
-      .exec();
+    void (async () => {
+      try {
+        // 1) 항목을 즉시 상단으로 스크롤(smooth:false → 완료 후 레이아웃 확정)
+        await invokeAsync(listNode, "scrollToPosition", {
+          index: activeEntryIndex,
+          alignTo: "top",
+          smooth: false,
+        });
+        if (!nodeRef) return;
+        // 2) 매치 노드와 리스트의 뷰포트 기준 위치를 병렬 조회
+        const [nodeRect, listRect] = await Promise.all([
+          invokeAsync<{ top: number }>(nodeRef, "boundingClientRect"),
+          invokeAsync<{ top: number }>(listNode, "boundingClientRect"),
+        ]);
+        // 3) 노드가 리스트 상단보다 아래에 있는 만큼 추가 스크롤
+        const offset = nodeRect.top - listRect.top;
+        if (offset <= 0) return;
+        await invokeAsync(listNode, "scrollBy", { offset });
+      } catch {
+        // 스크롤 실패(언마운트·ref 없음 등)는 무시
+      }
+    })();
   }, [activeEntryId, activeEntryIndex, activeNodeKey, activeIndex]);
 
   return {

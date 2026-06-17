@@ -94,9 +94,10 @@ export function useNetworkSearch(networks: NetworkEntry[]) {
     listRef.current
       ?.invoke({
         method: "scrollToPosition",
-        // middle: 매치 항목을 "완전히 보이도록" 화면 중앙에 정렬한다.
-        // top 정렬은 상단 헤더에 가리거나 목록 끝 근처 항목을 못 올리는 문제가 있음
-        params: { position: activeEntryIndex, alignTo: "middle", smooth: true },
+        // top: 매치 항목의 맨 위를 검색바 바로 아래로 올린다.
+        // 매치된 body는 NetworkDetailSection에서 Headers보다 위에 렌더되므로
+        // 항목 상단 가까이에 보인다.
+        params: { position: activeEntryIndex, alignTo: "top", smooth: true },
         // 스크롤 도중 목록이 갱신되며 나는 무해한 경고를 무시
         fail: () => {},
       })

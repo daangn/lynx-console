@@ -8,25 +8,36 @@ interface HighlightSegment {
   occurrence?: number;
 }
 
+// query가 등장하는 시작 인덱스들을 대소문자 구분 없이 반환한다.
+// 강조(splitHighlight)와 카운트(countOccurrences)가 같은 매치 정의를
+// 공유하도록 하는 단일 출처. 한쪽만 바뀌어 어긋나는 일을 막는다.
+function matchIndices(text: string, query: string): number[] {
+  const q = query.trim().toLowerCase();
+  if (!q) return [];
+  const lower = text.toLowerCase();
+  const indices: number[] = [];
+  let from = 0;
+  while (true) {
+    const idx = lower.indexOf(q, from);
+    if (idx === -1) break;
+    indices.push(idx);
+    from = idx + q.length;
+  }
+  return indices;
+}
+
 // query에 일치하는 부분을 대소문자 구분 없이 잘라 세그먼트로 반환
 export function splitHighlight(
   text: string,
   query: string,
 ): HighlightSegment[] {
   const q = query.trim().toLowerCase();
-  if (!q) return [{ text, match: false }];
+  const indices = matchIndices(text, query);
+  if (indices.length === 0) return [{ text, match: false }];
 
-  const lower = text.toLowerCase();
   const segments: HighlightSegment[] = [];
   let cursor = 0;
-  let occurrence = 0;
-
-  while (cursor < text.length) {
-    const idx = lower.indexOf(q, cursor);
-    if (idx === -1) {
-      segments.push({ text: text.slice(cursor), match: false });
-      break;
-    }
+  indices.forEach((idx, occurrence) => {
     if (idx > cursor) {
       segments.push({ text: text.slice(cursor, idx), match: false });
     }
@@ -35,8 +46,10 @@ export function splitHighlight(
       match: true,
       occurrence,
     });
-    occurrence += 1;
     cursor = idx + q.length;
+  });
+  if (cursor < text.length) {
+    segments.push({ text: text.slice(cursor), match: false });
   }
 
   return segments;
@@ -55,18 +68,7 @@ export function countOccurrences(
   query: string,
 ): number {
   if (!text) return 0;
-  const q = query.trim().toLowerCase();
-  if (!q) return 0;
-  const lower = text.toLowerCase();
-  let count = 0;
-  let from = 0;
-  while (true) {
-    const idx = lower.indexOf(q, from);
-    if (idx === -1) break;
-    count += 1;
-    from = idx + q.length;
-  }
-  return count;
+  return matchIndices(text, query).length;
 }
 
 interface HighlightTextProps {

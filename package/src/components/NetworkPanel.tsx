@@ -317,6 +317,14 @@ export const NetworkPanel = ({
                             {getGeneralInfo(network).map((item) => (
                               <view
                                 key={item.key}
+                                ref={
+                                  item.key === "URL"
+                                    ? search.getNodeRef(
+                                        network.id,
+                                        matchNode.url,
+                                      )
+                                    : undefined
+                                }
                                 className={"np-tableRow"}
                                 style={{
                                   backgroundColor: colors.bg.neutralWeak,
@@ -364,6 +372,9 @@ export const NetworkPanel = ({
                             getActiveOccurrence={(nodeKey) =>
                               search.getActiveOccurrence(network.id, nodeKey)
                             }
+                            getNodeRef={(nodeKey) =>
+                              search.getNodeRef(network.id, nodeKey)
+                            }
                           />
                         )}
 
@@ -376,6 +387,9 @@ export const NetworkPanel = ({
                             highlightQuery={search.searchQuery}
                             getActiveOccurrence={(nodeKey) =>
                               search.getActiveOccurrence(network.id, nodeKey)
+                            }
+                            getNodeRef={(nodeKey) =>
+                              search.getNodeRef(network.id, nodeKey)
                             }
                           />
                         )}

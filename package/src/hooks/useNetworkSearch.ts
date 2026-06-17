@@ -1,4 +1,10 @@
-import { useEffect, useMemo, useRef, useState } from "@lynx-js/react";
+import {
+  type RefObject,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "@lynx-js/react";
 import type { NodesRef } from "@lynx-js/types";
 import { countOccurrences } from "../components/HighlightText";
 import type { NetworkEntry } from "../types";
@@ -46,11 +52,14 @@ export function useNetworkSearch(networks: NetworkEntry[]) {
   );
   const searchInputRef = useRef<NodesRef>(null);
   const listRef = useRef<NodesRef>(null);
+  // 현재 활성 매치가 렌더된 노드(헤더 행 / body 섹션 / url 행)에 붙는 ref
+  const activeNodeRef = useRef<NodesRef>(null);
 
   useEffect(() => {
     savedSearchQuery = searchQuery;
-    // 검색어가 바뀌면 첫 매치부터 다시 시작
+    // 검색어가 바뀌면 첫 매치부터 다시 시작하고 탭 선택도 매치를 따르도록 초기화
     setCurrentMatchIndex(0);
+    setTabOverrides({});
   }, [searchQuery]);
 
   useEffect(() => {
@@ -102,6 +111,7 @@ export function useNetworkSearch(networks: NetworkEntry[]) {
       ? ((currentMatchIndex % matches.length) + matches.length) % matches.length
       : 0;
   const activeMatch = matches[activeIndex];
+  const activeNodeKey = activeMatch?.nodeKey;
 
   // 일치한 항목 id 집합과 항목별 기본 탭(첫 매치 기준)
   const { matchedIds, defaultTabByEntry } = useMemo(() => {
@@ -116,27 +126,33 @@ export function useNetworkSearch(networks: NetworkEntry[]) {
     return { matchedIds: ids, defaultTabByEntry: tabByEntry };
   }, [matches]);
 
-  // 현재 매치가 바뀌면 해당 항목으로 스크롤하고 그 항목의 탭을 매치 위치로 전환
+  // 현재 매치가 바뀌면 매치 노드를 화면 상단으로 스크롤한다.
   const activeEntryId = activeMatch?.entryId;
   const activeEntryIndex = activeMatch?.entryIndex;
-  const activeTab = activeMatch?.tab;
   useEffect(() => {
-    if (activeEntryId === undefined || activeEntryIndex === undefined) return;
-    listRef.current
-      ?.invoke({
-        method: "scrollToPosition",
-        // top: 매치 항목의 맨 위를 검색바 바로 아래로 올린다.
-        // 매치된 body는 NetworkDetailSection에서 Headers보다 위에 렌더되므로
-        // 항목 상단 가까이에 보인다.
-        params: { position: activeEntryIndex, alignTo: "top", smooth: true },
-        // 스크롤 도중 목록이 갱신되며 나는 무해한 경고를 무시
-        fail: () => {},
-      })
-      .exec();
-    if (activeTab) {
-      setTabOverrides((prev) => ({ ...prev, [activeEntryId]: activeTab }));
+    if (activeEntryId === undefined) return;
+    if (activeNodeRef.current) {
+      // 매치 노드(헤더 행 등)가 이미 렌더돼 있으면 그 노드를 정확히 상단에 맞춘다
+      activeNodeRef.current
+        .invoke({
+          method: "scrollIntoView",
+          params: {
+            scrollIntoViewOptions: { block: "start", behavior: "smooth" },
+          },
+          fail: () => {},
+        })
+        .exec();
+    } else if (activeEntryIndex !== undefined) {
+      // 아직 렌더 전(가상화로 멀리 있는 항목)이면 항목 단위로 먼저 끌어온다
+      listRef.current
+        ?.invoke({
+          method: "scrollToPosition",
+          params: { position: activeEntryIndex, alignTo: "top", smooth: true },
+          fail: () => {},
+        })
+        .exec();
     }
-  }, [activeEntryId, activeEntryIndex, activeTab, activeIndex]);
+  }, [activeEntryId, activeEntryIndex, activeNodeKey, activeIndex]);
 
   return {
     searchQuery,
@@ -147,8 +163,12 @@ export function useNetworkSearch(networks: NetworkEntry[]) {
     matchedCount: matchedIds.size,
     activeIndex,
     isMatched: (id: string): boolean => matchedIds.has(id),
+    // 활성 항목은 매치 위치의 탭을 따른다(수동 탭 선택이 있으면 그것을 우선)
     getActiveTab: (id: string): NetworkTab =>
-      tabOverrides[id] ?? defaultTabByEntry.get(id) ?? "general",
+      tabOverrides[id] ??
+      (activeMatch?.entryId === id ? activeMatch.tab : undefined) ??
+      defaultTabByEntry.get(id) ??
+      "general",
     selectTab: (id: string, tab: NetworkTab): void =>
       setTabOverrides((prev) => ({ ...prev, [id]: tab })),
     // 이 항목/노드에서 현재 활성 매치의 등장 순번(아니면 -1)
@@ -158,8 +178,21 @@ export function useNetworkSearch(networks: NetworkEntry[]) {
       activeMatch.nodeKey === nodeKey
         ? activeMatch.localIndex
         : -1,
+    // 활성 매치 노드에만 스크롤용 ref를 부여한다(나머지는 undefined)
+    getNodeRef: (
+      id: string,
+      nodeKey: string,
+    ): RefObject<NodesRef> | undefined =>
+      activeMatch &&
+      activeMatch.entryId === id &&
+      activeMatch.nodeKey === nodeKey
+        ? activeNodeRef
+        : undefined,
     goToMatch: (delta: number): void => {
-      if (matches.length > 0) setCurrentMatchIndex((prev) => prev + delta);
+      if (matches.length === 0) return;
+      // 이동 시 탭 선택을 비워 활성 항목이 매치 위치의 탭을 따르도록 한다
+      setTabOverrides({});
+      setCurrentMatchIndex((prev) => prev + delta);
     },
   };
 }

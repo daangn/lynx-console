@@ -1,4 +1,5 @@
-import { useState } from "@lynx-js/react";
+import { type RefObject, useState } from "@lynx-js/react";
+import type { NodesRef } from "@lynx-js/types";
 import { matchNode } from "../hooks/useNetworkSearch";
 import { useThemeColors } from "../styles/ThemeContext";
 import { fontWeight } from "../styles/theme";
@@ -13,6 +14,10 @@ interface NetworkDetailSectionProps {
   highlightQuery?: string | undefined;
   // 이 항목 안에서 nodeKey에 해당하는 노드의 활성 매치 등장 순번(없으면 -1)
   getActiveOccurrence?: ((nodeKey: string) => number) | undefined;
+  // 활성 매치 노드면 스크롤용 ref를 돌려준다(아니면 undefined)
+  getNodeRef?:
+    | ((nodeKey: string) => RefObject<NodesRef> | undefined)
+    | undefined;
 }
 
 export const NetworkDetailSection = ({
@@ -22,8 +27,14 @@ export const NetworkDetailSection = ({
   error = "",
   highlightQuery = "",
   getActiveOccurrence = () => -1,
+  getNodeRef = () => undefined,
 }: NetworkDetailSectionProps) => {
   const colors = useThemeColors();
+
+  // 헤더 행 안의 key 또는 value가 활성 매치면 그 행에 스크롤 ref를 단다
+  const rowRef = (name: string) =>
+    getNodeRef(matchNode.headerKey(section, name)) ??
+    getNodeRef(matchNode.headerValue(section, name));
 
   const headerEntries = Object.entries(headers);
   const headerHasMatch = headerEntries.some(
@@ -64,6 +75,7 @@ export const NetworkDetailSection = ({
               {headerEntries.map(([key, value]) => (
                 <view
                   key={key}
+                  ref={rowRef(key)}
                   className={"np-tableRow"}
                   style={{ backgroundColor: colors.bg.neutralWeak }}
                 >
@@ -108,7 +120,10 @@ export const NetworkDetailSection = ({
       </view>
 
       {/* Body */}
-      <view className={"np-detailSection"}>
+      <view
+        className={"np-detailSection"}
+        ref={getNodeRef(matchNode.body(section))}
+      >
         <text
           className={"np-detailSectionTitle t3"}
           style={{ fontWeight: fontWeight.bold, color: colors.fg.neutral }}

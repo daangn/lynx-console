@@ -35,6 +35,13 @@ const lightColors = {
     neutralSubtle: "#0000000c",
     neutralWeak: "#dcdee3",
   },
+  // 검색 하이라이트(버터·살구). match=전체 매치, active=현재 선택된 매치
+  highlight: {
+    matchBg: "#fef3c7",
+    matchText: "#92400e",
+    activeBg: "#fcd34d",
+    activeText: "#78350f",
+  },
 } as const;
 
 const darkColors = {
@@ -71,6 +78,13 @@ const darkColors = {
   stroke: {
     neutralSubtle: "#ffffff0d",
     neutralWeak: "#393d46",
+  },
+  // 검색 하이라이트(버터·살구). match=전체 매치, active=현재 선택된 매치
+  highlight: {
+    matchBg: "#46401d",
+    matchText: "#fde68a",
+    activeBg: "#b7791f",
+    activeText: "#fff7e0",
   },
 } as const;
 

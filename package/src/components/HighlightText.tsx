@@ -113,11 +113,11 @@ export const HighlightText = ({
             key={`hl-${index}`}
             style={{
               backgroundColor: isActive
-                ? colors.palette.yellow600
-                : colors.palette.yellow100,
+                ? colors.highlight.activeBg
+                : colors.highlight.matchBg,
               color: isActive
-                ? colors.palette.staticWhite
-                : colors.palette.yellow900,
+                ? colors.highlight.activeText
+                : colors.highlight.matchText,
               fontWeight: fontWeight.bold,
             }}
           >

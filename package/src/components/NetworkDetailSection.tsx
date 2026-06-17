@@ -1,6 +1,7 @@
+import { useState } from "@lynx-js/react";
 import { useThemeColors } from "../styles/ThemeContext";
 import { fontWeight } from "../styles/theme";
-import { HighlightText } from "./HighlightText";
+import { HighlightText, textIncludes } from "./HighlightText";
 import "./NetworkPanel.css";
 
 interface NetworkDetailSectionProps {
@@ -20,112 +21,127 @@ export const NetworkDetailSection = ({
 }: NetworkDetailSectionProps) => {
   const colors = useThemeColors();
 
-  // 이 body에 현재 활성 매치가 있으면 스크롤 포커스가 body로 잘 잡히도록
-  // Headers보다 위에 렌더한다(헤더가 길어도 body가 밀려나지 않음)
-  const bodyFirst = activeOccurrence >= 0;
-
-  const headerSection = (
-    <view className={"np-detailSection"}>
-      <text
-        className={"np-detailSectionTitle t3"}
-        style={{ fontWeight: fontWeight.bold, color: colors.fg.neutral }}
-      >
-        Headers
-      </text>
-      {headers && Object.keys(headers).length > 0 ? (
-        <view className={"np-table"}>
-          {Object.entries(headers).map(([key, value]) => (
-            <view
-              key={key}
-              className={"np-tableRow"}
-              style={{ backgroundColor: colors.bg.neutralWeak }}
-            >
-              <text
-                className={"np-tableKey t3"}
-                style={{
-                  fontWeight: fontWeight.bold,
-                  color: colors.fg.neutralSubtle,
-                }}
-              >
-                {key}
-              </text>
-              <text
-                className={"np-tableValue t3"}
-                style={{
-                  fontWeight: fontWeight.regular,
-                  color: colors.fg.neutral,
-                }}
-              >
-                {value}
-              </text>
-            </view>
-          ))}
-        </view>
-      ) : (
-        <text
-          className={"np-emptyText t3"}
-          style={{
-            fontWeight: fontWeight.regular,
-            color: colors.fg.disabled,
-          }}
-        >
-          No headers
-        </text>
-      )}
-    </view>
+  const headerEntries = Object.entries(headers);
+  const headerHasMatch = headerEntries.some(
+    ([key, value]) =>
+      textIncludes(key, highlightQuery) || textIncludes(value, highlightQuery),
   );
-
-  const bodySection = (
-    <view className={"np-detailSection"}>
-      <text
-        className={"np-detailSectionTitle t3"}
-        style={{ fontWeight: fontWeight.bold, color: colors.fg.neutral }}
-      >
-        Body
-      </text>
-      {error && (
-        <text
-          className={"np-errorText t3"}
-          style={{
-            fontWeight: fontWeight.regular,
-            color: colors.palette.red600,
-            backgroundColor: colors.palette.red100,
-          }}
-        >
-          {error}
-        </text>
-      )}
-      {body && (
-        <HighlightText
-          text={body}
-          query={highlightQuery}
-          activeOccurrence={activeOccurrence}
-          className={"np-bodyText t3"}
-          style={{
-            fontWeight: fontWeight.regular,
-            color: colors.fg.neutral,
-            backgroundColor: colors.bg.neutralWeak,
-          }}
-        />
-      )}
-      {!error && !body && (
-        <text
-          className={"np-emptyText t3"}
-          style={{
-            fontWeight: fontWeight.regular,
-            color: colors.fg.disabled,
-          }}
-        >
-          No body
-        </text>
-      )}
-    </view>
-  );
+  // 헤더는 기본 접힘. 검색 결과가 헤더에 있으면 자동으로 펼치고, 탭하면 수동 토글
+  const [manualOpen, setManualOpen] = useState<boolean | null>(null);
+  const headersOpen = manualOpen ?? headerHasMatch;
 
   return (
     <>
-      {bodyFirst ? bodySection : headerSection}
-      {bodyFirst ? headerSection : bodySection}
+      {/* Headers (토글) */}
+      <view className={"np-detailSection"}>
+        <view
+          className={"np-detailSectionHeader"}
+          bindtap={() => setManualOpen(!headersOpen)}
+        >
+          <text
+            className={"t2"}
+            style={{
+              fontWeight: fontWeight.regular,
+              color: colors.fg.neutralSubtle,
+            }}
+          >
+            {headersOpen ? "▼" : "▶"}
+          </text>
+          <text
+            className={"t3"}
+            style={{ fontWeight: fontWeight.bold, color: colors.fg.neutral }}
+          >
+            Headers
+          </text>
+        </view>
+        {headersOpen &&
+          (headerEntries.length > 0 ? (
+            <view className={"np-table"}>
+              {headerEntries.map(([key, value]) => (
+                <view
+                  key={key}
+                  className={"np-tableRow"}
+                  style={{ backgroundColor: colors.bg.neutralWeak }}
+                >
+                  <HighlightText
+                    text={key}
+                    query={highlightQuery}
+                    className={"np-tableKey t3"}
+                    style={{
+                      fontWeight: fontWeight.bold,
+                      color: colors.fg.neutralSubtle,
+                    }}
+                  />
+                  <HighlightText
+                    text={value}
+                    query={highlightQuery}
+                    className={"np-tableValue t3"}
+                    style={{
+                      fontWeight: fontWeight.regular,
+                      color: colors.fg.neutral,
+                    }}
+                  />
+                </view>
+              ))}
+            </view>
+          ) : (
+            <text
+              className={"np-emptyText t3"}
+              style={{
+                fontWeight: fontWeight.regular,
+                color: colors.fg.disabled,
+              }}
+            >
+              No headers
+            </text>
+          ))}
+      </view>
+
+      {/* Body */}
+      <view className={"np-detailSection"}>
+        <text
+          className={"np-detailSectionTitle t3"}
+          style={{ fontWeight: fontWeight.bold, color: colors.fg.neutral }}
+        >
+          Body
+        </text>
+        {error && (
+          <text
+            className={"np-errorText t3"}
+            style={{
+              fontWeight: fontWeight.regular,
+              color: colors.palette.red600,
+              backgroundColor: colors.palette.red100,
+            }}
+          >
+            {error}
+          </text>
+        )}
+        {body && (
+          <HighlightText
+            text={body}
+            query={highlightQuery}
+            activeOccurrence={activeOccurrence}
+            className={"np-bodyText t3"}
+            style={{
+              fontWeight: fontWeight.regular,
+              color: colors.fg.neutral,
+              backgroundColor: colors.bg.neutralWeak,
+            }}
+          />
+        )}
+        {!error && !body && (
+          <text
+            className={"np-emptyText t3"}
+            style={{
+              fontWeight: fontWeight.regular,
+              color: colors.fg.disabled,
+            }}
+          >
+            No body
+          </text>
+        )}
+      </view>
     </>
   );
 };

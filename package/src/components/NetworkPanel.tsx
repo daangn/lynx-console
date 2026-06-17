@@ -336,7 +336,7 @@ export const NetworkPanel = ({
                                     item.key === "URL"
                                       ? search.getActiveOccurrence(
                                           network.id,
-                                          "general",
+                                          "url",
                                         )
                                       : -1
                                   }
@@ -358,7 +358,7 @@ export const NetworkPanel = ({
                             highlightQuery={search.searchQuery}
                             activeOccurrence={search.getActiveOccurrence(
                               network.id,
-                              "request",
+                              "requestBody",
                             )}
                           />
                         )}
@@ -371,7 +371,7 @@ export const NetworkPanel = ({
                             highlightQuery={search.searchQuery}
                             activeOccurrence={search.getActiveOccurrence(
                               network.id,
-                              "response",
+                              "responseBody",
                             )}
                           />
                         )}

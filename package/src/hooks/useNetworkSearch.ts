@@ -131,21 +131,44 @@ export function useNetworkSearch(networks: NetworkEntry[]) {
   const activeEntryIndex = activeMatch?.entryIndex;
   useEffect(() => {
     if (activeEntryId === undefined || activeEntryIndex === undefined) return;
-    // 항목을 상단으로 스크롤(가상화 대응·확실히 동작)
+    // 1) 항목을 즉시 상단으로 스크롤(smooth:false → success 콜백 시점에 레이아웃 확정)
     listRef.current
       ?.invoke({
         method: "scrollToPosition",
-        params: { position: activeEntryIndex, alignTo: "top", smooth: true },
-        // 스크롤 도중 목록이 갱신되며 나는 무해한 경고를 무시
-        fail: () => {},
-      })
-      .exec();
-    // 매치 노드가 렌더돼 있으면 그 노드를 정확히 상단으로 보정(지원 시)
-    activeNodeRef.current
-      ?.invoke({
-        method: "scrollIntoView",
-        params: {
-          scrollIntoViewOptions: { block: "start", behavior: "smooth" },
+        params: { index: activeEntryIndex, alignTo: "top", smooth: false },
+        success: () => {
+          const nodeRef = activeNodeRef.current;
+          if (!nodeRef) return;
+          // 2) 매치 노드의 뷰포트 기준 위치 조회
+          nodeRef
+            .invoke({
+              method: "boundingClientRect",
+              params: {},
+              success: (nodeRect) => {
+                // 3) 리스트 자체의 뷰포트 기준 위치 조회
+                listRef.current
+                  ?.invoke({
+                    method: "boundingClientRect",
+                    params: {},
+                    success: (listRect) => {
+                      // 노드가 리스트 상단보다 아래에 있는 만큼 추가 스크롤
+                      const offset = nodeRect.top - listRect.top;
+                      if (offset <= 0) return;
+                      listRef.current
+                        ?.invoke({
+                          method: "scrollBy",
+                          params: { offset },
+                          fail: () => {},
+                        })
+                        .exec();
+                    },
+                    fail: () => {},
+                  })
+                  .exec();
+              },
+              fail: () => {},
+            })
+            .exec();
         },
         fail: () => {},
       })

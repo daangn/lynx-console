@@ -1,23 +1,27 @@
 import { useState } from "@lynx-js/react";
+import { matchNode } from "../hooks/useNetworkSearch";
 import { useThemeColors } from "../styles/ThemeContext";
 import { fontWeight } from "../styles/theme";
 import { HighlightText, textIncludes } from "./HighlightText";
 import "./NetworkPanel.css";
 
 interface NetworkDetailSectionProps {
+  section: "request" | "response";
   headers?: Record<string, string> | undefined;
   body?: string | undefined;
   error?: string | undefined;
   highlightQuery?: string | undefined;
-  activeOccurrence?: number | undefined;
+  // 이 항목 안에서 nodeKey에 해당하는 노드의 활성 매치 등장 순번(없으면 -1)
+  getActiveOccurrence?: ((nodeKey: string) => number) | undefined;
 }
 
 export const NetworkDetailSection = ({
+  section,
   headers = {},
   body = "",
   error = "",
   highlightQuery = "",
-  activeOccurrence = -1,
+  getActiveOccurrence = () => -1,
 }: NetworkDetailSectionProps) => {
   const colors = useThemeColors();
 
@@ -66,6 +70,9 @@ export const NetworkDetailSection = ({
                   <HighlightText
                     text={key}
                     query={highlightQuery}
+                    activeOccurrence={getActiveOccurrence(
+                      matchNode.headerKey(section, key),
+                    )}
                     className={"np-tableKey t3"}
                     style={{
                       fontWeight: fontWeight.bold,
@@ -75,6 +82,9 @@ export const NetworkDetailSection = ({
                   <HighlightText
                     text={value}
                     query={highlightQuery}
+                    activeOccurrence={getActiveOccurrence(
+                      matchNode.headerValue(section, key),
+                    )}
                     className={"np-tableValue t3"}
                     style={{
                       fontWeight: fontWeight.regular,
@@ -121,7 +131,7 @@ export const NetworkDetailSection = ({
           <HighlightText
             text={body}
             query={highlightQuery}
-            activeOccurrence={activeOccurrence}
+            activeOccurrence={getActiveOccurrence(matchNode.body(section))}
             className={"np-bodyText t3"}
             style={{
               fontWeight: fontWeight.regular,

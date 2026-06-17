@@ -1,5 +1,9 @@
 import { useState } from "@lynx-js/react";
-import { type NetworkTab, useNetworkSearch } from "../hooks/useNetworkSearch";
+import {
+  matchNode,
+  type NetworkTab,
+  useNetworkSearch,
+} from "../hooks/useNetworkSearch";
 import { useThemeColors } from "../styles/ThemeContext";
 import { fontWeight, type ThemeColors } from "../styles/theme";
 import type { NetworkEntry } from "../types";
@@ -336,7 +340,7 @@ export const NetworkPanel = ({
                                     item.key === "URL"
                                       ? search.getActiveOccurrence(
                                           network.id,
-                                          "url",
+                                          matchNode.url,
                                         )
                                       : -1
                                   }
@@ -353,26 +357,26 @@ export const NetworkPanel = ({
 
                         {activeTab === "request" && (
                           <NetworkDetailSection
+                            section="request"
                             headers={network.requestHeaders}
                             body={network.requestBody}
                             highlightQuery={search.searchQuery}
-                            activeOccurrence={search.getActiveOccurrence(
-                              network.id,
-                              "requestBody",
-                            )}
+                            getActiveOccurrence={(nodeKey) =>
+                              search.getActiveOccurrence(network.id, nodeKey)
+                            }
                           />
                         )}
 
                         {activeTab === "response" && (
                           <NetworkDetailSection
+                            section="response"
                             headers={network.responseHeaders}
                             body={network.responseBody}
                             error={network.error}
                             highlightQuery={search.searchQuery}
-                            activeOccurrence={search.getActiveOccurrence(
-                              network.id,
-                              "responseBody",
-                            )}
+                            getActiveOccurrence={(nodeKey) =>
+                              search.getActiveOccurrence(network.id, nodeKey)
+                            }
                           />
                         )}
                       </view>

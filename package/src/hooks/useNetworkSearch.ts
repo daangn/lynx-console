@@ -4,44 +4,37 @@ import { countOccurrences } from "../components/HighlightText";
 import type { NetworkEntry } from "../types";
 
 export type NetworkTab = "general" | "request" | "response";
+type Section = "request" | "response";
 
-// 검색이 적용되는 개별 필드
-export type MatchField =
-  | "url"
-  | "requestHeaders"
-  | "requestBody"
-  | "responseHeaders"
-  | "responseBody";
+// 렌더되는 개별 <text> 노드를 고유 식별하는 키 생성기.
+// 훅(매치 카운트)과 렌더(강조)가 반드시 같은 키를 쓰도록 한곳에서 관리한다.
+export const matchNode = {
+  url: "url",
+  body: (section: Section): string => `${section}:body`,
+  headerKey: (section: Section, name: string): string =>
+    `${section}:hdr:${name}:k`,
+  headerValue: (section: Section, name: string): string =>
+    `${section}:hdr:${name}:v`,
+};
 
 // 검색어의 개별 등장(매치) 하나
 interface SearchMatch {
   entryId: string;
   entryIndex: number;
   tab: NetworkTab;
-  field: MatchField;
-  // 해당 필드 텍스트 안에서의 0-based 등장 순번
+  // 렌더되는 <text> 노드 식별자(matchNode로 생성)
+  nodeKey: string;
+  // 그 노드 텍스트 안에서의 0-based 등장 순번
   localIndex: number;
 }
 
 // 패널이 다시 마운트돼도 검색어를 유지
 let savedSearchQuery = "";
 
-// 헤더(key/value)에서 검색어 등장 횟수를 센다(렌더 시 key·value를 각각 강조하므로 합산)
-function countHeaderOccurrences(
-  headers: Record<string, string> | undefined,
-  query: string,
-): number {
-  let count = 0;
-  for (const [key, value] of Object.entries(headers ?? {})) {
-    count += countOccurrences(key, query) + countOccurrences(value, query);
-  }
-  return count;
-}
-
 /**
  * 네트워크 패널의 검색 상태와 매치 네비게이션을 담당한다.
- * url / request body / response body 안의 모든 등장을 평탄한 배열로 모아
- * 위/아래 이동, 스크롤 포커스, 탭 자동 전환, 활성 매치 강조를 제공한다.
+ * url / request·response 헤더 / request·response body 안의 모든 등장을
+ * 노드 단위로 모아 위/아래 이동, 스크롤 포커스, 탭 전환, 활성 매치 강조를 제공한다.
  */
 export function useNetworkSearch(networks: NetworkEntry[]) {
   const [searchQuery, setSearchQuery] = useState(savedSearchQuery);
@@ -72,44 +65,34 @@ export function useNetworkSearch(networks: NetworkEntry[]) {
     if (!searchQuery.trim()) return [];
     const result: SearchMatch[] = [];
     networks.forEach((network, entryIndex) => {
-      const fields: { tab: NetworkTab; field: MatchField; count: number }[] = [
-        {
-          tab: "general",
-          field: "url",
-          count: countOccurrences(network.url, searchQuery),
-        },
-        {
-          tab: "request",
-          field: "requestHeaders",
-          count: countHeaderOccurrences(network.requestHeaders, searchQuery),
-        },
-        {
-          tab: "request",
-          field: "requestBody",
-          count: countOccurrences(network.requestBody, searchQuery),
-        },
-        {
-          tab: "response",
-          field: "responseHeaders",
-          count: countHeaderOccurrences(network.responseHeaders, searchQuery),
-        },
-        {
-          tab: "response",
-          field: "responseBody",
-          count: countOccurrences(network.responseBody, searchQuery),
-        },
-      ];
-      for (const { tab, field, count } of fields) {
+      // 렌더 순서와 동일하게 노드를 훑으며 각 노드의 등장마다 매치를 만든다
+      const addNode = (tab: NetworkTab, nodeKey: string, text?: string) => {
+        const count = countOccurrences(text, searchQuery);
         for (let localIndex = 0; localIndex < count; localIndex++) {
           result.push({
             entryId: network.id,
             entryIndex,
             tab,
-            field,
+            nodeKey,
             localIndex,
           });
         }
-      }
+      };
+      const addHeaders = (
+        section: Section,
+        headers?: Record<string, string>,
+      ) => {
+        for (const [key, value] of Object.entries(headers ?? {})) {
+          addNode(section, matchNode.headerKey(section, key), key);
+          addNode(section, matchNode.headerValue(section, key), value);
+        }
+      };
+
+      addNode("general", matchNode.url, network.url);
+      addHeaders("request", network.requestHeaders);
+      addNode("request", matchNode.body("request"), network.requestBody);
+      addHeaders("response", network.responseHeaders);
+      addNode("response", matchNode.body("response"), network.responseBody);
     });
     return result;
   }, [networks, searchQuery]);
@@ -168,9 +151,11 @@ export function useNetworkSearch(networks: NetworkEntry[]) {
       tabOverrides[id] ?? defaultTabByEntry.get(id) ?? "general",
     selectTab: (id: string, tab: NetworkTab): void =>
       setTabOverrides((prev) => ({ ...prev, [id]: tab })),
-    // 이 항목/필드에서 현재 활성 매치의 등장 순번(아니면 -1)
-    getActiveOccurrence: (id: string, field: MatchField): number =>
-      activeMatch && activeMatch.entryId === id && activeMatch.field === field
+    // 이 항목/노드에서 현재 활성 매치의 등장 순번(아니면 -1)
+    getActiveOccurrence: (id: string, nodeKey: string): number =>
+      activeMatch &&
+      activeMatch.entryId === id &&
+      activeMatch.nodeKey === nodeKey
         ? activeMatch.localIndex
         : -1,
     goToMatch: (delta: number): void => {

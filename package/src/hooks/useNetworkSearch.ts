@@ -131,14 +131,17 @@ export function useNetworkSearch(networks: NetworkEntry[]) {
   const activeEntryIndex = activeMatch?.entryIndex;
   useEffect(() => {
     if (activeEntryId === undefined || activeEntryIndex === undefined) return;
+    // effect 시작 시점의 노드를 스냅샷으로 캡처 — 콜백 내부에서 읽으면
+    // 빠른 연속 이동 시 이미 다른 노드를 가리킬 수 있다
+    const nodeRef = activeNodeRef.current;
     // 1) 항목을 즉시 상단으로 스크롤(smooth:false → success 콜백 시점에 레이아웃 확정)
     listRef.current
       ?.invoke({
         method: "scrollToPosition",
         params: { index: activeEntryIndex, alignTo: "top", smooth: false },
         success: () => {
-          const nodeRef = activeNodeRef.current;
           if (!nodeRef) return;
+
           // 2) 매치 노드의 뷰포트 기준 위치 조회
           nodeRef
             .invoke({

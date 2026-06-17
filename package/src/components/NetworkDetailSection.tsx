@@ -1,4 +1,4 @@
-import { type RefObject, useState } from "@lynx-js/react";
+import { type RefObject, useEffect, useState } from "@lynx-js/react";
 import type { NodesRef } from "@lynx-js/types";
 import { matchNode } from "../hooks/useNetworkSearch";
 import { useThemeColors } from "../styles/ThemeContext";
@@ -43,6 +43,10 @@ export const NetworkDetailSection = ({
   );
   // 헤더는 기본 접힘. 검색 결과가 헤더에 있으면 자동으로 펼치고, 탭하면 수동 토글
   const [manualOpen, setManualOpen] = useState<boolean | null>(null);
+  // 검색어가 바뀌면 수동 상태를 초기화해 새 매치 여부를 자동으로 반영한다
+  useEffect(() => {
+    setManualOpen(null);
+  }, [highlightQuery]);
   const headersOpen = manualOpen ?? headerHasMatch;
 
   return (

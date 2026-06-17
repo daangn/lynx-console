@@ -130,28 +130,26 @@ export function useNetworkSearch(networks: NetworkEntry[]) {
   const activeEntryId = activeMatch?.entryId;
   const activeEntryIndex = activeMatch?.entryIndex;
   useEffect(() => {
-    if (activeEntryId === undefined) return;
-    if (activeNodeRef.current) {
-      // 매치 노드(헤더 행 등)가 이미 렌더돼 있으면 그 노드를 정확히 상단에 맞춘다
-      activeNodeRef.current
-        .invoke({
-          method: "scrollIntoView",
-          params: {
-            scrollIntoViewOptions: { block: "start", behavior: "smooth" },
-          },
-          fail: () => {},
-        })
-        .exec();
-    } else if (activeEntryIndex !== undefined) {
-      // 아직 렌더 전(가상화로 멀리 있는 항목)이면 항목 단위로 먼저 끌어온다
-      listRef.current
-        ?.invoke({
-          method: "scrollToPosition",
-          params: { position: activeEntryIndex, alignTo: "top", smooth: true },
-          fail: () => {},
-        })
-        .exec();
-    }
+    if (activeEntryId === undefined || activeEntryIndex === undefined) return;
+    // 항목을 상단으로 스크롤(가상화 대응·확실히 동작)
+    listRef.current
+      ?.invoke({
+        method: "scrollToPosition",
+        params: { position: activeEntryIndex, alignTo: "top", smooth: true },
+        // 스크롤 도중 목록이 갱신되며 나는 무해한 경고를 무시
+        fail: () => {},
+      })
+      .exec();
+    // 매치 노드가 렌더돼 있으면 그 노드를 정확히 상단으로 보정(지원 시)
+    activeNodeRef.current
+      ?.invoke({
+        method: "scrollIntoView",
+        params: {
+          scrollIntoViewOptions: { block: "start", behavior: "smooth" },
+        },
+        fail: () => {},
+      })
+      .exec();
   }, [activeEntryId, activeEntryIndex, activeNodeKey, activeIndex]);
 
   return {

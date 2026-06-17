@@ -157,6 +157,8 @@ export function useNetworkSearch(networks: NetworkEntry[]) {
     // 빠른 연속 이동 시 이미 다른 노드를 가리킬 수 있다
     const nodeRef = activeNodeRef.current;
     const listNode = listRef.current;
+    // 다음 매치로 빠르게 이동하면 이전 체인을 중단해 옛 스크롤이 이기지 않게 한다
+    let cancelled = false;
 
     void (async () => {
       try {
@@ -166,12 +168,13 @@ export function useNetworkSearch(networks: NetworkEntry[]) {
           alignTo: "top",
           smooth: false,
         });
-        if (!nodeRef) return;
+        if (cancelled || !nodeRef) return;
         // 2) 매치 노드와 리스트의 뷰포트 기준 위치를 병렬 조회
         const [nodeRect, listRect] = await Promise.all([
           invokeAsync<{ top: number }>(nodeRef, "boundingClientRect"),
           invokeAsync<{ top: number }>(listNode, "boundingClientRect"),
         ]);
+        if (cancelled) return;
         // 3) 노드가 리스트 상단보다 아래에 있는 만큼 추가 스크롤
         const offset = nodeRect.top - listRect.top;
         if (offset <= 0) return;
@@ -180,6 +183,10 @@ export function useNetworkSearch(networks: NetworkEntry[]) {
         // 스크롤 실패(언마운트·ref 없음 등)는 무시
       }
     })();
+
+    return () => {
+      cancelled = true;
+    };
   }, [activeEntryId, activeEntryIndex, activeNodeKey, activeIndex]);
 
   return {

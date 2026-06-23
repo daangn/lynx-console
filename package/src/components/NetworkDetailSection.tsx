@@ -1,4 +1,4 @@
-import { type RefObject, useState, useRef } from "@lynx-js/react";
+import { type RefObject, useState } from "@lynx-js/react";
 import type { NodesRef } from "@lynx-js/types";
 import { matchNode } from "../hooks/useNetworkSearch";
 import { useThemeColors } from "../styles/ThemeContext";
@@ -31,7 +31,6 @@ export const NetworkDetailSection = ({
 }: NetworkDetailSectionProps) => {
   const colors = useThemeColors();
   const [toastVisible, setToastVisible] = useState(false);
-  const toastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // 헤더 행 안의 key 또는 value가 활성 매치면 그 행에 스크롤 ref를 단다
   const rowRef = (name: string) =>
@@ -149,9 +148,8 @@ export const NetworkDetailSection = ({
               }}
               bindtap={() => {
                 console.log(`[lynx-console] ${section} body:`, body);
-                if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
                 setToastVisible(true);
-                toastTimerRef.current = setTimeout(() => setToastVisible(false), 5000);
+                setTimeout(() => setToastVisible(false), 5000);
               }}
             >
               <text

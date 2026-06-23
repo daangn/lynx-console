@@ -30,7 +30,7 @@ export const NetworkDetailSection = ({
   getNodeRef = () => undefined,
 }: NetworkDetailSectionProps) => {
   const colors = useThemeColors();
-  const [isLogged, setIsLogged] = useState(false);
+  const [showLogConfirm, setShowLogConfirm] = useState(false);
 
   // 헤더 행 안의 key 또는 value가 활성 매치면 그 행에 스크롤 ref를 단다
   const rowRef = (name: string) =>
@@ -148,18 +148,18 @@ export const NetworkDetailSection = ({
               }}
               bindtap={() => {
                 console.log(`[lynx-console] ${section} body:`, body);
-                setIsLogged(true);
-                setTimeout(() => setIsLogged(false), 5000);
+                setShowLogConfirm(true);
+                setTimeout(() => setShowLogConfirm(false), 5000);
               }}
             >
               <text
                 className={"t3"}
                 style={{
-                  color: isLogged ? colors.fg.accent : colors.fg.neutralSubtle,
+                  color: showLogConfirm ? colors.fg.accent : colors.fg.neutralSubtle,
                   fontWeight: fontWeight.regular,
                 }}
               >
-                {isLogged ? "✓ logged" : "log"}
+                {showLogConfirm ? "✓ logged" : "log"}
               </text>
             </view>
           )}

@@ -155,7 +155,9 @@ export const NetworkDetailSection = ({
               <text
                 className={"t3"}
                 style={{
-                  color: showLogConfirm ? colors.fg.accent : colors.fg.neutralSubtle,
+                  color: showLogConfirm
+                    ? colors.fg.accent
+                    : colors.fg.neutralSubtle,
                   fontWeight: fontWeight.regular,
                 }}
               >

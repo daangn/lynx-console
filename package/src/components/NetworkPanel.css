@@ -132,9 +132,6 @@
   margin-bottom: 12px;
 }
 
-.np-detailSectionTitle {
-}
-
 .np-detailSectionHeader {
   display: flex;
   flex-direction: row;
@@ -190,4 +187,3 @@
   padding: 2px 6px;
   border-radius: 4px;
 }
-

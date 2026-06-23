@@ -30,6 +30,7 @@ export const NetworkDetailSection = ({
   getNodeRef = () => undefined,
 }: NetworkDetailSectionProps) => {
   const colors = useThemeColors();
+  const [showLogConfirm, setShowLogConfirm] = useState(false);
 
   // 헤더 행 안의 key 또는 value가 활성 매치면 그 행에 스크롤 ref를 단다
   const rowRef = (name: string) =>
@@ -131,12 +132,40 @@ export const NetworkDetailSection = ({
         className={"np-detailSection"}
         ref={getNodeRef(matchNode.body(section))}
       >
-        <text
-          className={"np-detailSectionTitle t3"}
-          style={{ fontWeight: fontWeight.bold, color: colors.fg.neutral }}
-        >
-          Body
-        </text>
+        <view className={"np-detailSectionHeader"}>
+          <text
+            className={"np-detailSectionTitle t3"}
+            style={{ fontWeight: fontWeight.bold, color: colors.fg.neutral }}
+          >
+            Body
+          </text>
+          {body && (
+            <view
+              className={"np-logButton"}
+              style={{
+                backgroundColor: colors.bg.neutralWeak,
+                borderRadius: 4,
+              }}
+              bindtap={() => {
+                console.log(`[lynx-console] ${section} body:`, body);
+                setShowLogConfirm(true);
+                setTimeout(() => setShowLogConfirm(false), 5000);
+              }}
+            >
+              <text
+                className={"t3"}
+                style={{
+                  color: showLogConfirm
+                    ? colors.fg.accent
+                    : colors.fg.neutralSubtle,
+                  fontWeight: fontWeight.regular,
+                }}
+              >
+                {showLogConfirm ? "✓ logged" : "log"}
+              </text>
+            </view>
+          )}
+        </view>
         {error && (
           <text
             className={"np-errorText t3"}

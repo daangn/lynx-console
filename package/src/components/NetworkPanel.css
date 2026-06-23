@@ -132,14 +132,11 @@
   margin-bottom: 12px;
 }
 
-.np-detailSectionTitle {
-  margin-bottom: 8px;
-}
-
 .np-detailSectionHeader {
   display: flex;
   flex-direction: row;
   align-items: center;
+  justify-content: space-between;
   gap: 4px;
   margin-bottom: 8px;
 }
@@ -184,4 +181,9 @@
 .np-emptyText {
   text-align: center;
   padding: 16px 0;
+}
+
+.np-logButton {
+  padding: 2px 6px;
+  border-radius: 4px;
 }

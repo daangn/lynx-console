@@ -1,8 +1,5 @@
 import type { ReactNode } from "@lynx-js/react";
-import {
-  type InitialPosition,
-  useLongPressDrag,
-} from "../hooks/useLongPressDrag";
+import { type InitialPosition, useDrag } from "../hooks/useDrag";
 import { useThemeColors } from "../styles/ThemeContext";
 import { duration } from "../styles/theme";
 import "./FloatingButton.css";
@@ -36,10 +33,9 @@ export const FloatingButton = ({
   initialPosition,
 }: FloatingButtonProps) => {
   const colors = useThemeColors();
-  const { phase, positionStyle, clearTimer, handlers } = useLongPressDrag(
-    bindtap,
-    { initialPosition },
-  );
+  const { phase, positionStyle, handlers } = useDrag(bindtap, {
+    initialPosition,
+  });
 
   const handleReload = () => {
     try {
@@ -73,7 +69,8 @@ export const FloatingButton = ({
       <view
         className={"fb-reloadButton"}
         style={{ backgroundColor: colors.palette.green600 }}
-        catchtouchstart={() => clearTimer()}
+        // reload 버튼 터치가 wrapper로 전파돼 드래그가 시작되지 않도록 막아요.
+        catchtouchstart={() => {}}
         bindtap={handleReload}
       >
         <text

@@ -1,7 +1,6 @@
 import { useRef, useState } from "@lynx-js/react";
 import type { BaseTouchEvent, Target } from "@lynx-js/types";
 
-const LONG_PRESS_DURATION = 400;
 const MOVE_THRESHOLD = 5;
 
 const DEFAULT_RIGHT = 16;
@@ -51,14 +50,11 @@ interface SavedState {
 
 let saved: SavedState | null = null;
 
-interface UseLongPressDragOptions {
+interface UseDragOptions {
   initialPosition?: InitialPosition;
 }
 
-export function useLongPressDrag(
-  onTap: () => void,
-  options?: UseLongPressDragOptions,
-) {
+export function useDrag(onTap: () => void, options?: UseDragOptions) {
   const anchors = resolveAnchors(options?.initialPosition);
 
   // 저장된 위치는 anchor 조합이 동일할 때만 복원해요.
@@ -80,20 +76,12 @@ export function useLongPressDrag(
   const [tempX, setTempX] = useState(initX);
   const [tempY, setTempY] = useState(initY);
 
-  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const draggingRef = useRef(false);
   const startRef = useRef({ x: 0, y: 0, ax: 0, ay: 0 });
 
   // anchor 방향에 따라 드래그 부호 결정. right/bottom anchor면 드래그 방향과 값 변화가 반대.
   const xSign = anchors.horizontal === "right" ? -1 : 1;
   const ySign = anchors.vertical === "bottom" ? -1 : 1;
-
-  const clearTimer = () => {
-    if (timerRef.current) {
-      clearTimeout(timerRef.current);
-      timerRef.current = null;
-    }
-  };
 
   const handleTouchStart = (e: BaseTouchEvent<Target>) => {
     startRef.current = {
@@ -103,13 +91,6 @@ export function useLongPressDrag(
       ay: y,
     };
     draggingRef.current = false;
-
-    timerRef.current = setTimeout(() => {
-      draggingRef.current = true;
-      setPhase("dragging");
-      setTempX(x);
-      setTempY(y);
-    }, LONG_PRESS_DURATION);
   };
 
   const handleTouchMove = (e: BaseTouchEvent<Target>) => {
@@ -120,7 +101,10 @@ export function useLongPressDrag(
       !draggingRef.current &&
       (Math.abs(dx) > MOVE_THRESHOLD || Math.abs(dy) > MOVE_THRESHOLD)
     ) {
-      clearTimer();
+      draggingRef.current = true;
+      setPhase("dragging");
+      setTempX(startRef.current.ax);
+      setTempY(startRef.current.ay);
     }
 
     if (!draggingRef.current) return;
@@ -130,8 +114,6 @@ export function useLongPressDrag(
   };
 
   const handleTouchEnd = () => {
-    clearTimer();
-
     if (draggingRef.current) {
       setX(tempX);
       setY(tempY);
@@ -161,7 +143,6 @@ export function useLongPressDrag(
   return {
     phase,
     positionStyle,
-    clearTimer,
     handlers: {
       catchtouchstart: handleTouchStart,
       catchtouchmove: handleTouchMove,

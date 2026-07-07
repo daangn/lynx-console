@@ -69,7 +69,6 @@ export const FloatingButton = ({
       <view
         className={"fb-reloadButton"}
         style={{ backgroundColor: colors.palette.green600 }}
-        // reload 버튼 터치가 wrapper로 전파돼 드래그가 시작되지 않도록 막아요.
         catchtouchstart={() => {}}
         bindtap={handleReload}
       >

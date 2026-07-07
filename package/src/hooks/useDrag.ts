@@ -97,7 +97,6 @@ export function useDrag(onTap: () => void, options?: UseDragOptions) {
     const dx = e.detail.x - startRef.current.x;
     const dy = e.detail.y - startRef.current.y;
 
-    // 롱프레스 없이, 임계값을 넘어 움직이는 즉시 드래그를 시작해요.
     if (
       !draggingRef.current &&
       (Math.abs(dx) > MOVE_THRESHOLD || Math.abs(dy) > MOVE_THRESHOLD)

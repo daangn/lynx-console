@@ -10,7 +10,7 @@
     "preview": "rspeedy preview"
   },
   "dependencies": {
-    "@lynx-js/react": "^0.116.0",
+    "@lynx-js/react": "^0.117.0",
     "lynx-console": "workspace:*"
   },
   "devDependencies": {

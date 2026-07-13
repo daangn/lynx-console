@@ -959,18 +959,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@lynx-js/react@npm:^0.116.0":
-  version: 0.116.5
-  resolution: "@lynx-js/react@npm:0.116.5"
+"@lynx-js/react@npm:^0.117.0":
+  version: 0.117.1
+  resolution: "@lynx-js/react@npm:0.117.1"
   dependencies:
-    preact: "npm:@hongzhiyuan/preact@10.28.0-fc4af453"
+    preact: "npm:@lynx-js/internal-preact@10.28.4-4842985"
   peerDependencies:
     "@lynx-js/types": "*"
     "@types/react": ^18
   peerDependenciesMeta:
     "@lynx-js/types":
       optional: true
-  checksum: 10c0/e745e968466ccddbd1e2da85e7fd10999a92ac0f721bba1c6b0d10392eb48731ca6557d30a45fa480fc8a1cb0224c3fd14af748ee884c45c2a5344b3f85f034c
+  checksum: 10c0/57b8a28b242f01edf34616daa2e37f310f8587c774d9af9f4a5a4decb38b2771b7c000241a8decef052185c64536ddb9ca0d9e0474f2b85fc765bb8d30e9211e
   languageName: node
   linkType: hard
 
@@ -4347,7 +4347,7 @@ __metadata:
     "@biomejs/biome": "npm:2.2.3"
     "@lynx-js/preact-devtools": "npm:^5.0.1-cf9aef5"
     "@lynx-js/qrcode-rsbuild-plugin": "npm:^0.4.6"
-    "@lynx-js/react": "npm:^0.116.0"
+    "@lynx-js/react": "npm:^0.117.0"
     "@lynx-js/react-rsbuild-plugin": "npm:^0.13.0"
     "@lynx-js/rspeedy": "npm:^0.13.3"
     "@lynx-js/types": "npm:^3.7.0"
@@ -4362,7 +4362,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "lynx-console@workspace:package"
   dependencies:
-    "@lynx-js/react": "npm:^0.116.0"
+    "@lynx-js/react": "npm:^0.117.0"
     "@lynx-js/types": "npm:^3.7.0"
     "@types/react": "npm:^18.3.28"
     devalue: "npm:^5.6.4"
@@ -4371,7 +4371,7 @@ __metadata:
     tsdown: "npm:^0.20.1"
     typescript: "npm:^5.9.3"
   peerDependencies:
-    "@lynx-js/react": ^0.110.0
+    "@lynx-js/react": ">=0.110.0 <1.0.0"
     "@lynx-js/types": ^3.6.0
     "@types/react": ^18
   languageName: unknown
@@ -5269,10 +5269,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"preact@npm:@hongzhiyuan/preact@10.28.0-fc4af453":
-  version: 10.28.0-fc4af453
-  resolution: "@hongzhiyuan/preact@npm:10.28.0-fc4af453"
-  checksum: 10c0/16f1b5ed30392190e4f04aedb343dd71adda8fb9fd65353561fe5f256218444268b3d833a31bc65637e475afc5408e14ebeb9304b0d8d327017ed9ed235637e5
+"preact@npm:@lynx-js/internal-preact@10.28.4-4842985":
+  version: 10.28.4-4842985
+  resolution: "@lynx-js/internal-preact@npm:10.28.4-4842985"
+  checksum: 10c0/da76aa2d4088d8e3ed35137dcfbed08e8e629ee8c5731326da0b228ac124649ac04d988c9608ce8ffead53b09064e72867da0bf1fd07bded1cc27c1e18ae9c7c
   languageName: node
   linkType: hard
 

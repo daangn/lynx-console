@@ -3,41 +3,13 @@ import { stringify } from "javascript-stringify";
 import { useThemeColors } from "../styles/ThemeContext";
 import { fontWeight, type ThemeColors } from "../styles/theme";
 import type { PerformanceEntryData } from "../types";
+import { extractFcpMetrics } from "../utils/extractFcp";
 import "./PerformancePanel.css";
 
 interface PerformancePanelProps {
   performances: PerformanceEntryData[];
   clearPerformances: () => void;
 }
-
-interface FcpMetric {
-  name: string;
-  duration: number;
-}
-
-interface MetricFcpEntry {
-  totalFcp?: FcpMetric;
-  lynxFcp?: FcpMetric;
-  fcp?: FcpMetric;
-}
-
-const isMetricFcpEntry = (entry: PerformanceEntryData): boolean => {
-  return entry.entryType === "metric" && entry.name === "fcp";
-};
-
-const extractFcpMetrics = (entry: PerformanceEntryData) => {
-  if (!isMetricFcpEntry(entry) || !entry.rawEntry) {
-    return null;
-  }
-
-  const metricEntry = entry.rawEntry as MetricFcpEntry;
-
-  return {
-    totalFcp: metricEntry.totalFcp ?? undefined,
-    lynxFcp: metricEntry.lynxFcp ?? undefined,
-    fcp: metricEntry.fcp ?? undefined,
-  };
-};
 
 const formatDuration = (ms?: number): string => {
   if (ms === undefined) return "-";
@@ -179,8 +151,8 @@ export const PerformancePanel = ({
 
       <list scroll-orientation="vertical" className={"pp-list"}>
         {performances.map((perf) => {
-          const isMetricFcp = isMetricFcpEntry(perf);
           const fcpMetrics = extractFcpMetrics(perf);
+          const hasFcp = fcpMetrics !== null;
           const primaryFcp = getPrimaryFcpLabel(perf);
           const { totalFcp, lynxFcp, fcp } = fcpMetrics ?? {};
 
@@ -230,7 +202,7 @@ export const PerformancePanel = ({
                     setSelectedId(selectedId === perf.id ? null : perf.id)
                   }
                 >
-                  {isMetricFcp && primaryFcp && (
+                  {hasFcp && primaryFcp && (
                     <text
                       className={"pp-fcpHighlight t3"}
                       style={{
@@ -246,7 +218,7 @@ export const PerformancePanel = ({
 
                 {selectedId === perf.id && (
                   <view className={"pp-detailsContainer"}>
-                    {isMetricFcp && fcpMetrics && (
+                    {hasFcp && fcpMetrics && (
                       <view className={"pp-fcpSection"}>
                         {totalFcp !== undefined && (
                           <view

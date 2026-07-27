@@ -156,7 +156,7 @@ export const NetworkDetailSection = ({
                 className={"t3"}
                 style={{
                   color: showLogConfirm
-                    ? colors.fg.accent
+                    ? colors.palette.green600
                     : colors.fg.neutralSubtle,
                   fontWeight: fontWeight.regular,
                 }}

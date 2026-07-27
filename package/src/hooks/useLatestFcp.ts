@@ -1,22 +1,12 @@
 import { useEffect, useState } from "@lynx-js/react";
 import type { PerformanceEntryData } from "../types";
-
-interface FcpMetric {
-  name: string;
-  duration: number;
-}
-
-interface MetricFcpRawEntry {
-  totalFcp?: FcpMetric;
-  lynxFcp?: FcpMetric;
-  fcp?: FcpMetric;
-}
+import { extractFcpMetrics, type FcpMetric } from "../utils/extractFcp";
 
 const pickFcp = (entry: PerformanceEntryData): FcpMetric | undefined => {
-  if (entry.entryType !== "metric" || entry.name !== "fcp") return undefined;
-  const raw = entry.rawEntry as MetricFcpRawEntry | undefined;
-  if (raw?.totalFcp?.duration !== undefined) return raw.totalFcp;
-  if (raw?.lynxFcp?.duration !== undefined) return raw.lynxFcp;
+  const metrics = extractFcpMetrics(entry);
+  if (!metrics) return undefined;
+  if (metrics.totalFcp?.duration !== undefined) return metrics.totalFcp;
+  if (metrics.lynxFcp?.duration !== undefined) return metrics.lynxFcp;
   return undefined;
 };
 

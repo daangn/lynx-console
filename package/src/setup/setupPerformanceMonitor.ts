@@ -61,9 +61,9 @@ export const initPerformanceMonitor = () => {
   });
 
   observer.observe([
-    "pipeline", // LoadBundleEntry
-    "init", // InitLynxviewEntry
-    "metric", // MetricEntry
+    "pipeline", // LoadBundleEntry/ReloadBundleEntry — 엔진 3.7+에서는 FCP/init 타임스탬프도 여기에 실려옴
+    "init", // InitLynxviewEntry — 엔진 3.6까지만 사용
+    "metric", // MetricFcpEntry(3.6까지) / MetricFspEntry
   ]);
 
   console.log("[LynxConsole] ✅ Performance monitoring initialized");

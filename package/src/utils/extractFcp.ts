@@ -24,8 +24,6 @@ const isMetricFcpEntry = (entry: PerformanceEntryData): boolean => {
   return entry.entryType === "metric" && entry.name === "fcp";
 };
 
-// reload 엔트리의 name은 "reloadBundle"이 아니라
-// "reloadBundleFromNative" | "reloadBundleFromBts" (엔진 timing_constants.h 기준)
 const isBundlePipelineEntry = (entry: PerformanceEntryData): boolean => {
   return (
     entry.entryType === "pipeline" &&

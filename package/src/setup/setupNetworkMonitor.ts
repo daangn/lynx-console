@@ -201,10 +201,11 @@ export const initNetworkMonitor = () => {
         });
 
         const contentType = headerMap["content-type"];
-        if (contentType?.includes("application/json")) {
+        const mimeType = contentType?.split(";")[0]?.trim().toLowerCase();
+        if (mimeType === "application/json" || mimeType?.endsWith("+json")) {
           const json = await clonedResponse.json();
           responseBody = stringify(json, null, 2, { references: true }) ?? "";
-        } else if (contentType?.includes("text")) {
+        } else if (mimeType?.includes("text")) {
           responseBody = await clonedResponse.text();
         }
       } catch (error) {

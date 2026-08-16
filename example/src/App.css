@@ -58,6 +58,9 @@
 .app-deleteButton {
   background-color: #fff5f5;
 }
+.app-graphqlButton {
+  background-color: #fdf2f8;
+}
 
 .app-consoleButtonText {
   color: #4a5568;
@@ -73,4 +76,7 @@
 }
 .app-deleteButtonText {
   color: #e53e3e;
+}
+.app-graphqlButtonText {
+  color: #db2777;
 }

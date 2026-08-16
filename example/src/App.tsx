@@ -107,6 +107,36 @@ const App = () => {
       console.error('DELETE Error:', error);
     }
   };
+  // 응답 Content-Type이 application/graphql-response+json 인 케이스
+  // graphql.org 공식 사이트의 예제 엔드포인트 (SWAPI 스키마)
+  // 끝의 슬래시가 없으면 308 리다이렉트되므로 그대로 둬요
+  const testGraphqlRequest = async () => {
+    try {
+      const response = await fetch('https://graphql.org/graphql/?op=GetFilm', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/graphql-response+json',
+        },
+        body: JSON.stringify({
+          query: `query GetFilm($filmID: ID!) {
+            film(filmID: $filmID) {
+              title
+              episodeID
+              director
+              releaseDate
+            }
+          }`,
+          variables: { filmID: '1' },
+        }),
+      });
+      const data = await response.json();
+      console.log('GraphQL Response:', data);
+    } catch (error) {
+      console.error('GraphQL Error:', error);
+    }
+  };
+
   return (
     <view className="app-container">
       <list className="app-list" scroll-orientation="vertical">
@@ -193,6 +223,14 @@ const App = () => {
             >
               <text className="app-buttonText app-deleteButtonText">
                 DELETE Request
+              </text>
+            </view>
+            <view
+              bindtap={testGraphqlRequest}
+              className="app-baseButton app-graphqlButton"
+            >
+              <text className="app-buttonText app-graphqlButtonText">
+                GraphQL Request
               </text>
             </view>
           </view>

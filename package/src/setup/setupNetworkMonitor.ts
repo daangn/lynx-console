@@ -1,5 +1,6 @@
 import { stringify } from "javascript-stringify";
 import { ensureConsoleStructure } from "../shared/ensureConsoleStructure";
+import { isWebPlatform } from "../shared/isWebPlatform";
 import type { NetworkEntry } from "../types";
 
 const generateNetworkId = (): string => {
@@ -121,7 +122,7 @@ const updateNetworkEntry = (
 };
 
 export const initNetworkMonitor = () => {
-  if (!lynx.fetch) {
+  if (isWebPlatform ? !globalThis.fetch : !lynx.fetch) {
     console.warn(
       "[LynxConsole] lynx.fetch not available, skipping network monitor",
     );
@@ -146,7 +147,10 @@ export const initNetworkMonitor = () => {
     };
   };
 
-  const originalFetch = fetch.bind(lynx);
+  // web의 lynx.fetch는 LynxFetchModule이 없어 동작하지 않으므로 worker fetch를 써요
+  const originalFetch = isWebPlatform
+    ? (globalThis.fetch.bind(globalThis) as typeof fetch)
+    : fetch.bind(lynx);
 
   const monitoredFetch = async (
     input: RequestInfo | URL,
@@ -236,13 +240,20 @@ export const initNetworkMonitor = () => {
     }
   };
 
-  // biome-ignore lint/suspicious/noTsIgnore: to assign fetch to global functionfetch
-  // @ts-ignore
-  // biome-ignore lint/suspicious/noGlobalAssign: to assign fetch to global functionfetch fetch
-  fetch = monitoredFetch as typeof fetch;
+  if (isWebPlatform) {
+    globalThis.fetch = monitoredFetch as typeof globalThis.fetch;
+    if (lynx.fetch) {
+      lynx.fetch = monitoredFetch as typeof lynx.fetch;
+    }
+  } else {
+    // biome-ignore lint/suspicious/noTsIgnore: to assign fetch to global functionfetch
+    // @ts-ignore
+    // biome-ignore lint/suspicious/noGlobalAssign: to assign fetch to global functionfetch fetch
+    fetch = monitoredFetch as typeof fetch;
 
-  //fetch 대신 lynx.fetch를 사용하는 경우에도 모니터링 되도록 설정
-  lynx.fetch = monitoredFetch as typeof lynx.fetch;
+    //fetch 대신 lynx.fetch를 사용하는 경우에도 모니터링 되도록 설정
+    lynx.fetch = monitoredFetch as typeof lynx.fetch;
+  }
 
   console.log("[LynxConsole] ✅ Network monitoring initialized");
 };

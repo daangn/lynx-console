@@ -28,6 +28,7 @@ dist
 .vscode/*
 !.vscode/extensions.json
 .idea
+.claude/launch.json
 
 # TypeScript
 *.tsbuildinfo

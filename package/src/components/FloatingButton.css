@@ -1,6 +1,6 @@
 .fb-wrapper {
   position: fixed;
-  z-index: 9999;
+  z-index: 9997;
   display: flex;
   flex-direction: row;
   align-items: center;

@@ -1,10 +1,21 @@
 import { ensureConsoleStructure } from "../shared/ensureConsoleStructure";
+import { isWebPlatform } from "../shared/isWebPlatform";
 import type { LogEntry, LogLevel } from "../types";
 
 type LogListener = (entry: LogEntry) => void;
 
 const LOG_METHODS: LogLevel[] = ["log", "warn", "error", "info"];
 const LOG_ID_PREFIX = "background-thread";
+
+// web lynx-core가 미구현 API 호출 시 찍는 "NYI: ..." 노이즈 로그인지 확인해요
+const isUnimplementedApiNoise = (args: unknown[]): boolean => {
+  return (
+    isWebPlatform &&
+    typeof args[0] === "string" &&
+    args[0].startsWith("NYI: ") &&
+    args[0].includes("lynx-core")
+  );
+};
 
 const generateLogId = (): string => {
   return `${LOG_ID_PREFIX}-${Date.now()}-${Math.random()}`;
@@ -66,6 +77,7 @@ export const initLogMonitor = () => {
   // Background Thread console 오버라이드
   LOG_METHODS.forEach((method) => {
     globalThis.console[method] = ((...args: unknown[]) => {
+      if (isUnimplementedApiNoise(args)) return;
       lynxConsole.originalConsole?.[method](...args);
       const entry = createLogEntry(method, args);
       addLogEntry(entry);

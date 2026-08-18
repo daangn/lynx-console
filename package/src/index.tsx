@@ -11,6 +11,7 @@ import "./components/FloatingButton.css";
 import "./styles/tokens.css";
 import { FloatingButton } from "./components/FloatingButton.jsx";
 import { useLatestFcp } from "./hooks/useLatestFcp";
+import { isWebPlatform } from "./shared/isWebPlatform";
 import { ThemeProvider } from "./styles/ThemeContext";
 import { getColors } from "./styles/theme";
 import type { CustomTab } from "./types";
@@ -87,12 +88,15 @@ const LynxConsole = forwardRef<LynxConsoleHandle, LynxConsoleProps>(
             >
               LynxConsole
             </text>
-            <text
-              className="fb-subtitle t3"
-              style={{ fontWeight: "400", color: colors.palette.staticWhite }}
-            >
-              {`${latestFcp?.name ?? "FCP"}: ${latestFcp?.duration ? latestFcp.duration.toFixed(2) : "--"}ms`}
-            </text>
+            {/* web은 performance entry가 오지 않아 실제 수집된 경우에만 표시해요 */}
+            {(!isWebPlatform || latestFcp) && (
+              <text
+                className="fb-subtitle t3"
+                style={{ fontWeight: "400", color: colors.palette.staticWhite }}
+              >
+                {`${latestFcp?.name ?? "FCP"}: ${latestFcp?.duration ? latestFcp.duration.toFixed(2) : "--"}ms`}
+              </text>
+            )}
           </FloatingButton>
           {isOpen && (
             <BottomSheet

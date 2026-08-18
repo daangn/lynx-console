@@ -1,5 +1,6 @@
 import { useRef, useState } from "@lynx-js/react";
 import type { BaseTouchEvent, Target } from "@lynx-js/types";
+import { isWebPlatform } from "../shared/isWebPlatform";
 
 const MOVE_THRESHOLD = 5;
 
@@ -77,6 +78,7 @@ export function useDrag(onTap: () => void, options?: UseDragOptions) {
   const [tempY, setTempY] = useState(initY);
 
   const draggingRef = useRef(false);
+  const recentDragRef = useRef(false);
   const startRef = useRef({ x: 0, y: 0, ax: 0, ay: 0 });
 
   // anchor 방향에 따라 드래그 부호 결정. right/bottom anchor면 드래그 방향과 값 변화가 반대.
@@ -125,10 +127,19 @@ export function useDrag(onTap: () => void, options?: UseDragOptions) {
       };
       setPhase("releasing");
       draggingRef.current = false;
-      setTimeout(() => setPhase("idle"), 300);
+      recentDragRef.current = true;
+      setTimeout(() => {
+        setPhase("idle");
+        recentDragRef.current = false;
+      }, 300);
     } else {
       onTap();
     }
+  };
+
+  const handleWebTap = () => {
+    if (recentDragRef.current) return;
+    onTap();
   };
 
   const isDragging = phase === "dragging";
@@ -147,6 +158,7 @@ export function useDrag(onTap: () => void, options?: UseDragOptions) {
       catchtouchstart: handleTouchStart,
       catchtouchmove: handleTouchMove,
       catchtouchend: handleTouchEnd,
+      ...(isWebPlatform ? { bindtap: handleWebTap } : {}),
     },
   };
 }

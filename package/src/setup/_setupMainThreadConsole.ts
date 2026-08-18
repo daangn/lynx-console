@@ -64,10 +64,22 @@ const _setupMainThreadConsole = (): void => {
     info: originalConsole.info.bind(originalConsole),
   };
 
+  // web lynx-core의 "NYI: ..." 노이즈 로그 필터 (main thread 제약으로 인라인)
+  const isUnimplementedApiNoise = (args: unknown[]): boolean => {
+    return (
+      typeof SystemInfo !== "undefined" &&
+      (SystemInfo.platform as string) === "web" &&
+      typeof args[0] === "string" &&
+      args[0].startsWith("NYI: ") &&
+      args[0].includes("lynx-core")
+    );
+  };
+
   // Main Thread console 오버라이드
   LOG_METHODS.forEach((method) => {
     const original = originalMethods[method];
     originalConsole[method] = ((...args: unknown[]) => {
+      if (isUnimplementedApiNoise(args)) return;
       // 원본 console 호출
       original(...args);
 

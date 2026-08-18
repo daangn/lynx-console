@@ -1,5 +1,6 @@
 import { type ReactNode, useRef, useState } from "@lynx-js/react";
 import type { ListSnapEvent, NodesRef } from "@lynx-js/types";
+import { isWebPlatform } from "../shared/isWebPlatform";
 import { useThemeColors } from "../styles/ThemeContext";
 import { fontWeight } from "../styles/theme";
 import "./Tabs.css";
@@ -76,29 +77,50 @@ export default function Tabs(props: TabsProps) {
         ))}
       </view>
 
-      <list
-        ref={tabContentsRef}
-        className={"tabs-contents"}
-        scroll-orientation="horizontal"
-        item-snap={{ factor: 0, offset: 0 }}
-        bindscroll={() => props.onTabChange?.()}
-        bindsnap={(e: ListSnapEvent) => {
-          setActiveIndex(e.detail.position);
-        }}
-        bounces={false}
-        preload-buffer-count={props.items.length}
-      >
-        {props.items.map((item) => (
-          <list-item
-            key={item.key}
-            item-key={item.key}
-            recyclable={false}
-            className={"tabs-content"}
-          >
-            {item.renderContent()}
-          </list-item>
-        ))}
-      </list>
+      {isWebPlatform ? (
+        // web x-list는 리렌더 시 가로 스크롤이 리셋되므로 display 토글로 대체해요
+        <view
+          className={"tabs-contents"}
+          style={{ display: "flex", flexDirection: "column" }}
+        >
+          {props.items.map((item, i) => (
+            <view
+              key={item.key}
+              className={"tabs-content"}
+              style={{
+                display: i === activeIndex ? "flex" : "none",
+                flex: 1,
+              }}
+            >
+              {item.renderContent()}
+            </view>
+          ))}
+        </view>
+      ) : (
+        <list
+          ref={tabContentsRef}
+          className={"tabs-contents"}
+          scroll-orientation="horizontal"
+          item-snap={{ factor: 0, offset: 0 }}
+          bindscroll={() => props.onTabChange?.()}
+          bindsnap={(e: ListSnapEvent) => {
+            setActiveIndex(e.detail.position);
+          }}
+          bounces={false}
+          preload-buffer-count={props.items.length}
+        >
+          {props.items.map((item) => (
+            <list-item
+              key={item.key}
+              item-key={item.key}
+              recyclable={false}
+              className={"tabs-content"}
+            >
+              {item.renderContent()}
+            </list-item>
+          ))}
+        </list>
+      )}
     </view>
   );
 }

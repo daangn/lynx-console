@@ -22,6 +22,19 @@ const getLocalIP = () => {
 };
 
 export default defineConfig({
+  environments: {
+    web: {
+      source: {
+        define: {
+          fetch: 'globalThis.fetch',
+        },
+      },
+      output: {
+        assetPrefix: '/',
+      },
+    },
+    lynx: {},
+  },
   source: {
     entry: {
       main: './src/index.tsx',

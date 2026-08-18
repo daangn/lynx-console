@@ -1,0 +1,9 @@
+import '@lynx-js/web-core';
+import '@lynx-js/web-core/index.css';
+import '@lynx-js/web-elements/LynxWrapper';
+import '@lynx-js/web-elements/ScrollView';
+import '@lynx-js/web-elements/XInput';
+import '@lynx-js/web-elements/XList';
+import '@lynx-js/web-elements/XText';
+import '@lynx-js/web-elements/XView';
+import '@lynx-js/web-elements/index.css';

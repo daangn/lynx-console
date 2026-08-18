@@ -54,9 +54,18 @@ export default function BottomSheet({
 
   // 아래에서 올라오는 애니메이션
   useEffect(() => {
-    requestAnimationFrame(() => {
+    let done = false;
+    const finishOpening = () => {
+      if (done) return;
+      done = true;
       setIsOpening(false);
-    });
+    };
+    if (typeof requestAnimationFrame === "function") {
+      requestAnimationFrame(finishOpening);
+    }
+    // web BTS에서는 rAF 콜백이 유실될 수 있어 setTimeout으로 보완해요
+    const timer = setTimeout(finishOpening, 50);
+    return () => clearTimeout(timer);
   }, []);
 
   // 외부에서 닫기 요청 시 애니메이션 처리

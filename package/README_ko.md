@@ -8,13 +8,14 @@ Lynx 앱에 내장할 수 있는 인앱 개발자 콘솔이에요. 콘솔 로그
 
 https://github.com/user-attachments/assets/dcd874bf-ff2e-4a98-ae03-d83de5fae31c
 
-<img width="450" height="450" alt="lynx_bundle_qrcode_fullscreen" src="https://github.com/user-attachments/assets/8bbb9bfe-df2b-436d-ad17-6e4eb4b672c9" />
+<img width="492" height="492" alt="lynxconsoleqrcodefullscreen" src="https://github.com/user-attachments/assets/ca735109-c531-44ce-bf81-3a61a61ac2e4" />
 
 [Lynx Explorer](https://lynxjs.org/guide/start/quick-start.html#via-lynx-explorer-app) 앱으로 위 QR코드를 스캔해서 데모를 실행해볼 수 있어요.
 
 ## 기능
 
-- **콘솔 로그** — `console.log`, `console.error` 등의 출력을 실시간으로 확인해요. 레벨 필터, 키워드 검색, 로그 지우기, 내장 REPL 기능을 지원해요
+- **콘솔 로그** — `console.log`, `console.error` 등의 출력을 실시간으로 확인해요. 
+레벨 필터, 키워드 검색, 로그 지우기, 내장 REPL 기능을 지원해요
 - **메인 스레드 콘솔** — 백그라운드 스레드 로그와 함께 메인 스레드의 로그도 캡처해요
 
 https://github.com/user-attachments/assets/539fe31a-aca4-468d-b673-3b070b21cd08

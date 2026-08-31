@@ -8,7 +8,7 @@ An in-app developer console that can be embedded in Lynx apps. View console logs
 
 https://github.com/user-attachments/assets/dcd874bf-ff2e-4a98-ae03-d83de5fae31c
 
-<img width="450" height="450" alt="lynx_bundle_qrcode_fullscreen" src="https://github.com/user-attachments/assets/8bbb9bfe-df2b-436d-ad17-6e4eb4b672c9" />
+<img width="492" height="492" alt="lynxconsoleqrcodefullscreen" src="https://github.com/user-attachments/assets/ca735109-c531-44ce-bf81-3a61a61ac2e4" />
 
 Scan the QR code above with the [Lynx Explorer](https://lynxjs.org/guide/start/quick-start.html#via-lynx-explorer-app) app to try the demo.
 

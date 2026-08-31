@@ -9,6 +9,8 @@ import { pluginTypeCheck } from '@rsbuild/plugin-type-check';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+const packageDir = path.resolve(__dirname, '../package');
+
 const getLocalIP = () => {
   const interfaces = os.networkInterfaces();
   for (const interfaceName in interfaces) {
@@ -40,7 +42,11 @@ export default defineConfig({
       main: './src/index.tsx',
     },
     define: { console: 'globalThis.console' },
-    include: [/@lynx-js\/preact-devtools/, /lynx-console/],
+    include: [
+      /@lynx-js\/preact-devtools/,
+      { and: [packageDir, { not: /[\\/]node_modules[\\/]/ }] },
+      /[\\/]node_modules[\\/]devalue[\\/]/,
+    ],
   },
   output: {
     assetPrefix: process.env.ASSET_PREFIX ?? `http://${getLocalIP()}:<port>/`,

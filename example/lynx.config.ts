@@ -68,7 +68,7 @@ export default defineConfig({
       schema(url) {
         return {
           LynxExplorer: `${url}?fullscreen=true`,
-          LynxConsoleDemo: `https://lynx-console-demo.vercel.app/main.lynx.bundle?fullscreen=true`,
+          LynxConsoleDemo: `https://lynx-console.pages.dev/main.lynx.bundle?fullscreen=true`,
         };
       },
     }),

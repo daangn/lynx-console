@@ -51,7 +51,7 @@ function alternates(routePath) {
   return { en, ko };
 }
 
-function escape(value) {
+function escapeAttr(value) {
   return String(value)
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
@@ -73,16 +73,16 @@ export function buildHead(route) {
   const { en, ko } = alternates(route.routePath);
 
   const tags = [
-    `<link rel="canonical" href="${escape(canonical)}">`,
-    `<link rel="alternate" hreflang="en" href="${escape(`${SITE_URL}${en}`)}">`,
-    `<link rel="alternate" hreflang="ko" href="${escape(`${SITE_URL}${ko}`)}">`,
-    `<link rel="alternate" hreflang="x-default" href="${escape(`${SITE_URL}${en}`)}">`,
+    `<link rel="canonical" href="${escapeAttr(canonical)}">`,
+    `<link rel="alternate" hreflang="en" href="${escapeAttr(`${SITE_URL}${en}`)}">`,
+    `<link rel="alternate" hreflang="ko" href="${escapeAttr(`${SITE_URL}${ko}`)}">`,
+    `<link rel="alternate" hreflang="x-default" href="${escapeAttr(`${SITE_URL}${en}`)}">`,
     `<meta property="og:type" content="website">`,
     `<meta property="og:site_name" content="${SITE_NAME}">`,
     `<meta property="og:locale" content="${lang === "ko" ? "ko_KR" : "en_US"}">`,
-    `<meta property="og:url" content="${escape(canonical)}">`,
-    `<meta property="og:title" content="${escape(title)}">`,
-    `<meta property="og:description" content="${escape(description)}">`,
+    `<meta property="og:url" content="${escapeAttr(canonical)}">`,
+    `<meta property="og:title" content="${escapeAttr(title)}">`,
+    `<meta property="og:description" content="${escapeAttr(description)}">`,
     `<meta property="og:image" content="${OG_IMAGE}">`,
     `<meta property="og:image:width" content="1200">`,
     `<meta property="og:image:height" content="630">`,

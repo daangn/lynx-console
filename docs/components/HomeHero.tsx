@@ -25,12 +25,13 @@ const TEXT = {
     openInTab: "Open the demo in a new tab",
   },
   ko: { explorer: "Lynx Explorer로 열기", openInTab: "새 탭에서 데모 열기" },
+  zh: { explorer: "用 Lynx Explorer 打开", openInTab: "在新标签页打开演示" },
 } as const;
 
 export function HomeHero() {
   const { page } = usePageData();
   const lang = useLang();
-  const t = TEXT[lang === "ko" ? "ko" : "en"];
+  const t = TEXT[lang in TEXT ? (lang as keyof typeof TEXT) : "en"];
   const hero = (page.frontmatter?.hero ?? {}) as Hero;
 
   return (

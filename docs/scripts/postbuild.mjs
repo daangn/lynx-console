@@ -2,7 +2,12 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { SITE_URL } from "../siteMeta.mjs";
+import {
+  alternatePaths,
+  DEFAULT_LOCALE,
+  LOCALES,
+  SITE_URL,
+} from "../siteMeta.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const outDir = path.resolve(__dirname, "..", "doc_build");
@@ -30,26 +35,21 @@ function collectHtml(dir, base = "") {
   return routes;
 }
 
-function alternates(route) {
-  const isKo = route === "/ko/" || route.startsWith("/ko/");
-  const en = isKo ? route.replace(/^\/ko/, "") || "/" : route;
-  const ko = isKo ? route : `/ko${route}`;
-  return { en, ko };
-}
-
 const routes = collectHtml(outDir).sort();
 const today = new Date().toISOString().slice(0, 10);
 
 const urls = routes
   .map((route) => {
-    const { en, ko } = alternates(route);
+    const alternates = alternatePaths(route);
     return [
       "  <url>",
       `    <loc>${SITE_URL}${route}</loc>`,
       `    <lastmod>${today}</lastmod>`,
-      `    <xhtml:link rel="alternate" hreflang="en" href="${SITE_URL}${en}"/>`,
-      `    <xhtml:link rel="alternate" hreflang="ko" href="${SITE_URL}${ko}"/>`,
-      `    <xhtml:link rel="alternate" hreflang="x-default" href="${SITE_URL}${en}"/>`,
+      ...LOCALES.map(
+        (lang) =>
+          `    <xhtml:link rel="alternate" hreflang="${lang}" href="${SITE_URL}${alternates[lang]}"/>`,
+      ),
+      `    <xhtml:link rel="alternate" hreflang="x-default" href="${SITE_URL}${alternates[DEFAULT_LOCALE]}"/>`,
       "  </url>",
     ].join("\n");
   })

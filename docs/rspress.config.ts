@@ -25,6 +25,12 @@ export default defineConfig({
       title: "lynx-console",
       description: "Lynx 앱에 내장할 수 있는 인앱 개발자 콘솔",
     },
+    {
+      lang: "zh",
+      label: "简体中文",
+      title: "lynx-console",
+      description: "可以嵌入 Lynx 应用的应用内开发者控制台",
+    },
   ],
   globalStyles: path.resolve("styles/global.css"),
   route: {
@@ -103,6 +109,41 @@ export default defineConfig({
             {
               text: "API",
               items: [{ text: "API 레퍼런스", link: "/ko/api/" }],
+            },
+          ],
+        },
+      },
+      {
+        lang: "zh",
+        label: "简体中文",
+        outlineTitle: "目录",
+        prevPageText: "上一页",
+        nextPageText: "下一页",
+        editLink: {
+          docRepoBaseUrl: `${GITHUB_URL}/tree/main/docs/src`,
+          text: "在 GitHub 上编辑此页",
+        },
+        nav: [
+          { text: "指南", link: "/zh/guide/getting-started" },
+          { text: "API", link: "/zh/api/" },
+          { text: "演示", link: "/zh/guide/demo" },
+        ],
+        sidebar: {
+          "/zh/guide/": [
+            {
+              text: "指南",
+              items: [
+                { text: "介绍", link: "/zh/guide/introduction" },
+                { text: "快速开始", link: "/zh/guide/getting-started" },
+                { text: "自定义标签页与 ref", link: "/zh/guide/customizing" },
+                { text: "体验演示", link: "/zh/guide/demo" },
+              ],
+            },
+          ],
+          "/zh/api/": [
+            {
+              text: "API",
+              items: [{ text: "API 参考", link: "/zh/api/" }],
             },
           ],
         },

@@ -1,4 +1,4 @@
-[한국어](https://github.com/daangn/lynx-console/blob/main/package/README_ko.md) | English
+English | [한국어](https://github.com/daangn/lynx-console/blob/main/package/README_ko.md) | [简体中文](https://github.com/daangn/lynx-console/blob/main/package/README_zh.md)
 
 # lynx-console
 

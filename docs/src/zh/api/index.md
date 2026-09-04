@@ -19,8 +19,8 @@ description: props、console handle 和监视器初始化函数。
 | 属性 | 类型 | 说明 |
 | --- | --- | --- |
 | `key` | `string` | 标签页的唯一标识。 |
-| `label` | `string` | 标签页的文字。 |
-| `renderContent` | `() => ReactNode` | 渲染标签页内容。 |
+| `label` | `string` | 标签页的显示文字。 |
+| `renderContent` | `() => ReactNode` | 渲染标签页的内容。 |
 
 ## `LynxConsoleHandle`
 
@@ -43,4 +43,4 @@ description: props、console handle 和监视器初始化函数。
 | `initNetworkMonitor()` | 拦截并记录 `fetch` 请求。 |
 | `initPerformanceMonitor()` | 收集性能指标。 |
 
-只有初始化过的监视器才会渲染对应的标签页。
+只有初始化过的监视器，才会显示对应的标签页。

@@ -26,7 +26,7 @@ const DEFAULTS = {
   zh: {
     title: "lynx-console",
     description:
-      "Lynx 应用的应用内开发者控制台。不用连调试器，就能在真机上查看控制台日志、fetch 请求和性能指标。",
+      "可以嵌入 Lynx 应用的开发者控制台。不用连调试器，就能在真机上查看控制台日志、fetch 请求和性能指标。",
     ogLocale: "zh_CN",
   },
 };

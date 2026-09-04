@@ -33,13 +33,13 @@ export default defineConfig({
 });
 ```
 
-- **`console`** — iOS 的 JSC 注入的 `console` 并*不是* `globalThis.console`。不做这个替换，
+- **`console`** — iOS 上 JSC 注入的 `console` 并*不是* `globalThis.console`。不做这个替换的话，
   `initLogMonitor()` 在 iOS 上不会生效。
-- **`fetch`** — 取决于你的构建配置，不替换成 `lynx.fetch` 的话网络请求可能不会被记录。
+- **`fetch`** — 视构建配置而定，不替换成 `lynx.fetch` 的话，网络请求可能不会被记录。
 
 ## 1. 初始化监视器
 
-在应用入口调用，要在 `LynxConsole` 渲染**之前**。
+在应用入口调用这些函数，而且要在 `LynxConsole` 渲染**之前**。
 
 ```typescript title="src/index.tsx"
 import {
@@ -60,7 +60,7 @@ initPerformanceMonitor();
 之前调用。
 :::
 
-没有初始化的监视器，不会渲染对应的标签页。
+没有初始化的监视器，对应的标签页不会显示。
 
 ## 2. 渲染组件
 

@@ -2,7 +2,7 @@
 
 # lynx-console
 
-可以嵌入 Lynx 应用的应用内开发者控制台。实时查看控制台日志、网络请求和性能指标。
+可以嵌入 Lynx 应用的开发者控制台。实时查看控制台日志、网络请求和性能指标。
 
 📖 **[文档站点](https://lynx-console.pages.dev/zh/)** — 指南、API 参考，以及可以在浏览器里直接运行的在线演示。
 
@@ -18,7 +18,7 @@ https://github.com/user-attachments/assets/dcd874bf-ff2e-4a98-ae03-d83de5fae31c
 
 ## 功能
 
-- **控制台日志** — 实时查看 `console.log`、`console.error` 等输出。支持级别过滤、关键字搜索、清空日志，以及内置 REPL
+- **控制台日志** — 实时查看 `console.log`、`console.error` 等输出。支持级别过滤、关键字搜索、清空日志，还内置了 REPL
 - **主线程控制台** — 主线程的日志会和后台线程的日志一起被捕获
 
 https://github.com/user-attachments/assets/539fe31a-aca4-468d-b673-3b070b21cd08
@@ -33,8 +33,8 @@ https://github.com/user-attachments/assets/d231bdf5-71bb-483f-9bdb-5843279c1308
 
 - **悬浮按钮** — 显示最新的 FCP 数值；点击打开控制台，长按拖动可以改变位置
 - **可调整面板** — 拖动手柄调整控制台面板高度（200–700px）；向下滑动即可关闭
-- **标签页自动隐藏** — 只显示已初始化的监视器的标签页，没有初始化的会自动隐藏
-- **自定义标签页** — 通过 `customTabs` prop 把自己的标签页加进控制台
+- **标签页自动隐藏** — 只显示已初始化的监视器对应的标签页，没有初始化的不会出现
+- **自定义标签页** — 通过 `customTabs` prop 把自己的标签页加到控制台里
 - 支持**浅色/深色主题**
 
 ## 安装
@@ -67,12 +67,12 @@ export default defineConfig({
 });
 ```
 
-- **`console`** — 在 iOS 上，Lynx 运行时（JSC）会注入一个独立于 `globalThis.console` 的 `console` 对象。不在构建时替换这个标识符，`initLogMonitor()` 打的补丁在 iOS 上不会生效。
-- **`fetch`** — 取决于你的构建配置，不替换成 `lynx.fetch` 的话网络请求可能不会被记录。
+- **`console`** — 在 iOS 上，Lynx 运行时（JSC）会注入一个独立于 `globalThis.console` 的 `console` 对象。不在构建时替换这个标识符的话，`initLogMonitor()` 打的补丁在 iOS 上不会生效。
+- **`fetch`** — 视构建配置而定，不替换成 `lynx.fetch` 的话，网络请求可能不会被记录。
 
 ### 1. 初始化监视器
 
-在应用入口调用监视函数。这段设置必须在 `LynxConsole` 组件渲染**之前**执行。
+在应用入口调用这些监视函数。这段初始化必须在 `LynxConsole` 组件渲染**之前**执行。
 
 ```typescript
 import {
@@ -146,7 +146,7 @@ function App() {
 
 ### 用 ref 控制
 
-通过 `LynxConsoleHandle` 可以用代码打开和关闭控制台。
+通过 `LynxConsoleHandle` 可以用代码开关控制台。
 
 ```tsx
 import { type LynxConsoleHandle } from "lynx-console";
@@ -175,7 +175,7 @@ function App() {
 }
 ```
 
-也可以和返回键处理逻辑结合，让用户按返回键时关掉控制台。
+也可以和返回键的处理逻辑结合，让用户按返回键时关掉控制台。
 
 ## API
 
@@ -194,7 +194,7 @@ function App() {
 | --------------- | ----------------- | ---------------------- |
 | `key`           | `string`          | 标签页的唯一标识       |
 | `label`         | `string`          | 标签页的文字           |
-| `renderContent` | `() => ReactNode` | 渲染标签页内容的函数   |
+| `renderContent` | `() => ReactNode` | 渲染标签页内容的函数     |
 
 ### `LynxConsoleHandle`
 

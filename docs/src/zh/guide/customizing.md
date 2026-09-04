@@ -7,7 +7,7 @@ description: 自定义标签页、用代码打开控制台，以及按钮位置�
 
 ## 添加自己的标签页
 
-可以把任何你需要的调试信息放进控制台的标签页里。
+任何你需要的调试信息，都可以放进控制台的一个标签页里。
 
 ```tsx
 import LynxConsole, { type CustomTab } from 'lynx-console';
@@ -29,9 +29,9 @@ function App() {
 }
 ```
 
-## 用代码控制控制台
+## 用代码开关控制台
 
-`LynxConsoleHandle` 让你自己打开和关闭面板。
+通过 `LynxConsoleHandle` 可以自己打开和关闭面板。
 
 ```tsx
 import { type LynxConsoleHandle } from 'lynx-console';
@@ -60,9 +60,9 @@ function App() {
 }
 ```
 
-把 `close()` 接到返回键处理里，就能用返回键关掉控制台。
+把 `close()` 接到返回键的处理逻辑里，按返回键就能关掉控制台。
 
-## 放置悬浮按钮
+## 悬浮按钮的位置
 
 默认是 `{ right: 16, bottom: 84 }`，四个方向互相独立：
 
@@ -70,7 +70,7 @@ function App() {
 <LynxConsole initialPosition={{ top: 50, left: 16 }} />
 ```
 
-用户拖动过按钮之后，拖动后的位置优先于 `initialPosition`。
+用户拖动过按钮之后，拖出来的位置会盖过 `initialPosition`。
 
 ## 主题和安全区域
 

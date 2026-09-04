@@ -1,10 +1,10 @@
 ---
 pageType: home
-titleSuffix: Lynx 应用的应用内开发者控制台
+titleSuffix: 可以嵌入 Lynx 应用的开发者控制台
 
 hero:
   name: lynx-console
-  tagline: 一个悬浮按钮，在运行中的 Lynx 应用之上打开控制台、网络和性能面板。不用电脑也能看日志。
+  tagline: 点一下悬浮按钮，控制台、网络和性能面板就浮在运行中的 Lynx 应用上。不用电脑也能看日志。
   actions:
     - theme: brand
       text: 快速开始
@@ -18,5 +18,5 @@ features:
   - title: 记录每一个 fetch
     details: 方法、状态码、请求头、请求体、响应。从初始化那一刻开始记录。
   - title: 自定义标签页
-    details: 可以把任何你需要的调试信息放进控制台的标签页里。
+    details: 任何你需要的调试信息，都可以放进控制台的一个标签页里。
 ---

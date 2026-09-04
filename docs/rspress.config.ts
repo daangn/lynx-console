@@ -29,7 +29,7 @@ export default defineConfig({
       lang: "zh",
       label: "简体中文",
       title: "lynx-console",
-      description: "可以嵌入 Lynx 应用的应用内开发者控制台",
+      description: "可以嵌入 Lynx 应用的开发者控制台",
     },
   ],
   globalStyles: path.resolve("styles/global.css"),

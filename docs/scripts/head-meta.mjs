@@ -86,8 +86,6 @@ export function buildHead(route) {
     `<meta property="og:image" content="${OG_IMAGE}">`,
     `<meta property="og:image:width" content="1200">`,
     `<meta property="og:image:height" content="630">`,
-    // Slack · Discord 같은 링크 미리보기도 읽어요. 큰 이미지 카드로 뜨게 해요.
-    `<meta name="twitter:card" content="summary_large_image">`,
   ];
 
   if (isHome) {

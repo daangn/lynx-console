@@ -1,5 +1,11 @@
 # lynx-console
 
+## 0.9.1
+
+### Patch Changes
+
+- b2aba5a: README 중국어(간체) 번역을 추가하고, 세 README 의 언어 전환 줄을 맞췄어요
+
 ## 0.9.0
 
 ### Minor Changes

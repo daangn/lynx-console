@@ -41,7 +41,7 @@ export default defineConfig({
     entry: {
       main: './src/index.tsx',
     },
-    define: { console: 'globalThis.console' },
+    define: { console: 'globalThis.console', fetch: 'lynx.fetch' },
     include: [
       /@lynx-js\/preact-devtools/,
       { and: [packageDir, { not: /[\\/]node_modules[\\/]/ }] },
@@ -68,7 +68,7 @@ export default defineConfig({
       schema(url) {
         return {
           LynxExplorer: `${url}?fullscreen=true`,
-          LynxConsoleDemo: `https://lynx-console-demo.vercel.app/main.lynx.bundle?fullscreen=true`,
+          LynxConsoleDemo: `https://lynx-console.pages.dev/main.lynx.bundle?fullscreen=true`,
         };
       },
     }),

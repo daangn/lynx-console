@@ -4,7 +4,11 @@
 
 An in-app developer console that can be embedded in Lynx apps. View console logs, network requests, and performance metrics in real time.
 
+📖 **[Documentation](https://lynx-console.pages.dev)** — guides, API reference, and a live demo you can run in your browser.
+
 ## Demo
+
+Try it in your browser at **[lynx-console.pages.dev](https://lynx-console.pages.dev)** — the home page embeds the example app running on the Lynx Web Platform.
 
 https://github.com/user-attachments/assets/dcd874bf-ff2e-4a98-ae03-d83de5fae31c
 
@@ -46,13 +50,9 @@ yarn add @lynx-js/react @lynx-js/types
 yarn add -D @types/react
 ```
 
-> **Note:** Each monitor requires the corresponding Lynx API to be available at runtime. If `lynx.fetch` is not present, `initNetworkMonitor()` will be skipped with a warning. Likewise, `initPerformanceMonitor()` requires `lynx.performance`.
-
 ## Usage
 
-### 0. Configure Build (Required for iOS)
-
-On iOS, the Lynx runtime (JSC) injects a separate `console` object that is different from `globalThis.console`. This means patches applied by `initLogMonitor()` won't take effect on iOS unless you explicitly replace the `console` identifier with `globalThis.console` at build time.
+### 0. Configure Build (Required)
 
 Add the following to your `lynx.config.ts`:
 
@@ -61,10 +61,14 @@ export default defineConfig({
   source: {
     define: {
       console: "globalThis.console",
+      fetch: "lynx.fetch",
     },
   },
 });
 ```
+
+- **`console`** — on iOS, the Lynx runtime (JSC) injects a separate `console` object that is different from `globalThis.console`. Patches applied by `initLogMonitor()` won't take effect on iOS unless you replace the identifier at build time.
+- **`fetch`** — depending on your build setup, network requests may not be logged unless it is replaced with `lynx.fetch`.
 
 ### 1. Initialize Monitors
 

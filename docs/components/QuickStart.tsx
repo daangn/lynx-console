@@ -33,11 +33,17 @@ const TEXT = {
     moreLink: "/ko/guide/getting-started",
     steps: ["설치", "진입점에서 초기화", "컴포넌트 렌더"],
   },
+  zh: {
+    title: "三步就能跑起来",
+    more: "完整指南 →",
+    moreLink: "/zh/guide/getting-started",
+    steps: ["安装", "在入口初始化", "渲染组件"],
+  },
 } as const;
 
 export function QuickStart() {
   const lang = useLang();
-  const t = TEXT[lang === "ko" ? "ko" : "en"];
+  const t = TEXT[lang in TEXT ? (lang as keyof typeof TEXT) : "en"];
   const snippets = [INSTALL, INIT, RENDER];
 
   return (

@@ -31,11 +31,14 @@ yarn format         # biome 자동 수정
 
 ## 문서 사이트 규칙
 
-- 콘텐츠는 `docs/src/en` 과 `docs/src/ko` 에 **양쪽 다** 둬요. 한쪽만 고치지 않아요.
+- 콘텐츠는 `docs/src/en` · `docs/src/ko` · `docs/src/zh` 에 **세 벌 다** 둬요. 한쪽만 고치지 않아요.
+  중국어는 간체(简体中文)로 써요.
 - 한국어 문서는 해요체로 써요. 영어를 그대로 옮긴 듯한 문장이나, 코드 스팬 뒤 조사 앞
   띄어쓰기(`` `foo` 는 ``)를 만들지 않아요.
 - 기본 언어(en)는 라우트에서 `/en` 접두사가 빠져요. 영문 문서의 내부 링크는 `/guide/...`,
-  한국어는 `/ko/guide/...` 로 써요.
+  한국어는 `/ko/guide/...`, 중국어는 `/zh/guide/...` 로 써요.
+- 로케일 목록은 `docs/siteMeta.mjs` 의 `LOCALES` 한 곳에 있어요. 언어를 추가하면 여기와
+  `docs/rspress.config.ts`, 홈 컴포넌트의 `TEXT` 사전, `head-meta.mjs` 의 `DEFAULTS` 를 같이 채워요.
 - `.md` 에서는 raw HTML/JSX 가 렌더되지 않고 사라져요. `<a>`, `<img>`, style 객체가 필요하면
   파일 확장자를 `.mdx` 로 바꿔요.
 - `docs/src/public/` 은 전부 생성물이에요. `docs/scripts/sync-demo.mjs` 가 예제 빌드
@@ -67,6 +70,8 @@ yarn format         # biome 자동 수정
   쓰지 않아요. 클론 디렉터리 이름에 우연히 매칭돼 로컬만 통과하고 CI 에서 깨져요.
   `path.resolve(__dirname, ...)` 나 `[\\/]node_modules[\\/]<pkg>[\\/]` 형태로 써요.
 - `package/**` 를 고치면 changeset 이 필요해요 (CI 가 검사해요). `yarn changeset` 으로 만들어요.
+- README 는 `package/README.md`(en) · `README_ko.md` · `README_zh.md` 세 벌이에요. 루트의 같은 이름
+  파일은 심링크예요. 하나를 고치면 나머지도 맞춰요.
 - 커밋 메시지는 한국어로 써요.
 
 ## 참고 문서

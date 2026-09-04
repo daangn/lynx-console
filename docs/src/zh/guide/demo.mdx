@@ -1,0 +1,63 @@
+---
+title: 体验演示
+description: 在浏览器、Lynx Explorer 或本地运行示例。
+---
+
+# 体验演示
+
+示例应用和这份文档部署在一起，所以你可以马上试用 `lynx-console`。
+
+## 在浏览器里
+
+可以直接打开示例的 Web 版本。
+
+<a href="/demo/" target="_blank" rel="noreferrer"><strong>打开 Web 演示 →</strong></a>
+
+点一下 **LynxConsole** 按钮，再按任意一个测试按钮，面板里马上就会有记录。
+
+## 在真机上用 Lynx Explorer
+
+安装 [Lynx Explorer](https://lynxjs.org/guide/start/quick-start.html#via-lynx-explorer-app)
+应用，然后扫描这个二维码：
+
+<img src="/lynx-explorer-qr.svg" alt="Lynx Explorer 演示 bundle 的二维码" width="180" height="180" style={{ background: '#fff', padding: '8px', borderRadius: '8px' }} />
+
+正在手机上看？直接打开：
+
+<a href="lynx://open?url=https%3A%2F%2Flynx-console.pages.dev%2Fmain.lynx.bundle%3Ffullscreen%3Dtrue"><strong>用 Lynx Explorer 打开 →</strong></a>
+
+```
+https://lynx-console.pages.dev/main.lynx.bundle?fullscreen=true
+```
+
+| URL | 说明 |
+| --- | --- |
+| <a href="/main.lynx.bundle"><code>/main.lynx.bundle</code></a> | 给原生 Lynx 运行时（Lynx Explorer）用的示例 bundle。 |
+| <a href="/main.web.bundle"><code>/main.web.bundle</code></a> | 同一个示例，为 Lynx Web Platform 构建的版本。 |
+| <a href="/demo/"><code>/demo/</code></a> | 加载 `/main.web.bundle` 的 `<lynx-view>` 宿主页面。 |
+
+## 在本地运行
+
+```bash
+git clone https://github.com/daangn/lynx-console.git
+cd lynx-console
+yarn install
+
+# 先构建包，再启动示例，终端里会出现二维码
+yarn build
+yarn dev:example
+```
+
+想在浏览器里跑，还要把 Web 宿主页面也构建出来：
+
+```bash
+yarn build && yarn build:example
+yarn workspace lynx-console-test build:web
+```
+
+想把文档和演示一起跑起来：
+
+```bash
+yarn build && yarn build:example
+yarn dev:docs
+```

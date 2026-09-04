@@ -116,8 +116,9 @@
 }
 
 .phone {
-  width: 306px;
-  height: 616px;
+  box-sizing: border-box;
+  width: min(360px, 86vw);
+  aspect-ratio: 306 / 616;
   padding: 8px;
   border: 1px solid var(--lc-border);
   border-radius: 38px;
@@ -166,5 +167,11 @@
   .actions,
   .explorerRow {
     justify-content: flex-start;
+  }
+
+  /* 화면 높이가 허락하는 만큼 데모를 키워요. 최소치는 예전 크기보다 조금 커요. */
+  .phone {
+    width: auto;
+    height: clamp(660px, calc(100vh - 160px), 860px);
   }
 }

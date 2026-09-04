@@ -3,20 +3,31 @@ title: Getting Started
 description: Install, configure the build, initialize the monitors, render the console.
 ---
 
+import { PackageManagerTabs } from '@theme';
+
 # Getting Started
 
 ## Installation
 
-```bash
-yarn add lynx-console
-```
+<PackageManagerTabs
+  command={{
+    npm: 'npm install lynx-console',
+    yarn: 'yarn add lynx-console',
+    pnpm: 'pnpm add lynx-console',
+    bun: 'bun add lynx-console',
+  }}
+/>
 
 ### Peer dependencies
 
-```bash
-yarn add @lynx-js/react @lynx-js/types
-yarn add -D @types/react
-```
+<PackageManagerTabs
+  command={{
+    npm: 'npm install @lynx-js/react @lynx-js/types\nnpm install -D @types/react',
+    yarn: 'yarn add @lynx-js/react @lynx-js/types\nyarn add -D @types/react',
+    pnpm: 'pnpm add @lynx-js/react @lynx-js/types\npnpm add -D @types/react',
+    bun: 'bun add @lynx-js/react @lynx-js/types\nbun add -D @types/react',
+  }}
+/>
 
 ## 0. Configure your build (required)
 

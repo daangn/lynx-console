@@ -1,7 +1,7 @@
 import { useLang } from "rspress/runtime";
 import styles from "./QuickStart.module.css";
 
-const INSTALL = "yarn add lynx-console";
+const INSTALL = "npm install lynx-console";
 
 const INIT = `// src/index.tsx
 import {

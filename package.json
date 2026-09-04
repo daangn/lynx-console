@@ -3,13 +3,17 @@
   "private": true,
   "workspaces": [
     "package",
-    "example"
+    "example",
+    "docs"
   ],
   "scripts": {
     "build": "yarn workspace lynx-console build",
     "dev": "yarn workspace lynx-console dev",
     "dev:example": "yarn workspace lynx-console-test dev",
     "build:example": "yarn workspace lynx-console-test build",
+    "build:docs": "yarn workspace lynx-console-docs build",
+    "dev:docs": "yarn workspace lynx-console-docs dev",
+    "build:site": "yarn build && yarn build:example && yarn build:docs",
     "check": "biome check",
     "format": "biome check --fix --unsafe",
     "release": "changeset publish"

@@ -1,0 +1,63 @@
+---
+title: 데모 실행해보기
+description: 브라우저, Lynx Explorer, 로컬에서 예제를 돌리는 방법이에요.
+---
+
+# 데모 실행해보기
+
+예제 앱이 문서와 같은 곳에 배포돼 있으므로 `lynx-console`을 바로 써볼 수 있어요.
+
+## 브라우저에서
+
+웹 버전 예제를 열어볼 수 있어요.
+
+<a href="/demo/" target="_blank" rel="noreferrer"><strong>웹 데모 열기 →</strong></a>
+
+**LynxConsole** 버튼을 누르고 테스트 버튼을 눌러보세요. 패널에 바로 기록돼요.
+
+## 실기기에서 Lynx Explorer로
+
+[Lynx Explorer](https://lynxjs.org/guide/start/quick-start.html#via-lynx-explorer-app) 앱을 설치하고
+이 QR 코드를 스캔해요.
+
+<img src="/lynx-explorer-qr.svg" alt="Lynx Explorer 데모 번들 QR 코드" width="180" height="180" style={{ background: '#fff', padding: '8px', borderRadius: '8px' }} />
+
+폰에서 보고 있다면 바로 열 수도 있어요.
+
+<a href="lynx://open?url=https%3A%2F%2Flynx-console.pages.dev%2Fmain.lynx.bundle%3Ffullscreen%3Dtrue"><strong>Lynx Explorer로 열기 →</strong></a>
+
+```
+https://lynx-console.pages.dev/main.lynx.bundle?fullscreen=true
+```
+
+| URL | 설명 |
+| --- | --- |
+| <a href="/main.lynx.bundle"><code>/main.lynx.bundle</code></a> | 네이티브 Lynx 런타임(Lynx Explorer)용 예제 번들이에요. |
+| <a href="/main.web.bundle"><code>/main.web.bundle</code></a> | 같은 예제를 Lynx Web Platform용으로 빌드한 번들이에요. |
+| <a href="/demo/"><code>/demo/</code></a> | `/main.web.bundle`을 불러오는 `<lynx-view>` 호스트 페이지예요. |
+
+## 로컬에서 실행하기
+
+```bash
+git clone https://github.com/daangn/lynx-console.git
+cd lynx-console
+yarn install
+
+# 패키지를 빌드하고, 터미널에 QR 코드가 뜨는 예제를 실행해요
+yarn build
+yarn dev:example
+```
+
+브라우저에서 돌리려면 웹 호스트 셸까지 빌드해요.
+
+```bash
+yarn build && yarn build:example
+yarn workspace lynx-console-test build:web
+```
+
+문서와 데모를 같이 띄우려면 이렇게 해요.
+
+```bash
+yarn build && yarn build:example
+yarn dev:docs
+```

@@ -1,0 +1,41 @@
+.section {
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 0 24px 24px;
+}
+
+.grid {
+  display: grid;
+  gap: 1px;
+  grid-template-columns: 1fr;
+  border: 1px solid var(--lc-border);
+  border-radius: 16px;
+  background: var(--lc-border);
+  overflow: hidden;
+}
+
+.card {
+  padding: 28px 24px;
+  background: var(--lc-surface);
+}
+
+.title {
+  margin: 0 0 10px;
+  font-size: 16px;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+  color: var(--lc-fg);
+}
+
+.details {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.75;
+  color: var(--lc-fg-muted);
+}
+
+@media (min-width: 700px) {
+  .grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}

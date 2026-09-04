@@ -32,3 +32,8 @@ dist
 
 # TypeScript
 *.tsbuildinfo
+
+# Docs site
+docs/doc_build
+# 데모 산출물 — docs/scripts/sync-demo.mjs 가 example 빌드에서 만들어요
+docs/src/public

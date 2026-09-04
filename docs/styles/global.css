@@ -1,0 +1,47 @@
+/* 한국어 본문이 기본 시스템 폰트에서 자간이 들쭉날쭉해서 Pretendard 를 얹어요. */
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css");
+
+:root {
+  --rp-font-family-base:
+    "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+
+  /* 링크 · 네비 활성 상태 · 검색 하이라이트에 쓰는 강조색이에요.
+     색을 바꾸려면 아래 여섯 줄만 고치면 돼요 (.dark 블록도 함께). */
+  --rp-c-brand: #10ab7d;
+  --rp-c-brand-light: #1cc494;
+  --rp-c-brand-lighter: #45d4ac;
+  --rp-c-brand-dark: #0d8f68;
+  --rp-c-brand-darker: #0a7454;
+  --rp-c-brand-tint: #10ab7d29;
+
+  --lc-fg: #0b0d0e;
+  --lc-fg-muted: #6b7280;
+  --lc-border: #e5e7eb;
+  --lc-surface: #ffffff;
+  --lc-on-solid: #ffffff;
+  --lc-solid: #0b0d0e;
+  --lc-solid-hover: #26292b;
+}
+
+.dark {
+  --rp-c-brand: #1cc494;
+  --rp-c-brand-light: #45d4ac;
+  --rp-c-brand-lighter: #6fdfc0;
+  --rp-c-brand-dark: #10ab7d;
+  --rp-c-brand-darker: #0d8f68;
+  --rp-c-brand-tint: #1cc49429;
+
+  --lc-fg: #f3f4f6;
+  --lc-fg-muted: #9ca3af;
+  --lc-border: #2b2f33;
+  --lc-surface: #16181a;
+  --lc-on-solid: #0b0d0e;
+  --lc-solid: #f3f4f6;
+  --lc-solid-hover: #d9dbde;
+}
+
+body {
+  font-family: var(--rp-font-family-base);
+  letter-spacing: -0.005em;
+}

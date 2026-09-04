@@ -4,7 +4,11 @@
 
 Lynx 앱에 내장할 수 있는 인앱 개발자 콘솔이에요. 콘솔 로그, 네트워크 요청, 성능 지표를 실시간으로 확인할 수 있어요.
 
+📖 **[문서 사이트](https://lynx-console.pages.dev/ko/)** — 가이드, API 레퍼런스, 그리고 브라우저에서 바로 돌려보는 라이브 데모가 있어요.
+
 ## 데모
+
+**[lynx-console.pages.dev](https://lynx-console.pages.dev/ko/)** 홈에 Lynx Web Platform 위에서 돌아가는 예제가 임베드돼 있어서, 브라우저에서 바로 써볼 수 있어요.
 
 https://github.com/user-attachments/assets/dcd874bf-ff2e-4a98-ae03-d83de5fae31c
 
@@ -47,13 +51,9 @@ yarn add @lynx-js/react @lynx-js/types
 yarn add -D @types/react
 ```
 
-> **주의:** 각 모니터는 런타임에 해당 Lynx API가 있어야 동작해요. `lynx.fetch`가 없으면 `initNetworkMonitor()`는 경고만 출력하고 건너뛰며, `initPerformanceMonitor()`도 `lynx.performance`가 없으면 동일하게 동작해요.
-
 ## 사용법
 
-### 0. 빌드 설정 (iOS 지원을 위해 필수)
-
-iOS에서는 Lynx 런타임(JSC)이 `globalThis.console`과는 별개의 `console` 객체를 주입해요. 이 때문에 `initLogMonitor()`가 패치한 내용이 iOS에서는 적용되지 않아요. 빌드 타임에 `console` 식별자를 `globalThis.console`로 치환해야 해요.
+### 0. 빌드 설정 (필수)
 
 `lynx.config.ts`에 다음을 추가해요:
 
@@ -62,10 +62,14 @@ export default defineConfig({
   source: {
     define: {
       console: "globalThis.console",
+      fetch: "lynx.fetch",
     },
   },
 });
 ```
+
+- **`console`** — iOS에서는 Lynx 런타임(JSC)이 `globalThis.console`과는 별개의 `console` 객체를 주입해요. 빌드 타임에 치환하지 않으면 `initLogMonitor()`가 패치한 내용이 iOS에서는 적용되지 않아요.
+- **`fetch`** — 빌드 설정에 따라 `lynx.fetch`로 주입하지 않으면 네트워크 로깅이 되지 않을 수 있어요.
 
 ### 1. 모니터 초기화
 

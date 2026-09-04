@@ -1,0 +1,63 @@
+---
+title: Try the Demo
+description: Run the example in a browser, in Lynx Explorer, or locally.
+---
+
+# Try the Demo
+
+The example app is deployed alongside these docs, so you can try `lynx-console` right away.
+
+## In your browser
+
+You can open the web version of the example.
+
+<a href="/demo/" target="_blank" rel="noreferrer"><strong>Open the web demo →</strong></a>
+
+Tap the **LynxConsole** button, then press a test button. It is recorded in the panel right away.
+
+## On a device with Lynx Explorer
+
+Install the [Lynx Explorer](https://lynxjs.org/guide/start/quick-start.html#via-lynx-explorer-app)
+app and scan this QR code:
+
+<img src="/lynx-explorer-qr.svg" alt="QR code for the Lynx Explorer demo bundle" width="180" height="180" style={{ background: '#fff', padding: '8px', borderRadius: '8px' }} />
+
+Reading this on the phone? Open it directly:
+
+<a href="lynx://open?url=https%3A%2F%2Flynx-console.pages.dev%2Fmain.lynx.bundle%3Ffullscreen%3Dtrue"><strong>Open In Lynx Explorer →</strong></a>
+
+```
+https://lynx-console.pages.dev/main.lynx.bundle?fullscreen=true
+```
+
+| URL | What it is |
+| --- | --- |
+| <a href="/main.lynx.bundle"><code>/main.lynx.bundle</code></a> | The example bundle for the native Lynx runtime (Lynx Explorer). |
+| <a href="/main.web.bundle"><code>/main.web.bundle</code></a> | The same example built for the Lynx Web Platform. |
+| <a href="/demo/"><code>/demo/</code></a> | The `<lynx-view>` host page that loads `/main.web.bundle`. |
+
+## Running it locally
+
+```bash
+git clone https://github.com/daangn/lynx-console.git
+cd lynx-console
+yarn install
+
+# build the package, then start the example with a QR code in your terminal
+yarn build
+yarn dev:example
+```
+
+To run it in a browser, build the web host shell too:
+
+```bash
+yarn build && yarn build:example
+yarn workspace lynx-console-test build:web
+```
+
+Or run the whole docs site — docs and demo together — with:
+
+```bash
+yarn build && yarn build:example
+yarn workspace lynx-console-docs dev
+```

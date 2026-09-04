@@ -1,0 +1,170 @@
+.section {
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 48px 24px 72px;
+}
+
+.inner {
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+  align-items: center;
+}
+
+.copy {
+  flex: 1;
+  min-width: 0;
+  text-align: center;
+}
+
+.headline {
+  margin: 0 0 18px;
+  font-size: 34px;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.03em;
+  color: var(--lc-fg);
+}
+
+.tagline {
+  margin: 0;
+  max-width: 30em;
+  font-size: 16px;
+  line-height: 1.75;
+  color: var(--lc-fg-muted);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 32px;
+}
+
+.action {
+  display: inline-flex;
+  align-items: center;
+  height: 42px;
+  padding: 0 20px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.actionBrand {
+  background: var(--lc-solid);
+  color: var(--lc-on-solid);
+}
+
+.actionBrand:hover {
+  background: var(--lc-solid-hover);
+}
+
+.actionAlt {
+  border-color: var(--lc-border);
+  background: var(--lc-surface);
+  color: var(--lc-fg);
+}
+
+.actionAlt:hover {
+  border-color: var(--lc-fg-muted);
+}
+
+.explorerRow {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  justify-content: center;
+  margin-top: 36px;
+  padding-top: 28px;
+  border-top: 1px solid var(--lc-border);
+}
+
+.qr {
+  flex-shrink: 0;
+  width: 76px;
+  height: 76px;
+  padding: 5px;
+  border: 1px solid var(--lc-border);
+  border-radius: 8px;
+  background: #fff;
+}
+
+.explorer {
+  display: inline-flex;
+  align-items: center;
+  height: 36px;
+  padding: 0 16px;
+  border: 1px solid var(--lc-border);
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--lc-fg);
+}
+
+.explorer:hover {
+  border-color: var(--lc-fg-muted);
+}
+
+.stage {
+  flex-shrink: 0;
+}
+
+.phone {
+  width: 306px;
+  height: 616px;
+  padding: 8px;
+  border: 1px solid var(--lc-border);
+  border-radius: 38px;
+  background: var(--lc-surface);
+}
+
+.frame {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  border-radius: 31px;
+  background: #fff;
+}
+
+.openInTab {
+  display: block;
+  margin: 14px 0 0;
+  font-size: 13px;
+  text-align: center;
+  color: var(--lc-fg-muted);
+}
+
+.openInTab:hover {
+  color: var(--lc-fg);
+}
+
+@media (min-width: 960px) {
+  .section {
+    padding: 72px 24px 96px;
+  }
+
+  .inner {
+    flex-direction: row;
+    gap: 72px;
+    align-items: center;
+  }
+
+  .copy {
+    text-align: left;
+  }
+
+  .headline {
+    font-size: 46px;
+  }
+
+  .actions,
+  .explorerRow {
+    justify-content: flex-start;
+  }
+}

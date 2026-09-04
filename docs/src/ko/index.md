@@ -1,5 +1,6 @@
 ---
 pageType: home
+titleSuffix: Lynx 앱용 인앱 개발자 콘솔
 
 hero:
   name: lynx-console

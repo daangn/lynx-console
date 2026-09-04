@@ -1,5 +1,6 @@
 import path from "node:path";
 import { defineConfig } from "rspress/config";
+import { buildHead } from "./scripts/head-meta.mjs";
 
 const GITHUB_URL = "https://github.com/daangn/lynx-console";
 
@@ -26,6 +27,10 @@ export default defineConfig({
     },
   ],
   globalStyles: path.resolve("styles/global.css"),
+  route: {
+    cleanUrls: true,
+  },
+  head: [(route) => buildHead(route)],
   markdown: {
     checkDeadLinks: true,
   },

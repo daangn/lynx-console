@@ -43,6 +43,10 @@ yarn format         # biome 자동 수정
 - 배포 도메인과 데모 번들 주소는 `docs/siteMeta.mjs` 한 곳에 있어요.
 - 테마 색과 폰트는 `docs/styles/global.css` 의 CSS 변수로 바꿔요.
 - 홈은 기본 테마 대신 `docs/theme/index.tsx` 에서 `HomeLayout` 을 갈아끼워 그려요.
+- SEO 메타(canonical · hreflang · og · JSON-LD)는 `docs/scripts/head-meta.mjs` 가 라우트마다
+  만들어요. sitemap.xml 과 robots.txt 는 빌드 뒤 `docs/scripts/postbuild.mjs` 가 써요.
+- OG 이미지는 `docs/assets/og.svg` 로 만들고, 렌더한 `og.png` 를 레포에 커밋해요
+  (CI 에 폰트가 없어 빌드 타임 렌더는 안 해요).
 
 ## 배포 (Cloudflare Pages)
 

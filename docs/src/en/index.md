@@ -1,5 +1,6 @@
 ---
 pageType: home
+titleSuffix: In-app developer console for Lynx apps
 
 hero:
   name: lynx-console

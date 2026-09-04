@@ -48,6 +48,7 @@
     "type": "git",
     "url": "https://github.com/daangn/lynx-console"
   },
+  "homepage": "https://lynx-console.pages.dev",
   "publishConfig": {
     "provenance": true
   }

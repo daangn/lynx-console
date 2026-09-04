@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "node ./scripts/sync-demo.mjs && rspress dev",
-    "build": "node ./scripts/sync-demo.mjs && rspress build",
+    "build": "node ./scripts/sync-demo.mjs && rspress build && node ./scripts/postbuild.mjs",
     "preview": "rspress preview"
   },
   "devDependencies": {

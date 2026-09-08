@@ -1,11 +1,5 @@
-import {
-  type ReactNode,
-  runOnBackground,
-  useEffect,
-  useMainThreadRef,
-  useState,
-} from "@lynx-js/react";
-import type { MainThread } from "@lynx-js/types";
+import { type ReactNode, useEffect, useState } from "@lynx-js/react";
+import type { BaseTouchEvent, Target } from "@lynx-js/types";
 import { useKeyboardHeight } from "../hooks/useKeyboardHeight";
 import { useThemeColors } from "../styles/ThemeContext";
 import { duration } from "../styles/theme";
@@ -24,7 +18,6 @@ const MIN_HEIGHT = 200;
 const MAX_HEIGHT = 700;
 const DEFAULT_HEIGHT = 500;
 const CLOSE_DRAG_THRESHOLD = 30; // 30px 이상 아래로 드래그하면 닫힘
-const SHEET_TRANSITION = `transform ${duration.d6} cubic-bezier(0.4, 0, 0.2, 1), height ${duration.d6} cubic-bezier(0.4, 0, 0.2, 1)`;
 
 // 마지막 높이 저장
 let savedHeight: number | null = null;
@@ -39,18 +32,15 @@ export default function BottomSheet({
 }: BottomSheetProps) {
   const colors = useThemeColors();
   const [sheetHeight, setSheetHeight] = useState(savedHeight ?? DEFAULT_HEIGHT);
+  const [tempHeight, setTempHeight] = useState(savedHeight ?? DEFAULT_HEIGHT);
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragStartY, setDragStartY] = useState(0);
+  const [dragStartHeight, setDragStartHeight] = useState(
+    savedHeight ?? DEFAULT_HEIGHT,
+  );
   const [isOpening, setIsOpening] = useState(true);
   const [isClosing, setIsClosing] = useState(false);
   const keyboardHeight = useKeyboardHeight();
-
-  // 드래그 중 높이는 메인 스레드에서만 바꿔요. 기준 높이와 키보드 높이도 터치 시작 때의 값을
-  // 메인 스레드에 담아 두고 써서, 드래그 중 백그라운드 렌더가 나도 계산이 흔들리지 않아요
-  const contentRef = useMainThreadRef<MainThread.Element | null>(null);
-  const draggingRef = useMainThreadRef(false);
-  const dragStartY = useMainThreadRef(0);
-  const dragStartHeight = useMainThreadRef(0);
-  const dragKeyboardHeight = useMainThreadRef(0);
-  const dragHeight = useMainThreadRef(0);
 
   // 닫기 애니메이션 처리
   const handleClose = () => {
@@ -90,58 +80,32 @@ export default function BottomSheet({
 
   if (!isOpen) return null;
 
-  const renderedHeight =
-    keyboardHeight > 0
-      ? Math.min(MAX_HEIGHT, sheetHeight + keyboardHeight)
-      : sheetHeight;
+  const handleTouchStart = (e: BaseTouchEvent<Target>) => {
+    setIsDragging(true);
+    setDragStartY(e.detail.y);
+    setDragStartHeight(sheetHeight);
+    setTempHeight(sheetHeight);
+  };
 
-  // 드래그가 끝났을 때 한 번만 백그라운드로 넘겨요
-  const commitDrag = (height: number, dragDistance: number) => {
-    setSheetHeight(Math.min(Math.max(height, MIN_HEIGHT), MAX_HEIGHT));
+  const handleTouchMove = (e: BaseTouchEvent<Target>) => {
+    if (!isDragging) return;
+    const deltaY = dragStartY - e.detail.y;
+    const newHeight = Math.min(
+      Math.max(dragStartHeight + deltaY, MIN_HEIGHT),
+      MAX_HEIGHT,
+    );
+    setTempHeight(newHeight);
+  };
+
+  const handleTouchEnd = () => {
+    setIsDragging(false);
+
+    // 아래로 일정 30px 이상 드래그하면 닫기
+    const dragDistance = dragStartHeight - tempHeight;
+    setSheetHeight(tempHeight);
     if (dragDistance > CLOSE_DRAG_THRESHOLD) {
       handleClose();
     }
-  };
-
-  const handleTouchStart = (e: MainThread.TouchEvent) => {
-    "main thread";
-    draggingRef.current = true;
-    dragStartY.current = e.detail.y;
-    dragStartHeight.current = sheetHeight;
-    dragKeyboardHeight.current = keyboardHeight;
-    dragHeight.current = sheetHeight;
-    contentRef.current?.setStyleProperty("transition", "none");
-  };
-
-  const handleTouchMove = (e: MainThread.TouchEvent) => {
-    "main thread";
-    if (!draggingRef.current) return;
-    const deltaY = dragStartY.current - e.detail.y;
-    const newHeight = Math.min(
-      Math.max(dragStartHeight.current + deltaY, MIN_HEIGHT),
-      MAX_HEIGHT,
-    );
-    dragHeight.current = newHeight;
-    const keyboard = dragKeyboardHeight.current;
-    const shown =
-      keyboard > 0 ? Math.min(MAX_HEIGHT, newHeight + keyboard) : newHeight;
-    // 드래그 중 백그라운드 렌더가 style 을 다시 써도 다음 이동에서 바로 되돌리려고 transition 도 같이 써요
-    contentRef.current?.setStyleProperties({
-      height: `${shown}px`,
-      transition: "none",
-    });
-  };
-
-  // touchstart 없이 온 touchend 는 무시해요. 초기값 0 이 커밋되면 시트가 0px 로 굳어요
-  const handleTouchEnd = () => {
-    "main thread";
-    if (!draggingRef.current) return;
-    draggingRef.current = false;
-    contentRef.current?.setStyleProperty("transition", SHEET_TRANSITION);
-    runOnBackground(commitDrag)(
-      dragHeight.current,
-      dragStartHeight.current - dragHeight.current,
-    );
   };
 
   return (
@@ -156,23 +120,32 @@ export default function BottomSheet({
       <view className="bs-overlay" bindtap={handleClose}>
         <view
           className="bs-content"
-          main-thread:ref={contentRef}
           catchtap={() => {}}
           style={{
             background: colors.bg.layerFloating,
-            height: `${renderedHeight}px`,
+            height: `${
+              keyboardHeight > 0
+                ? Math.min(
+                    MAX_HEIGHT,
+                    (isDragging ? tempHeight : sheetHeight) + keyboardHeight,
+                  )
+                : isDragging
+                  ? tempHeight
+                  : sheetHeight
+            }px`,
             transform:
               isOpening || isClosing ? "translateY(100%)" : "translateY(0)",
-            transition: SHEET_TRANSITION,
+            transition: isDragging
+              ? "none"
+              : `transform ${duration.d6} cubic-bezier(0.4, 0, 0.2, 1), height ${duration.d6} cubic-bezier(0.4, 0, 0.2, 1)`,
           }}
         >
           {/* catchtap: 이벤트 버블링 차단 */}
           <view
             className="bs-handleContainer"
-            main-thread:bindtouchstart={handleTouchStart}
-            main-thread:bindtouchmove={handleTouchMove}
-            main-thread:bindtouchend={handleTouchEnd}
-            main-thread:bindtouchcancel={handleTouchEnd}
+            bindtouchstart={handleTouchStart}
+            bindtouchmove={handleTouchMove}
+            bindtouchend={handleTouchEnd}
           >
             <view
               className="bs-handle"

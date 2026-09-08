@@ -1,3 +1,5 @@
+import { createSnapshot } from "./snapshot";
+
 type LynxConsole = NonNullable<typeof globalThis.__LYNX_CONSOLE__>;
 type ConsoleState = NonNullable<LynxConsole["state"]>;
 
@@ -11,6 +13,10 @@ export const ensureConsoleStructure = (): {
 
   if (!globalThis.__LYNX_CONSOLE__.state) {
     globalThis.__LYNX_CONSOLE__.state = {};
+  }
+
+  if (!globalThis.__LYNX_CONSOLE__.snapshot) {
+    globalThis.__LYNX_CONSOLE__.snapshot = createSnapshot;
   }
 
   return {

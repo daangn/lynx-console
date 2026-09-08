@@ -26,6 +26,16 @@ const App = () => {
     console.log('escaped %% percent');
   };
 
+  // 필터 탭(Track)에서만 모아 보는 로그예요. "%c" 로 분홍 track 칩을 앞에 붙여요
+  const TRACK_CHIP =
+    'padding:1px 4px;border-radius:3px;font-weight:bold;background:#fdf2f8;color:#db2777';
+  const testTrackEvent = (name: string) => {
+    console.log(`%ctrack%c ${name}`, TRACK_CHIP, '', {
+      screen: 'home',
+      timestamp: Date.now(),
+    });
+  };
+
   const testConsoleLogInMainThread = () => {
     'main thread';
     console.log(
@@ -40,11 +50,7 @@ const App = () => {
 
   const testGetRequest = async () => {
     try {
-      const response = await fetch(
-        'https://jsonplaceholder.typicode.com/posts/1',
-      );
-      const data = await response.json();
-      console.log('GET Response:', data);
+      await fetch('https://jsonplaceholder.typicode.com/posts/1');
     } catch (error) {
       console.error('GET Error:', error);
     }
@@ -52,22 +58,17 @@ const App = () => {
 
   const testPostRequest = async () => {
     try {
-      const response = await fetch(
-        'https://jsonplaceholder.typicode.com/posts',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            title: 'Test Post',
-            body: 'This is a test post',
-            userId: 1,
-          }),
+      await fetch('https://jsonplaceholder.typicode.com/posts', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
         },
-      );
-      const data = await response.json();
-      console.log('POST Response:', data);
+        body: JSON.stringify({
+          title: 'Test Post',
+          body: 'This is a test post',
+          userId: 1,
+        }),
+      });
     } catch (error) {
       console.error('POST Error:', error);
     }
@@ -75,20 +76,15 @@ const App = () => {
 
   const testPatchRequest = async () => {
     try {
-      const response = await fetch(
-        'https://jsonplaceholder.typicode.com/posts/1',
-        {
-          method: 'PATCH',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            title: 'Updated Title',
-          }),
+      await fetch('https://jsonplaceholder.typicode.com/posts/1', {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
         },
-      );
-      const data = await response.json();
-      console.log('PATCH Response:', data);
+        body: JSON.stringify({
+          title: 'Updated Title',
+        }),
+      });
     } catch (error) {
       console.error('PATCH Error:', error);
     }
@@ -96,13 +92,9 @@ const App = () => {
 
   const testDeleteRequest = async () => {
     try {
-      const response = await fetch(
-        'https://jsonplaceholder.typicode.com/posts/1',
-        {
-          method: 'DELETE',
-        },
-      );
-      console.log('DELETE Response:', response.status);
+      await fetch('https://jsonplaceholder.typicode.com/posts/1', {
+        method: 'DELETE',
+      });
     } catch (error) {
       console.error('DELETE Error:', error);
     }
@@ -112,7 +104,7 @@ const App = () => {
   // 끝의 슬래시가 없으면 308 리다이렉트되므로 그대로 둬요
   const testGraphqlRequest = async () => {
     try {
-      const response = await fetch('https://graphql.org/graphql/?op=GetFilm', {
+      await fetch('https://graphql.org/graphql/?op=GetFilm', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -130,8 +122,6 @@ const App = () => {
           variables: { filmID: '1' },
         }),
       });
-      const data = await response.json();
-      console.log('GraphQL Response:', data);
     } catch (error) {
       console.error('GraphQL Error:', error);
     }
@@ -185,6 +175,28 @@ const App = () => {
             >
               <text className="app-buttonText app-consoleButtonText">
                 Test Console Log (Main Thread)
+              </text>
+            </view>
+          </view>
+        </list-item>
+
+        <list-item item-key="section-track">
+          <view className="app-section">
+            <text className="app-sectionTitle">Filter Tab Tests</text>
+            <view
+              bindtap={() => testTrackEvent('screen_view')}
+              className="app-baseButton app-consoleButton"
+            >
+              <text className="app-buttonText app-consoleButtonText">
+                Track screen_view
+              </text>
+            </view>
+            <view
+              bindtap={() => testTrackEvent('button_click')}
+              className="app-baseButton app-consoleButton"
+            >
+              <text className="app-buttonText app-consoleButtonText">
+                Track button_click
               </text>
             </view>
           </view>
@@ -258,18 +270,10 @@ const App = () => {
           initialPosition={{ right: 30, bottom: 200 }}
           customTabs={[
             {
-              key: 'custom',
-              label: 'Custom',
-              renderContent: () => (
-                <view style={{ padding: '16px' }}>
-                  <text style={{ fontSize: '14px', fontWeight: 'bold' }}>
-                    Custom Tab
-                  </text>
-                  <text style={{ fontSize: '12px', marginTop: '8px' }}>
-                    This is a custom tab added via the customTabs prop.
-                  </text>
-                </view>
-              ),
+              // 서식을 적용한 텍스트가 "track " 으로 시작하는 콘솔 로그만 모아 보여줘요
+              key: 'track',
+              label: 'Track',
+              filter: /^track /,
             },
             {
               key: 'debug',

@@ -1,13 +1,18 @@
-import { type ReactNode, useEffect, useState } from "@lynx-js/react";
-import type { BaseTouchEvent, Target } from "@lynx-js/types";
+import {
+  type ReactNode,
+  runOnBackground,
+  useEffect,
+  useMainThreadRef,
+  useState,
+} from "@lynx-js/react";
+import type { MainThread } from "@lynx-js/types";
 import { useKeyboardHeight } from "../hooks/useKeyboardHeight";
 import { useThemeColors } from "../styles/ThemeContext";
-import { duration, fontWeight } from "../styles/theme";
+import { duration } from "../styles/theme";
 import "./BottomSheet.css";
 
 interface BottomSheetProps {
   children: ReactNode;
-  title?: string;
   footer?: ReactNode;
   onClose: () => void;
   isOpen: boolean;
@@ -19,13 +24,13 @@ const MIN_HEIGHT = 200;
 const MAX_HEIGHT = 700;
 const DEFAULT_HEIGHT = 500;
 const CLOSE_DRAG_THRESHOLD = 30; // 30px 이상 아래로 드래그하면 닫힘
+const SHEET_TRANSITION = `transform ${duration.d6} cubic-bezier(0.4, 0, 0.2, 1), height ${duration.d6} cubic-bezier(0.4, 0, 0.2, 1)`;
 
 // 마지막 높이 저장
 let savedHeight: number | null = null;
 
 export default function BottomSheet({
   children,
-  title,
   footer,
   onClose,
   isOpen,
@@ -34,15 +39,15 @@ export default function BottomSheet({
 }: BottomSheetProps) {
   const colors = useThemeColors();
   const [sheetHeight, setSheetHeight] = useState(savedHeight ?? DEFAULT_HEIGHT);
-  const [tempHeight, setTempHeight] = useState(savedHeight ?? DEFAULT_HEIGHT);
-  const [isDragging, setIsDragging] = useState(false);
-  const [dragStartY, setDragStartY] = useState(0);
-  const [dragStartHeight, setDragStartHeight] = useState(
-    savedHeight ?? DEFAULT_HEIGHT,
-  );
   const [isOpening, setIsOpening] = useState(true);
   const [isClosing, setIsClosing] = useState(false);
   const keyboardHeight = useKeyboardHeight();
+
+  // 드래그 중 높이는 메인 스레드에서만 바꿔요. touchmove 마다 백그라운드 커밋이 나가면
+  // DevTool 이 "CallLepusMethod called too frequently" 경고를 내요
+  const contentRef = useMainThreadRef<MainThread.Element | null>(null);
+  const dragStartY = useMainThreadRef(0);
+  const dragHeight = useMainThreadRef(0);
 
   // 닫기 애니메이션 처리
   const handleClose = () => {
@@ -82,32 +87,48 @@ export default function BottomSheet({
 
   if (!isOpen) return null;
 
-  const handleTouchStart = (e: BaseTouchEvent<Target>) => {
-    setIsDragging(true);
-    setDragStartY(e.detail.y);
-    setDragStartHeight(sheetHeight);
-    setTempHeight(sheetHeight);
-  };
+  const renderedHeight =
+    keyboardHeight > 0
+      ? Math.min(MAX_HEIGHT, sheetHeight + keyboardHeight)
+      : sheetHeight;
 
-  const handleTouchMove = (e: BaseTouchEvent<Target>) => {
-    if (!isDragging) return;
-    const deltaY = dragStartY - e.detail.y;
-    const newHeight = Math.min(
-      Math.max(dragStartHeight + deltaY, MIN_HEIGHT),
-      MAX_HEIGHT,
-    );
-    setTempHeight(newHeight);
-  };
-
-  const handleTouchEnd = () => {
-    setIsDragging(false);
-
-    // 아래로 일정 30px 이상 드래그하면 닫기
-    const dragDistance = dragStartHeight - tempHeight;
-    setSheetHeight(tempHeight);
+  // 드래그가 끝났을 때 한 번만 백그라운드로 넘겨요
+  const commitDrag = (height: number, dragDistance: number) => {
+    setSheetHeight(height);
     if (dragDistance > CLOSE_DRAG_THRESHOLD) {
       handleClose();
     }
+  };
+
+  const handleTouchStart = (e: MainThread.TouchEvent) => {
+    "main thread";
+    dragStartY.current = e.detail.y;
+    dragHeight.current = sheetHeight;
+    contentRef.current?.setStyleProperty("transition", "none");
+  };
+
+  const handleTouchMove = (e: MainThread.TouchEvent) => {
+    "main thread";
+    const deltaY = dragStartY.current - e.detail.y;
+    const newHeight = Math.min(
+      Math.max(sheetHeight + deltaY, MIN_HEIGHT),
+      MAX_HEIGHT,
+    );
+    dragHeight.current = newHeight;
+    const shown =
+      keyboardHeight > 0
+        ? Math.min(MAX_HEIGHT, newHeight + keyboardHeight)
+        : newHeight;
+    contentRef.current?.setStyleProperty("height", `${shown}px`);
+  };
+
+  const handleTouchEnd = () => {
+    "main thread";
+    contentRef.current?.setStyleProperty("transition", SHEET_TRANSITION);
+    runOnBackground(commitDrag)(
+      dragHeight.current,
+      sheetHeight - dragHeight.current,
+    );
   };
 
   return (
@@ -122,51 +143,30 @@ export default function BottomSheet({
       <view className="bs-overlay" bindtap={handleClose}>
         <view
           className="bs-content"
+          main-thread:ref={contentRef}
           catchtap={() => {}}
           style={{
             background: colors.bg.layerFloating,
-            height: `${
-              keyboardHeight > 0
-                ? Math.min(
-                    MAX_HEIGHT,
-                    (isDragging ? tempHeight : sheetHeight) + keyboardHeight,
-                  )
-                : isDragging
-                  ? tempHeight
-                  : sheetHeight
-            }px`,
+            height: `${renderedHeight}px`,
             transform:
               isOpening || isClosing ? "translateY(100%)" : "translateY(0)",
-            transition: isDragging
-              ? "none"
-              : `transform ${duration.d6} cubic-bezier(0.4, 0, 0.2, 1), height ${duration.d6} cubic-bezier(0.4, 0, 0.2, 1)`,
+            transition: SHEET_TRANSITION,
           }}
         >
           {/* catchtap: 이벤트 버블링 차단 */}
           <view
             className="bs-handleContainer"
-            bindtouchstart={handleTouchStart}
-            bindtouchmove={handleTouchMove}
-            bindtouchend={handleTouchEnd}
+            main-thread:bindtouchstart={handleTouchStart}
+            main-thread:bindtouchmove={handleTouchMove}
+            main-thread:bindtouchend={handleTouchEnd}
           >
             <view
               className="bs-handle"
               style={{ backgroundColor: colors.palette.gray400 }}
             />
           </view>
-          <view className="bs-header">
-            {title && (
-              <text
-                className="bs-title t7"
-                style={{
-                  fontWeight: fontWeight.bold,
-                  color: colors.fg.neutral,
-                }}
-              >
-                {title}
-              </text>
-            )}
-          </view>
+          {/* 드래그 핸들 자리를 비워두는 스페이서예요 */}
+          <view className="bs-handleSpacer" />
           <view
             className="bs-body"
             style={{

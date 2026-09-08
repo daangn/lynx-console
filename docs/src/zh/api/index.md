@@ -16,11 +16,15 @@ description: props、console handle 和监视器初始化函数。
 
 ## `CustomTab`
 
+标签页是内容标签页或日志筛选标签页两者之一。
+
 | 属性 | 类型 | 说明 |
 | --- | --- | --- |
 | `key` | `string` | 标签页的唯一标识。 |
 | `label` | `string` | 标签页的显示文字。 |
-| `renderContent` | `() => ReactNode` | 渲染标签页的内容。 |
+| `renderContent` | `() => ReactNode` | 内容标签页：渲染标签页的内容。 |
+| `filter` | `string \| RegExp \| (entry: LogEntry) => boolean` | 筛选标签页：只显示匹配的控制台条目。字符串在打印出来的文本（应用 `%c` / `%s` 之后）包含它时匹配，正则在该文本通过 test 时匹配。 |
+| `renderEntry` | `(entry: LogEntry) => ReactNode` | 筛选标签页，可选：渲染一条匹配的条目。默认和 Log 标签页的样式相同。 |
 
 ## `LynxConsoleHandle`
 
@@ -40,7 +44,17 @@ description: props、console handle 和监视器初始化函数。
 | --- | --- |
 | `initLogMonitor()` | 捕获 `console.log`、`console.error` 等输出。 |
 | `initMainThreadConsole()` | 捕获主线程的控制台输出。需要先调用 `initLogMonitor()`。 |
-| `initNetworkMonitor()` | 拦截并记录 `fetch` 请求。 |
-| `initPerformanceMonitor()` | 收集性能指标。 |
+| `initNetworkMonitor(options?)` | 拦截并记录 `fetch` 请求。 |
+| `initPerformanceMonitor(options?)` | 收集性能指标。 |
 
 只有初始化过的监视器，才会显示对应的标签页。
+
+`options.console`（默认 `true`）会把每条收集到的 entry 以一行带 `%c` 样式的摘要加 entry 对象的形式也打印到控制台，这样在 Lynx DevTool 里也能看到。`"plain"` 打印无样式文本，`false` 则不打印。参见 [Lynx DevTool](/zh/guide/devtool)。
+
+## `isNetworkLog(entry)`
+
+返回一个 `LogEntry` 是否是网络监视器打印的行。用于筛选标签页：`filter: isNetworkLog`。
+
+## `__LYNX_CONSOLE__.snapshot(options?)`
+
+任意监视器初始化后可用的全局函数。返回包含最近日志、网络 entry 和性能 entry 的 JSON 字符串。`options.limit`（默认 `100`）限制每类的数量。用于在 Lynx DevTool 里求值。

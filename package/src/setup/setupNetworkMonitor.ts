@@ -1,7 +1,15 @@
 import { stringify } from "javascript-stringify";
 import { ensureConsoleStructure } from "../shared/ensureConsoleStructure";
 import { isWebPlatform } from "../shared/isWebPlatform";
-import type { NetworkEntry } from "../types";
+import type { MonitorConsoleOptions, NetworkEntry } from "../types";
+import {
+  formatBrandConsoleArgs,
+  formatNetworkConsoleArgs,
+  formatNetworkPlain,
+} from "../utils/consoleStyle";
+
+// console 에 실어 보내는 바디 길이 상한. DevTool 이 큰 객체를 받으면 느려져요
+const CONSOLE_BODY_LIMIT = 2_000;
 
 const generateNetworkId = (): string => {
   return `network-${Date.now()}-${Math.random()}`;
@@ -70,6 +78,29 @@ const mergeRequestHeaders = (
   return merged;
 };
 
+const truncateBody = (body: string | undefined): string | undefined => {
+  if (body === undefined || body.length <= CONSOLE_BODY_LIMIT) return body;
+  return `${body.slice(0, CONSOLE_BODY_LIMIT)}… [truncated ${body.length - CONSOLE_BODY_LIMIT} chars]`;
+};
+
+// 완료된 요청을 "GET 200 https://… 123ms" 한 줄과 엔트리 객체로 console 에 찍어요.
+// Lynx DevTool 에는 Network 패널이 없어서, Console 패널이 네트워크를 볼 유일한 자리예요
+const emitNetworkLog = (entry: NetworkEntry, plain: boolean): void => {
+  const summary = plain
+    ? [formatNetworkPlain(entry)]
+    : formatNetworkConsoleArgs(entry);
+  const payload: NetworkEntry = {
+    ...entry,
+    requestBody: truncateBody(entry.requestBody),
+    responseBody: truncateBody(entry.responseBody),
+  };
+  if (entry.status === "error") {
+    console.error(...summary, payload);
+  } else {
+    console.info(...summary, payload);
+  }
+};
+
 const addNetworkEntry = (entry: NetworkEntry): void => {
   const state = globalThis.__LYNX_CONSOLE__?.state;
   if (!state?.networks || !state?.networksMap || !state?.networkListeners) {
@@ -121,7 +152,11 @@ const updateNetworkEntry = (
   });
 };
 
-export const initNetworkMonitor = () => {
+export const initNetworkMonitor = (options?: MonitorConsoleOptions) => {
+  const consoleMode = options?.console ?? true;
+  const emitToConsole = consoleMode !== false;
+  const plainConsole = consoleMode === "plain";
+
   if (isWebPlatform ? !globalThis.fetch : !lynx.fetch) {
     console.warn(
       "[LynxConsole] lynx.fetch not available, skipping network monitor",
@@ -227,6 +262,11 @@ export const initNetworkMonitor = () => {
         responseBody: responseBody ?? "",
       });
 
+      if (emitToConsole) {
+        const completed = state.networksMap?.get(id);
+        if (completed) emitNetworkLog(completed, plainConsole);
+      }
+
       return response;
     } catch (error) {
       const endTime = Date.now();
@@ -236,6 +276,12 @@ export const initNetworkMonitor = () => {
         duration: endTime - startTime,
         error: error instanceof Error ? error.message : String(error),
       });
+
+      if (emitToConsole) {
+        const failed = state.networksMap?.get(id);
+        if (failed) emitNetworkLog(failed, plainConsole);
+      }
+
       throw error;
     }
   };
@@ -255,5 +301,5 @@ export const initNetworkMonitor = () => {
     lynx.fetch = monitoredFetch as typeof lynx.fetch;
   }
 
-  console.log("[LynxConsole] ✅ Network monitoring initialized");
+  console.log(...formatBrandConsoleArgs("Network monitoring initialized"));
 };

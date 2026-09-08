@@ -99,7 +99,12 @@ const _setupMainThreadConsole = (): void => {
 
   lynxConsole.mainThreadInitialized = true;
 
-  originalConsole.log("[LynxConsole] ✅ Main thread console initialized");
+  // 메인 스레드에서는 바깥 함수를 못 쓰니 consoleStyle 의 칩 스타일을 그대로 적어요
+  originalConsole.log(
+    "%cLynxConsole%c Main thread console initialized",
+    "padding:1px 4px;border-radius:3px;font-weight:bold;background:#edfaf6;color:#10ab7d",
+    "",
+  );
 };
 
 export default _setupMainThreadConsole;

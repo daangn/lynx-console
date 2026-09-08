@@ -1,6 +1,7 @@
 import { ensureConsoleStructure } from "../shared/ensureConsoleStructure";
 import { isWebPlatform } from "../shared/isWebPlatform";
 import type { LogEntry, LogLevel } from "../types";
+import { formatBrandConsoleArgs } from "../utils/consoleStyle";
 
 type LogListener = (entry: LogEntry) => void;
 
@@ -85,6 +86,6 @@ export const initLogMonitor = () => {
   });
 
   lynxConsole.originalConsole?.log(
-    "[LynxConsole] ✅ Log monitoring initialized",
+    ...formatBrandConsoleArgs("Log monitoring initialized"),
   );
 };

@@ -1,5 +1,10 @@
-import { useRef, useState } from "@lynx-js/react";
-import type { BaseTouchEvent, Target } from "@lynx-js/types";
+import {
+  runOnBackground,
+  useMainThreadRef,
+  useRef,
+  useState,
+} from "@lynx-js/react";
+import type { BaseTouchEvent, MainThread, Target } from "@lynx-js/types";
 import { isWebPlatform } from "../shared/isWebPlatform";
 
 const MOVE_THRESHOLD = 5;
@@ -49,11 +54,7 @@ function getMousePoint(e: WebMouseEvent): Point {
   return { x: e.clientX ?? e.x ?? 0, y: e.clientY ?? e.y ?? 0 };
 }
 
-function getTouchPoint(e: BaseTouchEvent<Target>): Point {
-  if (!isWebPlatform) {
-    return { x: e.detail.x, y: e.detail.y };
-  }
-
+function getWebTouchPoint(e: BaseTouchEvent<Target>): Point {
   const webEvent = e as unknown as WebTouchEvent;
   const touch = webEvent.changedTouches?.[0] ?? webEvent.touches?.[0];
   return { x: touch?.clientX ?? 0, y: touch?.clientY ?? 0 };
@@ -90,6 +91,10 @@ interface UseDragOptions {
   initialPosition?: InitialPosition;
 }
 
+// 네이티브: 드래그 중 위치는 main-thread 워클릿이 요소 스타일을 직접 바꿔요. touchmove 마다
+//   백그라운드 커밋이 나가면 DevTool 이 "CallLepusMethod called too frequently" 경고를 내요.
+// web: main-thread 터치 이벤트에 detail.x/y 가 없고 마우스 드래그도 필요해서, 백그라운드에서
+//   touch/mouse 이벤트로 같은 상태 머신을 돌려요.
 export function useDrag(onTap: () => void, options?: UseDragOptions) {
   const anchors = resolveAnchors(options?.initialPosition);
 
@@ -119,9 +124,83 @@ export function useDrag(onTap: () => void, options?: UseDragOptions) {
   const recentDragRef = useRef(false);
   const startRef = useRef({ x: 0, y: 0, ax: 0, ay: 0 });
 
+  // 네이티브 main-thread 경로에서 쓰는 상태예요
+  const mtStartRef = useMainThreadRef({ x: 0, y: 0 });
+  const mtDraggingRef = useMainThreadRef(false);
+  const mtPosRef = useMainThreadRef({ x: 0, y: 0 });
+
   // anchor 방향에 따라 드래그 부호 결정. right/bottom anchor면 드래그 방향과 값 변화가 반대.
   const xSign = anchors.horizontal === "right" ? -1 : 1;
   const ySign = anchors.vertical === "bottom" ? -1 : 1;
+  const horizontal = anchors.horizontal;
+  const vertical = anchors.vertical;
+
+  const startDrag = () => {
+    setPhase("dragging");
+  };
+
+  // 드래그가 끝난 위치를 저장하고 releasing 단계로 넘어가요
+  const commitPosition = (nextX: number, nextY: number) => {
+    setX(nextX);
+    setY(nextY);
+    saved = {
+      vertical: anchors.vertical,
+      horizontal: anchors.horizontal,
+      x: nextX,
+      y: nextY,
+    };
+    setPhase("releasing");
+    recentDragRef.current = true;
+    setTimeout(() => {
+      setPhase("idle");
+      recentDragRef.current = false;
+    }, 300);
+  };
+
+  // ---- 네이티브: main-thread 터치 ----
+
+  const handleMainThreadTouchStart = (e: MainThread.TouchEvent) => {
+    "main thread";
+    mtStartRef.current = { x: e.detail.x, y: e.detail.y };
+    mtPosRef.current = { x, y };
+    mtDraggingRef.current = false;
+  };
+
+  const handleMainThreadTouchMove = (e: MainThread.TouchEvent) => {
+    "main thread";
+    const dx = e.detail.x - mtStartRef.current.x;
+    const dy = e.detail.y - mtStartRef.current.y;
+
+    if (
+      !mtDraggingRef.current &&
+      (Math.abs(dx) > MOVE_THRESHOLD || Math.abs(dy) > MOVE_THRESHOLD)
+    ) {
+      mtDraggingRef.current = true;
+      runOnBackground(startDrag)();
+    }
+
+    if (!mtDraggingRef.current) return;
+
+    const nextX = x + xSign * dx;
+    const nextY = y + ySign * dy;
+    mtPosRef.current = { x: nextX, y: nextY };
+    e.currentTarget.setStyleProperties({
+      [horizontal]: `${nextX}px`,
+      [vertical]: `${nextY}px`,
+    });
+  };
+
+  const handleMainThreadTouchEnd = () => {
+    "main thread";
+    if (mtDraggingRef.current) {
+      mtDraggingRef.current = false;
+      runOnBackground(commitPosition)(mtPosRef.current.x, mtPosRef.current.y);
+    } else {
+      runOnBackground(onTap)();
+    }
+  };
+
+  // ---- web: 백그라운드 touch/mouse ----
 
   const dragStart = (point: Point) => {
     startRef.current = {
@@ -153,35 +232,19 @@ export function useDrag(onTap: () => void, options?: UseDragOptions) {
     setTempY(startRef.current.ay + ySign * dy);
   };
 
+  // web은 뒤이어 오는 click을 bindtap이 받아서 탭을 처리해요. 여기서는 드래그 종료만 다뤄요.
   const dragEnd = () => {
-    if (draggingRef.current) {
-      setX(tempX);
-      setY(tempY);
-      saved = {
-        vertical: anchors.vertical,
-        horizontal: anchors.horizontal,
-        x: tempX,
-        y: tempY,
-      };
-      setPhase("releasing");
-      draggingRef.current = false;
-      recentDragRef.current = true;
-      setTimeout(() => {
-        setPhase("idle");
-        recentDragRef.current = false;
-      }, 300);
-    } else if (!isWebPlatform) {
-      // web은 뒤이어 오는 click을 bindtap이 받아서 처리해요. 여기서 부르면 두 번 열려요.
-      onTap();
-    }
+    if (!draggingRef.current) return;
+    draggingRef.current = false;
+    commitPosition(tempX, tempY);
   };
 
   const handleTouchStart = (e: BaseTouchEvent<Target>) => {
-    dragStart(getTouchPoint(e));
+    dragStart(getWebTouchPoint(e));
   };
 
   const handleTouchMove = (e: BaseTouchEvent<Target>) => {
-    dragMove(getTouchPoint(e));
+    dragMove(getWebTouchPoint(e));
   };
 
   const handleMouseDown = (e: WebMouseEvent) => {
@@ -212,29 +275,35 @@ export function useDrag(onTap: () => void, options?: UseDragOptions) {
   };
 
   const isDragging = phase === "dragging";
-  const currentX = isDragging ? tempX : x;
-  const currentY = isDragging ? tempY : y;
+  // 네이티브는 드래그 중 위치를 main-thread 가 직접 그려서 커밋된 x/y 만 써요
+  const currentX = isWebPlatform && isDragging ? tempX : x;
+  const currentY = isWebPlatform && isDragging ? tempY : y;
 
   const positionStyle = {
     [anchors.horizontal]: `${currentX}px`,
     [anchors.vertical]: `${currentY}px`,
   } as { top?: string; left?: string; right?: string; bottom?: string };
 
-  const mouseHandlers = {
-    catchmousedown: handleMouseDown,
-    catchmousemove: handleMouseMove,
-    catchmouseup: handleMouseUp,
-  };
+  const handlers = isWebPlatform
+    ? {
+        catchtouchstart: handleTouchStart,
+        catchtouchmove: handleTouchMove,
+        catchtouchend: dragEnd,
+        catchmousedown: handleMouseDown,
+        catchmousemove: handleMouseMove,
+        catchmouseup: handleMouseUp,
+        bindtap: handleWebTap,
+      }
+    : {
+        "main-thread:catchtouchstart": handleMainThreadTouchStart,
+        "main-thread:catchtouchmove": handleMainThreadTouchMove,
+        "main-thread:catchtouchend": handleMainThreadTouchEnd,
+      };
 
   return {
     phase,
     positionStyle,
-    handlers: {
-      catchtouchstart: handleTouchStart,
-      catchtouchmove: handleTouchMove,
-      catchtouchend: dragEnd,
-      ...(isWebPlatform ? { bindtap: handleWebTap, ...mouseHandlers } : {}),
-    },
+    handlers,
     // 누르고 있는 동안 화면 전체를 덮는 투명 오버레이용 핸들러예요.
     // 커서가 버튼을 벗어나도 오버레이가 mousemove/mouseup을 대신 받아줘요.
     dragOverlayHandlers:

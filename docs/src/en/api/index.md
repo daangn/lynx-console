@@ -16,11 +16,15 @@ description: Props, the console handle, and the monitor init functions.
 
 ## `CustomTab`
 
+A tab is either a content tab or a log filter tab.
+
 | Property | Type | Description |
 | --- | --- | --- |
 | `key` | `string` | Unique identifier for the tab. |
 | `label` | `string` | Tab label text. |
-| `renderContent` | `() => ReactNode` | Renders the tab content. |
+| `renderContent` | `() => ReactNode` | Content tab: renders the tab content. |
+| `filter` | `string \| RegExp \| (entry: LogEntry) => boolean` | Filter tab: shows only console entries that match. A string matches when the printed text (after `%c` / `%s` formatting) contains it, a RegExp when that text passes the test. |
+| `renderEntry` | `(entry: LogEntry) => ReactNode` | Filter tab, optional: renders one matched entry. Defaults to the Log tab row. |
 
 ## `LynxConsoleHandle`
 
@@ -40,7 +44,17 @@ Imported from `lynx-console/setup`, called at your app's entry point.
 | --- | --- |
 | `initLogMonitor()` | Captures `console.log`, `console.error`, and friends. |
 | `initMainThreadConsole()` | Captures console output from the main thread. Requires `initLogMonitor()` first. |
-| `initNetworkMonitor()` | Intercepts and records `fetch` requests. |
-| `initPerformanceMonitor()` | Collects performance metrics. |
+| `initNetworkMonitor(options?)` | Intercepts and records `fetch` requests. |
+| `initPerformanceMonitor(options?)` | Collects performance metrics. |
 
 Tabs are only rendered for monitors that were initialized.
+
+`options.console` (default `true`) also prints each collected entry to the console as a `%c`-styled summary line plus the entry object, so it shows up in Lynx DevTool. `"plain"` prints unstyled text, `false` prints nothing. See [Lynx DevTool](/guide/devtool).
+
+## `isNetworkLog(entry)`
+
+Returns whether a `LogEntry` is a line the network monitor printed. Meant for a filter tab: `filter: isNetworkLog`.
+
+## `__LYNX_CONSOLE__.snapshot(options?)`
+
+Global function, available once any monitor is initialized. Returns a JSON string with the latest logs, network entries, and performance entries. `options.limit` (default `100`) caps each collection. Meant to be evaluated from Lynx DevTool.

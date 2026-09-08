@@ -1,5 +1,15 @@
 import { ensureConsoleStructure } from "../shared/ensureConsoleStructure";
-import type { PerformanceEntryData, PerformanceEntryType } from "../types";
+import type {
+  MonitorConsoleOptions,
+  PerformanceEntryData,
+  PerformanceEntryType,
+} from "../types";
+import {
+  formatBrandConsoleArgs,
+  formatPerformanceConsoleArgs,
+  formatPerformancePlain,
+} from "../utils/consoleStyle";
+import { extractFcpMetrics } from "../utils/extractFcp";
 
 type PerformanceListener = (entry: PerformanceEntryData) => void;
 
@@ -22,8 +32,28 @@ const addPerformanceEntry = (entry: PerformanceEntryData): void => {
   });
 };
 
-export const initPerformanceMonitor = () => {
+// FCP 를 "FCP 812.34ms" 한 줄과 원본 엔트리로 console 에 찍어요
+const emitPerformanceLog = (
+  entry: PerformanceEntryData,
+  plain: boolean,
+): void => {
+  const metrics = extractFcpMetrics(entry);
+  if (!metrics) return;
+  const fcp = metrics.totalFcp ?? metrics.lynxFcp ?? metrics.fcp;
+  if (fcp?.duration === undefined) return;
+  const name = fcp.name || "FCP";
+  const summary = plain
+    ? [formatPerformancePlain(name, fcp.duration)]
+    : formatPerformanceConsoleArgs(name, fcp.duration);
+  console.info(...summary, entry.rawEntry);
+};
+
+export const initPerformanceMonitor = (options?: MonitorConsoleOptions) => {
   "background only";
+
+  const consoleMode = options?.console ?? true;
+  const emitToConsole = consoleMode !== false;
+  const plainConsole = consoleMode === "plain";
 
   if (!lynx.performance) {
     console.warn(
@@ -58,6 +88,7 @@ export const initPerformanceMonitor = () => {
     };
 
     addPerformanceEntry(performanceEntry);
+    if (emitToConsole) emitPerformanceLog(performanceEntry, plainConsole);
   });
 
   observer.observe([
@@ -66,5 +97,5 @@ export const initPerformanceMonitor = () => {
     "metric", // MetricFcpEntry(3.6까지) / MetricFspEntry
   ]);
 
-  console.log("[LynxConsole] ✅ Performance monitoring initialized");
+  console.log(...formatBrandConsoleArgs("Performance monitoring initialized"));
 };

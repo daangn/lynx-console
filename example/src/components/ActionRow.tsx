@@ -1,13 +1,15 @@
 import { Pressable } from './Pressable';
-import { metaFg, type Tone } from './tone';
+import { metaFg, methodChip, type Tone } from './tone';
 import './ActionRow.css';
 
 interface ActionRowContentProps {
   label: string;
   caption?: string;
-  /** 오른쪽 끝에 붙는 짧은 보조 텍스트예요 (GET, main thread …). */
+  /** 오른쪽 끝에 붙는 짧은 보조 텍스트예요 (log, main thread …). */
   meta?: string;
   tone?: Tone;
+  /** HTTP 메서드예요. 콘솔 Network 탭과 같은 칩으로 그려요. */
+  method?: string;
 }
 
 /**
@@ -19,12 +21,18 @@ export const ActionRowContent = ({
   caption,
   meta,
   tone = 'neutral',
+  method,
 }: ActionRowContentProps) => (
   <>
     <view className="actionRow-body">
       <text className="app-label">{label}</text>
       {caption ? <text className="app-caption">{caption}</text> : null}
     </view>
+    {method ? (
+      <text className={`actionRow-meta app-methodChip ${methodChip(method)}`}>
+        {method}
+      </text>
+    ) : null}
     {meta ? (
       <text className={`actionRow-meta app-meta ${metaFg(tone)}`}>{meta}</text>
     ) : null}

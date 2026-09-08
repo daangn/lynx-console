@@ -215,36 +215,31 @@ const App = () => {
             <ActionRow
               label="jsonplaceholder /posts/1"
               caption="목록 한 건을 받아와요"
-              meta="GET"
-              tone="blue"
+              method="GET"
               bindtap={testGetRequest}
             />
             <ActionRow
               label="jsonplaceholder /posts"
               caption="새 글을 만들어요"
-              meta="POST"
-              tone="green"
+              method="POST"
               bindtap={testPostRequest}
             />
             <ActionRow
               label="jsonplaceholder /posts/1"
               caption="제목만 바꿔요"
-              meta="PATCH"
-              tone="purple"
+              method="PATCH"
               bindtap={testPatchRequest}
             />
             <ActionRow
               label="jsonplaceholder /posts/1"
               caption="한 건을 지워요"
-              meta="DELETE"
-              tone="red"
+              method="DELETE"
               bindtap={testDeleteRequest}
             />
             <ActionRow
               label="graphql.org /graphql"
               caption="graphql-response+json 응답이에요"
-              meta="GQL"
-              tone="pink"
+              method="POST"
               bindtap={testGraphqlRequest}
             />
           </Section>

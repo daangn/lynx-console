@@ -59,3 +59,38 @@
 .app-metaFg-orange {
   color: #ff6f0f;
 }
+
+/* 콘솔 Network 탭의 메서드 칩과 같은 모양 · 색이에요
+   (package/src/styles/theme.ts 라이트 팔레트) */
+.app-methodChip {
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 700;
+  padding: 1px 5px;
+  border-radius: 3px;
+}
+
+.app-method-get {
+  color: #5e98fe;
+  background-color: #eff6ff;
+}
+.app-method-post {
+  color: #10ab7d;
+  background-color: #edfaf6;
+}
+.app-method-put {
+  color: #c49725;
+  background-color: #fff7de;
+}
+.app-method-patch {
+  color: #9f84fb;
+  background-color: #f5f3fe;
+}
+.app-method-delete {
+  color: #fc6a66;
+  background-color: #fdf0f0;
+}
+.app-method-default {
+  color: #6b6b6b;
+  background-color: #f4f4f4;
+}

@@ -34,12 +34,16 @@ export interface MonitorConsoleOptions {
 // https://lynxjs.org/api/lynx-api/global.html
 export type LogLevel = "log" | "warn" | "error" | "info";
 
+// 모니터가 직접 넣은 로그의 출처예요. 사용자의 console 호출은 비어 있어요
+export type LogSource = "network" | "performance";
+
 export interface LogEntry {
   id: string;
   level: LogLevel;
   message: string;
   timestamp: number;
   args: unknown[];
+  source?: LogSource;
 }
 
 // Network monitoring types

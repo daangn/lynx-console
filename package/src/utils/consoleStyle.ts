@@ -29,6 +29,9 @@ const RESET = "";
 
 export type ConsoleArgs = [string, ...string[]];
 
+// URL 이나 이름 안의 % 가 %c·%d 같은 서식 지정자로 읽히지 않게 해요
+const escapePercent = (text: string): string => text.replace(/%/g, "%%");
+
 const networkStatusText = (entry: NetworkEntry): string =>
   entry.status === "error" ? "ERR" : String(entry.statusCode ?? "-");
 
@@ -40,7 +43,7 @@ const isOk = (entry: NetworkEntry): boolean =>
 
 // "GET 200 https://… 123ms" 를 메서드 칩·상태색·회색 소요시간으로 꾸며요
 export const formatNetworkConsoleArgs = (entry: NetworkEntry): ConsoleArgs => [
-  `%c${entry.method}%c ${networkStatusText(entry)}%c ${entry.url}%c ${entry.duration ?? 0}ms`,
+  `%c${escapePercent(entry.method)}%c ${networkStatusText(entry)}%c ${escapePercent(entry.url)}%c ${entry.duration ?? 0}ms`,
   METHOD_CHIP[entry.method.toUpperCase()] ?? DEFAULT_METHOD_CHIP,
   isOk(entry) ? STATUS_OK : STATUS_FAIL,
   RESET,
@@ -57,11 +60,12 @@ export const formatPerformanceConsoleArgs = (
   fcpMs: number | undefined,
 ): ConsoleArgs => {
   const chip = ENTRY_TYPE_CHIP[entry.entryType] ?? DEFAULT_ENTRY_TYPE_CHIP;
+  const name = escapePercent(entry.name);
   if (fcpMs === undefined) {
-    return [`%c${entry.entryType}%c ${entry.name}`, chip, RESET];
+    return [`%c${entry.entryType}%c ${name}`, chip, RESET];
   }
   return [
-    `%c${entry.entryType}%c ${entry.name}%c FCP ${fcpMs.toFixed(2)}ms`,
+    `%c${entry.entryType}%c ${name}%c FCP ${fcpMs.toFixed(2)}ms`,
     chip,
     RESET,
     FCP_TEXT,

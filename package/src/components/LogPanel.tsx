@@ -5,7 +5,8 @@ import { fontWeight } from "../styles/theme";
 import type { LogEntry, LogLevel } from "../types";
 import { getLogSearchStrings } from "../utils/matchesLogFilter";
 import "./ConsolePanel.css";
-import { getLevelColor, LogItem } from "./LogItem";
+import { getLevelColor } from "./LogItem";
+import { LogList } from "./LogList";
 
 const LOG_LEVELS: LogLevel[] = ["log", "info", "warn", "error"];
 
@@ -36,7 +37,6 @@ const runCode = (code: string) => {
 
 export const LogPanel = ({ logs, clearLogs }: LogPanelProps) => {
   const colors = useThemeColors();
-  const [expandedArgs, setExpandedArgs] = useState(new Set<string>());
   const [code, setCode] = useState("");
   const [enabledLevels, setEnabledLevels] = useState<Set<LogLevel>>(
     () => savedEnabledLevels ?? new Set(LOG_LEVELS),
@@ -45,7 +45,6 @@ export const LogPanel = ({ logs, clearLogs }: LogPanelProps) => {
   const [searchQuery, setSearchQuery] = useState(savedSearchQuery);
   const inputRef = useRef<NodesRef>(null);
   const searchInputRef = useRef<NodesRef>(null);
-  const listRef = useRef<NodesRef>(null);
 
   useEffect(() => {
     savedEnabledLevels = enabledLevels;
@@ -84,9 +83,6 @@ export const LogPanel = ({ logs, clearLogs }: LogPanelProps) => {
       }),
     [logs, enabledLevels, searchQuery],
   );
-  const logsRef = useRef(filteredLogs);
-  logsRef.current = filteredLogs;
-
   const toggleLevel = (level: LogLevel) => {
     setEnabledLevels((prev) => {
       const next = new Set(prev);
@@ -94,34 +90,6 @@ export const LogPanel = ({ logs, clearLogs }: LogPanelProps) => {
         next.delete(level);
       } else {
         next.add(level);
-      }
-      return next;
-    });
-  };
-
-  const scrollToBottom = (smooth: boolean) => {
-    if (logsRef.current.length === 0) return;
-    listRef.current
-      ?.invoke({
-        method: "scrollToPosition",
-        params: { position: logsRef.current.length - 1, smooth },
-        // 연속 로그로 진행 중이던 smooth 스크롤이 중단될 때 나는 무해한 경고를 무시
-        fail: () => {},
-      })
-      .exec();
-  };
-
-  useEffect(() => {
-    scrollToBottom(true);
-  }, [filteredLogs]);
-
-  const toggleArg = (key: string) => {
-    setExpandedArgs((prev) => {
-      const next = new Set(prev);
-      if (next.has(key)) {
-        next.delete(key);
-      } else {
-        next.add(key);
       }
       return next;
     });
@@ -266,39 +234,10 @@ export const LogPanel = ({ logs, clearLogs }: LogPanelProps) => {
           </view>
         </view>
       </view>
-      <list
-        ref={listRef}
-        scroll-orientation="vertical"
-        className={"cp-logList"}
-        preload-buffer-count={10}
-        initial-scroll-index={Math.max(0, filteredLogs.length - 1)}
-      >
-        {filteredLogs.length === 0 ? (
-          <list-item item-key="empty-state">
-            <view className={"cp-placeholder"}>
-              <text
-                className={"cp-placeholderText t4"}
-                style={{
-                  fontWeight: fontWeight.regular,
-                  color: colors.fg.disabled,
-                }}
-              >
-                No logs yet. Try console.log("Hello!")
-              </text>
-            </view>
-          </list-item>
-        ) : (
-          filteredLogs.map((log) => (
-            <list-item key={log.id} item-key={log.id}>
-              <LogItem
-                log={log}
-                expandedArgs={expandedArgs}
-                toggleArg={toggleArg}
-              />
-            </list-item>
-          ))
-        )}
-      </list>
+      <LogList
+        logs={filteredLogs}
+        emptyText={'No logs yet. Try console.log("Hello!")'}
+      />
       <view className={"cp-replInputRow"}>
         <text
           className={"cp-replPrompt t10"}

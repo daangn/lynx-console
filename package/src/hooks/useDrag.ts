@@ -103,7 +103,7 @@ export function useDrag(onTap: () => void, options?: UseDragOptions) {
   };
 
   // 훅 호출 순서를 지키려고 둘 다 부르고, 플랫폼에 맞는 쪽만 써요
-  const mainThreadHandlers = useMainThreadDrag(ctx);
+  const mainThread = useMainThreadDrag(ctx);
   const web = useWebDrag(ctx, isDragging);
 
   // 네이티브는 드래그 중 위치를 main-thread 가 직접 그려서 커밋된 x/y 만 써요
@@ -118,7 +118,9 @@ export function useDrag(onTap: () => void, options?: UseDragOptions) {
   return {
     phase,
     positionStyle,
-    handlers: isWebPlatform ? web.handlers : mainThreadHandlers,
+    handlers: isWebPlatform ? web.handlers : mainThread.handlers,
     dragOverlayHandlers: isWebPlatform ? web.dragOverlayHandlers : null,
+    // 네이티브에서 드래그 중 반짝임 효과를 main-thread 가 직접 켜고 끄려고 써요
+    shineRef: mainThread.shineRef,
   };
 }

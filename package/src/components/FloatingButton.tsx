@@ -34,10 +34,8 @@ export const FloatingButton = ({
   initialPosition,
 }: FloatingButtonProps) => {
   const colors = useThemeColors();
-  const { phase, positionStyle, handlers, dragOverlayHandlers } = useDrag(
-    bindtap,
-    { initialPosition },
-  );
+  const { phase, positionStyle, handlers, dragOverlayHandlers, shineRef } =
+    useDrag(bindtap, { initialPosition });
 
   const handleReload = () => {
     try {
@@ -76,7 +74,11 @@ export const FloatingButton = ({
           style={{ backgroundColor: colors.palette.green600 }}
         >
           {children}
-          <view className={"fb-shineOverlay"} style={SHINE_STYLES[phase]} />
+          <view
+            className={"fb-shineOverlay"}
+            main-thread:ref={shineRef}
+            style={SHINE_STYLES[phase]}
+          />
         </view>
         <view
           className={"fb-reloadButton"}

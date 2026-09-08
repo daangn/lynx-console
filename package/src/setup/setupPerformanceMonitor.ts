@@ -10,6 +10,7 @@ import {
   formatPerformancePlain,
 } from "../utils/consoleStyle";
 import { extractFcpMetrics } from "../utils/extractFcp";
+import { emitMonitorLog } from "./setupLogMonitor";
 
 type PerformanceListener = (entry: PerformanceEntryData) => void;
 
@@ -42,7 +43,7 @@ const emitPerformanceLog = (
   const summary = plain
     ? [formatPerformancePlain(entry, fcp?.duration)]
     : formatPerformanceConsoleArgs(entry, fcp?.duration);
-  console.info(...summary, entry);
+  emitMonitorLog("info", [...summary, entry], "performance");
 };
 
 export const initPerformanceMonitor = (options?: MonitorConsoleOptions) => {

@@ -7,6 +7,7 @@ import {
   formatNetworkConsoleArgs,
   formatNetworkPlain,
 } from "../utils/consoleStyle";
+import { emitMonitorLog } from "./setupLogMonitor";
 
 const generateNetworkId = (): string => {
   return `network-${Date.now()}-${Math.random()}`;
@@ -79,11 +80,11 @@ const emitNetworkLog = (entry: NetworkEntry, plain: boolean): void => {
   const summary = plain
     ? [formatNetworkPlain(entry)]
     : formatNetworkConsoleArgs(entry);
-  if (entry.status === "error") {
-    console.error(...summary, entry);
-  } else {
-    console.info(...summary, entry);
-  }
+  emitMonitorLog(
+    entry.status === "error" ? "error" : "info",
+    [...summary, entry],
+    "network",
+  );
 };
 
 const addNetworkEntry = (entry: NetworkEntry): void => {

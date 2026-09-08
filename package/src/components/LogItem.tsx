@@ -9,7 +9,7 @@ import {
 import { parseConsoleArgs } from "../utils/parseFormat";
 import "./ConsolePanel.css";
 import { NetworkLogRow } from "./NetworkLogRow";
-import { PerformanceLogRow } from "./PerformanceLogRow";
+import { PerformanceListItem } from "./PerformanceListItem";
 
 export function getLevelColor(colors: ThemeColors, level: LogLevel): string {
   switch (level) {
@@ -88,7 +88,7 @@ export const LogItem = ({ log, expandedArgs, toggleArg }: LogItemProps) => {
   if (perf) {
     const key = `${log.id}-performance`;
     return (
-      <PerformanceLogRow
+      <PerformanceListItem
         perf={perf}
         expanded={expandedArgs.has(key)}
         onToggle={() => toggleArg(key)}

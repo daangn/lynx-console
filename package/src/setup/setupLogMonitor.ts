@@ -1,6 +1,6 @@
 import { ensureConsoleStructure } from "../shared/ensureConsoleStructure";
 import { isWebPlatform } from "../shared/isWebPlatform";
-import type { LogEntry, LogLevel } from "../types";
+import type { LogEntry, LogLevel, LogSource } from "../types";
 import { formatBrandConsoleArgs } from "../utils/consoleStyle";
 
 type LogListener = (entry: LogEntry) => void;
@@ -45,6 +45,22 @@ const addLogEntry = (entry: LogEntry): void => {
   state.logListeners.forEach((listener) => {
     listener(entry);
   });
+};
+
+// 네트워크·성능 모니터가 쓰는 진입점이에요. DevTool 에는 원본 console 로 보내고,
+// 로그 목록에는 출처를 붙여 넣어요. 로그 모니터가 없으면 console 로만 찍어요
+export const emitMonitorLog = (
+  level: LogLevel,
+  args: unknown[],
+  source: LogSource,
+): void => {
+  const original = globalThis.__LYNX_CONSOLE__?.originalConsole?.[level];
+  if (!original) {
+    console[level](...args);
+    return;
+  }
+  original(...args);
+  addLogEntry({ ...createLogEntry(level, args), source });
 };
 
 // Background Thread: Log monitoring 초기화

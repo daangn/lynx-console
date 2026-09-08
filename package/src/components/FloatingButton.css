@@ -8,6 +8,15 @@
   overflow: visible;
 }
 
+.fb-dragOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 9996;
+}
+
 .fb-button {
   position: relative;
   overflow: hidden;

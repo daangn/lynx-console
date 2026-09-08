@@ -2,15 +2,40 @@ import type { ReactNode } from "@lynx-js/react";
 
 // LynxConsole shared types
 
-export interface CustomTab {
+// 원하는 콘텐츠를 직접 그리는 탭
+export interface CustomContentTab {
   key: string;
   label: string;
   renderContent: () => ReactNode;
 }
 
+// 문자열: 문자열 인자 중 하나라도 포함하면 매칭
+// RegExp: 문자열 인자 중 하나라도 test 를 통과하면 매칭
+// 함수: 엔트리 단위로 직접 판정
+export type LogFilter = string | RegExp | ((entry: LogEntry) => boolean);
+
+// 전체 콘솔 로그 중 filter 에 맞는 것만 모아 보여주는 탭
+export interface CustomLogTab {
+  key: string;
+  label: string;
+  filter: LogFilter;
+  renderEntry?: (entry: LogEntry) => ReactNode;
+}
+
+export type CustomTab = CustomContentTab | CustomLogTab;
+
+export interface MonitorConsoleOptions {
+  // 수집한 엔트리를 console 에도 요약 한 줄과 함께 찍어요 (Lynx DevTool 에서 보려고요).
+  // true: %c 로 꾸민 한 줄 (기본값) / "plain": 스타일 없는 텍스트 한 줄 / false: 안 찍어요
+  console?: boolean | "plain";
+}
+
 // 추후 Lynx에서 지원하는 Console API를 추가적으로 지원 예정
 // https://lynxjs.org/api/lynx-api/global.html
 export type LogLevel = "log" | "warn" | "error" | "info";
+
+// 모니터가 직접 넣은 로그의 출처예요. 사용자의 console 호출은 비어 있어요
+export type LogSource = "network" | "performance";
 
 export interface LogEntry {
   id: string;
@@ -18,6 +43,7 @@ export interface LogEntry {
   message: string;
   timestamp: number;
   args: unknown[];
+  source?: LogSource;
 }
 
 // Network monitoring types

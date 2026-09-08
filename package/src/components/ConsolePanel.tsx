@@ -2,6 +2,7 @@ import type { ReactNode } from "@lynx-js/react";
 import { useConsole, useNetwork, usePerformance } from "../hooks";
 import type { CustomTab } from "../types";
 import "./ConsolePanel.css";
+import { LogFilterPanel } from "./LogFilterPanel";
 import { dismissFilterDropdown, LogPanel } from "./LogPanel";
 import { NetworkPanel } from "./NetworkPanel";
 import { PerformancePanel } from "./PerformancePanel";
@@ -57,11 +58,26 @@ export const ConsolePanel = ({ customTabs }: ConsolePanelProps) => {
 
   if (customTabs) {
     for (const tab of customTabs) {
-      items.push({
-        key: tab.key,
-        label: tab.label,
-        renderContent: tab.renderContent,
-      });
+      if ("filter" in tab) {
+        // 필터 탭: 전체 콘솔 로그 중 filter 에 맞는 것만 보여줘요
+        items.push({
+          key: tab.key,
+          label: tab.label,
+          renderContent: () => (
+            <LogFilterPanel
+              logs={logs}
+              filter={tab.filter}
+              renderEntry={tab.renderEntry}
+            />
+          ),
+        });
+      } else {
+        items.push({
+          key: tab.key,
+          label: tab.label,
+          renderContent: tab.renderContent,
+        });
+      }
     }
   }
 

@@ -1,5 +1,16 @@
 import { ensureConsoleStructure } from "../shared/ensureConsoleStructure";
-import type { PerformanceEntryData, PerformanceEntryType } from "../types";
+import type {
+  MonitorConsoleOptions,
+  PerformanceEntryData,
+  PerformanceEntryType,
+} from "../types";
+import {
+  formatBrandConsoleArgs,
+  formatPerformanceConsoleArgs,
+  formatPerformancePlain,
+} from "../utils/consoleStyle";
+import { extractFcpMetrics } from "../utils/extractFcp";
+import { emitMonitorLog } from "./setupLogMonitor";
 
 type PerformanceListener = (entry: PerformanceEntryData) => void;
 
@@ -22,8 +33,25 @@ const addPerformanceEntry = (entry: PerformanceEntryData): void => {
   });
 };
 
-export const initPerformanceMonitor = () => {
+// 모든 성능 엔트리를 "pipeline loadBundle FCP 812.34ms" 한 줄과 엔트리 객체로 console 에 찍어요
+const emitPerformanceLog = (
+  entry: PerformanceEntryData,
+  plain: boolean,
+): void => {
+  const metrics = extractFcpMetrics(entry);
+  const fcp = metrics?.totalFcp ?? metrics?.lynxFcp ?? metrics?.fcp;
+  const summary = plain
+    ? [formatPerformancePlain(entry, fcp?.duration)]
+    : formatPerformanceConsoleArgs(entry, fcp?.duration);
+  emitMonitorLog("info", [...summary, entry], "performance");
+};
+
+export const initPerformanceMonitor = (options?: MonitorConsoleOptions) => {
   "background only";
+
+  const consoleMode = options?.console ?? true;
+  const emitToConsole = consoleMode !== false;
+  const plainConsole = consoleMode === "plain";
 
   if (!lynx.performance) {
     console.warn(
@@ -58,6 +86,7 @@ export const initPerformanceMonitor = () => {
     };
 
     addPerformanceEntry(performanceEntry);
+    if (emitToConsole) emitPerformanceLog(performanceEntry, plainConsole);
   });
 
   observer.observe([
@@ -66,5 +95,5 @@ export const initPerformanceMonitor = () => {
     "metric", // MetricFcpEntry(3.6까지) / MetricFspEntry
   ]);
 
-  console.log("[LynxConsole] ✅ Performance monitoring initialized");
+  console.log(...formatBrandConsoleArgs("Performance monitoring initialized"));
 };

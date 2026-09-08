@@ -43,7 +43,6 @@ export default defineConfig({
     },
     define: { console: 'globalThis.console', fetch: 'lynx.fetch' },
     include: [
-      /@lynx-js\/preact-devtools/,
       { and: [packageDir, { not: /[\\/]node_modules[\\/]/ }] },
       /[\\/]node_modules[\\/]devalue[\\/]/,
     ],

@@ -2,12 +2,11 @@ import { type ReactNode, useEffect, useState } from "@lynx-js/react";
 import type { BaseTouchEvent, Target } from "@lynx-js/types";
 import { useKeyboardHeight } from "../hooks/useKeyboardHeight";
 import { useThemeColors } from "../styles/ThemeContext";
-import { duration, fontWeight } from "../styles/theme";
+import { duration } from "../styles/theme";
 import "./BottomSheet.css";
 
 interface BottomSheetProps {
   children: ReactNode;
-  title?: string;
   footer?: ReactNode;
   onClose: () => void;
   isOpen: boolean;
@@ -25,7 +24,6 @@ let savedHeight: number | null = null;
 
 export default function BottomSheet({
   children,
-  title,
   footer,
   onClose,
   isOpen,
@@ -154,19 +152,7 @@ export default function BottomSheet({
               style={{ backgroundColor: colors.palette.gray400 }}
             />
           </view>
-          <view className="bs-header">
-            {title && (
-              <text
-                className="bs-title t7"
-                style={{
-                  fontWeight: fontWeight.bold,
-                  color: colors.fg.neutral,
-                }}
-              >
-                {title}
-              </text>
-            )}
-          </view>
+          <view className="bs-handleSpacer" />
           <view
             className="bs-body"
             style={{

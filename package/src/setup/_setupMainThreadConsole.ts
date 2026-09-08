@@ -99,7 +99,11 @@ const _setupMainThreadConsole = (): void => {
 
   lynxConsole.mainThreadInitialized = true;
 
-  originalConsole.log("[LynxConsole] ✅ Main thread console initialized");
+  originalConsole.log(
+    "%cLynxConsole%c Main thread console initialized",
+    "padding:1px 4px;border-radius:3px;font-weight:bold;background:#edfaf6;color:#10ab7d",
+    "",
+  );
 };
 
 export default _setupMainThreadConsole;

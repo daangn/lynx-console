@@ -1022,16 +1022,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@lynx-js/preact-devtools@npm:^5.0.1-cf9aef5":
-  version: 5.0.1
-  resolution: "@lynx-js/preact-devtools@npm:5.0.1"
-  dependencies:
-    errorstacks: "npm:^2.4.1"
-    htm: "npm:^3.1.1"
-  checksum: 10c0/5232025c254a6861ee0b7186d95d0f2de38c38949b2c5b6a6a4d6d4cae5c5444801169839428b60c3651ba44953a85ee2fcc478e3993ede87964d8c2080b5b00
-  languageName: node
-  linkType: hard
-
 "@lynx-js/qrcode-rsbuild-plugin@npm:^0.4.6":
   version: 0.4.6
   resolution: "@lynx-js/qrcode-rsbuild-plugin@npm:0.4.6"
@@ -4536,13 +4526,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"errorstacks@npm:^2.4.1":
-  version: 2.4.1
-  resolution: "errorstacks@npm:2.4.1"
-  checksum: 10c0/5721d0fcc2f4b2f3bcedb71a767d19ea2dc04c7598ffcc547d5ad61187a36133b6b833922aadd449ebb12d7d1e68706eab0b9d1218409034e39bff48d8642df3
-  languageName: node
-  linkType: hard
-
 "es-abstract@npm:^1.23.2, es-abstract@npm:^1.23.5, es-abstract@npm:^1.23.9":
   version: 1.24.1
   resolution: "es-abstract@npm:1.24.1"
@@ -5362,13 +5345,6 @@ __metadata:
   version: 6.0.1
   resolution: "hookable@npm:6.0.1"
   checksum: 10c0/a53592937c1aa74a650b3b92a9d8cf8bd58eee48422124a90299344f81e90cd2ee2f3d9f3686c45c0bc87edbc9fede4de709edf6b987dd6837bdcfa502447fa0
-  languageName: node
-  linkType: hard
-
-"htm@npm:^3.1.1":
-  version: 3.1.1
-  resolution: "htm@npm:3.1.1"
-  checksum: 10c0/0de4c8fff2b8e76c162235ae80dbf93ca5eef1575bd50596a06ce9bebf1a6da5efc467417c53034a9ffa2ab9ecff819cbec041dc9087894b2b900ad4de26c7e7
   languageName: node
   linkType: hard
 
@@ -6299,7 +6275,6 @@ __metadata:
   dependencies:
     "@biomejs/biome": "npm:2.2.3"
     "@lynx-js/lynx-core": "npm:0.1.3"
-    "@lynx-js/preact-devtools": "npm:^5.0.1-cf9aef5"
     "@lynx-js/qrcode-rsbuild-plugin": "npm:^0.4.6"
     "@lynx-js/react": "npm:^0.117.0"
     "@lynx-js/react-rsbuild-plugin": "npm:^0.13.0"

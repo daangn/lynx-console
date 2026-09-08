@@ -103,7 +103,6 @@ const LynxConsole = forwardRef<LynxConsoleHandle, LynxConsoleProps>(
               isOpen={isOpen}
               shouldClose={shouldClose}
               onClose={handleCloseBottomSheet}
-              title="Lynx Console"
               safeAreaInsetBottom={safeAreaInsetBottom}
             >
               <ConsolePanel customTabs={customTabs} />
@@ -115,5 +114,14 @@ const LynxConsole = forwardRef<LynxConsoleHandle, LynxConsoleProps>(
   },
 );
 
-export type { CustomTab } from "./types";
+export type {
+  CustomContentTab,
+  CustomLogTab,
+  CustomTab,
+  LogEntry,
+  LogFilter,
+  LogLevel,
+  MonitorConsoleOptions,
+} from "./types";
+export { isNetworkLog, isPerformanceLog } from "./utils/networkLog";
 export default LynxConsole;

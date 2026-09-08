@@ -1,7 +1,13 @@
 import { stringify } from "javascript-stringify";
 import { ensureConsoleStructure } from "../shared/ensureConsoleStructure";
 import { isWebPlatform } from "../shared/isWebPlatform";
-import type { NetworkEntry } from "../types";
+import type { MonitorConsoleOptions, NetworkEntry } from "../types";
+import {
+  formatBrandConsoleArgs,
+  formatNetworkConsoleArgs,
+  formatNetworkPlain,
+} from "../utils/consoleStyle";
+import { emitMonitorLog } from "./setupLogMonitor";
 
 const generateNetworkId = (): string => {
   return `network-${Date.now()}-${Math.random()}`;
@@ -70,6 +76,17 @@ const mergeRequestHeaders = (
   return merged;
 };
 
+const emitNetworkLog = (entry: NetworkEntry, plain: boolean): void => {
+  const summary = plain
+    ? [formatNetworkPlain(entry)]
+    : formatNetworkConsoleArgs(entry);
+  emitMonitorLog(
+    entry.status === "error" ? "error" : "info",
+    [...summary, entry],
+    "network",
+  );
+};
+
 const addNetworkEntry = (entry: NetworkEntry): void => {
   const state = globalThis.__LYNX_CONSOLE__?.state;
   if (!state?.networks || !state?.networksMap || !state?.networkListeners) {
@@ -121,7 +138,11 @@ const updateNetworkEntry = (
   });
 };
 
-export const initNetworkMonitor = () => {
+export const initNetworkMonitor = (options?: MonitorConsoleOptions) => {
+  const consoleMode = options?.console ?? true;
+  const emitToConsole = consoleMode !== false;
+  const plainConsole = consoleMode === "plain";
+
   if (isWebPlatform ? !globalThis.fetch : !lynx.fetch) {
     console.warn(
       "[LynxConsole] lynx.fetch not available, skipping network monitor",
@@ -227,6 +248,11 @@ export const initNetworkMonitor = () => {
         responseBody: responseBody ?? "",
       });
 
+      if (emitToConsole) {
+        const completed = state.networksMap?.get(id);
+        if (completed) emitNetworkLog(completed, plainConsole);
+      }
+
       return response;
     } catch (error) {
       const endTime = Date.now();
@@ -236,6 +262,12 @@ export const initNetworkMonitor = () => {
         duration: endTime - startTime,
         error: error instanceof Error ? error.message : String(error),
       });
+
+      if (emitToConsole) {
+        const failed = state.networksMap?.get(id);
+        if (failed) emitNetworkLog(failed, plainConsole);
+      }
+
       throw error;
     }
   };
@@ -255,5 +287,5 @@ export const initNetworkMonitor = () => {
     lynx.fetch = monitoredFetch as typeof lynx.fetch;
   }
 
-  console.log("[LynxConsole] ✅ Network monitoring initialized");
+  console.log(...formatBrandConsoleArgs("Network monitoring initialized"));
 };

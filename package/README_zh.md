@@ -34,7 +34,8 @@ https://github.com/user-attachments/assets/d231bdf5-71bb-483f-9bdb-5843279c1308
 - **悬浮按钮** — 显示最新的 FCP 数值；点击打开控制台，长按拖动可以改变位置
 - **可调整面板** — 拖动手柄调整控制台面板高度（200–700px）；向下滑动即可关闭
 - **标签页自动隐藏** — 只显示已初始化的监视器对应的标签页，没有初始化的不会出现
-- **自定义标签页** — 通过 `customTabs` prop 把自己的标签页加到控制台里
+- **自定义标签页** — 通过 `customTabs` prop 添加自己的标签页，或者给标签页一个 `filter`，只看你关心的控制台日志
+- **对 Lynx DevTool 友好** — 网络请求和 FCP 也会以一行摘要加 entry 的形式打印到控制台，所以在没有 Network 面板的 Lynx DevTool 里也能看到。
 - 支持**浅色/深色主题**
 
 ## 安装
@@ -144,6 +145,25 @@ function App() {
 }
 ```
 
+### 把控制台日志筛进一个标签页
+
+Log 标签页始终显示全部日志。带 `filter` 的标签页只显示匹配的条目。
+
+```tsx
+const customTabs: CustomTab[] = [
+  { key: "track", label: "Track", filter: "track" }, // 字符串：打印出来的文本包含它就匹配
+  { key: "errors", label: "Errors", filter: (entry) => entry.level === "error" },
+];
+
+console.log("%ctrack%c screen_view", "color:#db2777;font-weight:bold", "", { screen: "home" }); // 会出现在 Track 标签页
+```
+
+想自己绘制每一条，传 `renderEntry`。
+
+### 在 Lynx DevTool 里查看
+
+Lynx DevTool 没有 Network 面板，所以每个完成的请求也会打印一行带 `%c` 样式的 `GET 200 https://… 123ms` 和 entry 对象，每条性能 entry 打印为 `pipeline loadBundle FCP 812.34ms`。在控制台的 Log 标签页里，它们渲染成和 Network、Perf 标签页相同的条目。`initNetworkMonitor({ console: "plain" })` 打印无样式文本（logcat、CI），`{ console: false }` 则关闭。想把这些行收进一个标签页，用 `filter: isNetworkLog`。
+
 ### 用 ref 控制
 
 通过 `LynxConsoleHandle` 可以用代码开关控制台。
@@ -194,7 +214,9 @@ function App() {
 | --------------- | ----------------- | ---------------------- |
 | `key`           | `string`          | 标签页的唯一标识       |
 | `label`         | `string`          | 标签页的文字           |
-| `renderContent` | `() => ReactNode` | 渲染标签页内容的函数     |
+| `renderContent` | `() => ReactNode` | 内容标签页：渲染标签页内容的函数 |
+| `filter`        | `string \| RegExp \| (entry: LogEntry) => boolean` | 筛选标签页：只显示匹配的控制台条目 |
+| `renderEntry`   | `(entry: LogEntry) => ReactNode` | 筛选标签页，可选：渲染一条匹配的条目 |
 
 ### `LynxConsoleHandle`
 

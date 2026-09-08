@@ -32,12 +32,13 @@
   overflow: hidden;
 }
 
+/* 스페이서(.bs-handleSpacer)와 같은 높이여야 해요. 더 크면 아래 탭 줄의 탭을 가로채요 */
 .bs-handleContainer {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
-  height: 48px;
+  height: 36px;
   display: flex;
   justify-content: center;
   z-index: 10;
@@ -50,12 +51,8 @@
   margin-top: 12px;
 }
 
-.bs-header {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  padding: 24px 50px 16px 16px;
-  justify-content: flex-start;
+.bs-handleSpacer {
+  height: 36px;
 }
 
 .bs-body {

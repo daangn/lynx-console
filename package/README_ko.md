@@ -35,7 +35,8 @@ https://github.com/user-attachments/assets/d231bdf5-71bb-483f-9bdb-5843279c1308
 - **플로팅 버튼** — 최신 FCP 수치를 표시하며, 탭하면 콘솔을 열고, 길게 눌러 드래그하면 위치를 이동할 수 있어요
 - **크기 조절 패널** — 핸들을 드래그해 콘솔 패널 높이를 조절하고(200–700px), 아래로 내리면 닫혀요
 - **탭 자동 숨김** — 초기화된 모니터의 탭만 표시되고, 초기화하지 않은 모니터의 탭은 표시되지 않아요
-- **커스텀 탭** — `customTabs` prop으로 직접 만든 탭을 콘솔에 추가할 수 있어요
+- **커스텀 탭** — `customTabs` prop으로 직접 만든 탭을 추가하거나, `filter`를 줘서 보고 싶은 콘솔 로그만 모아 볼 수 있어요
+- **Lynx DevTool 연동** — 네트워크 요청과 FCP를 요약 한 줄과 엔트리로 콘솔에도 찍어서, Network 패널이 없는 Lynx DevTool에서도 볼 수 있어요.
 - **라이트/다크 모드** 를 지원해요
 
 ## 설치
@@ -145,6 +146,25 @@ function App() {
 }
 ```
 
+### 콘솔 로그를 골라 탭으로 보기
+
+Log 탭에는 항상 전부 보여요. `filter`를 준 탭은 조건에 맞는 로그만 모아 보여줘요.
+
+```tsx
+const customTabs: CustomTab[] = [
+  { key: "track", label: "Track", filter: "track" }, // 문자열: 찍힌 텍스트에 포함되면 매칭
+  { key: "errors", label: "Errors", filter: (entry) => entry.level === "error" },
+];
+
+console.log("%ctrack%c screen_view", "color:#db2777;font-weight:bold", "", { screen: "home" }); // Track 탭에 보여요
+```
+
+한 줄을 직접 그리고 싶으면 `renderEntry`를 줘요.
+
+### Lynx DevTool에서 보기
+
+Lynx DevTool에는 Network 패널이 없어서, 완료된 요청마다 `%c`로 꾸민 `GET 200 https://… 123ms` 한 줄과 엔트리 객체를, 성능 엔트리는 `pipeline loadBundle FCP 812.34ms`를 콘솔에도 찍어요. 콘솔의 Log 탭에서는 Network · Perf 탭과 같은 행으로 그려져요. `initNetworkMonitor({ console: "plain" })`이면 스타일 없는 텍스트로(logcat, CI), `{ console: false }`면 안 찍어요. 이 줄만 탭에 모으려면 `filter: isNetworkLog`를 써요.
+
 ### ref로 제어하기
 
 `LynxConsoleHandle`을 통해 프로그래밍 방식으로 콘솔을 열고 닫을 수 있어요.
@@ -195,7 +215,9 @@ back press 핸들러와 연동해서 뒤로 가기 버튼을 눌렀을 때 콘�
 | --------------- | ----------------- | --------------------------- |
 | `key`           | `string`          | 탭의 고유 식별자            |
 | `label`         | `string`          | 탭 레이블 텍스트            |
-| `renderContent` | `() => ReactNode` | 탭 콘텐츠를 렌더링하는 함수 |
+| `renderContent` | `() => ReactNode` | 콘텐츠 탭: 탭 콘텐츠를 렌더링하는 함수 |
+| `filter`        | `string \| RegExp \| (entry: LogEntry) => boolean` | 필터 탭: 조건에 맞는 콘솔 로그만 보여줘요 |
+| `renderEntry`   | `(entry: LogEntry) => ReactNode` | 필터 탭 선택 항목: 매칭된 로그 한 줄을 그려요 |
 
 ### `LynxConsoleHandle`
 

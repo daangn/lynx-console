@@ -51,6 +51,10 @@ export default defineConfig({
   output: {
     assetPrefix: process.env.ASSET_PREFIX ?? `http://${getLocalIP()}:<port>/`,
   },
+  server: {
+    // 3000이 다른 프로젝트에 잡혀 있을 때 PORT=3001 yarn dev:example 로 바꿔 띄워요
+    port: process.env.PORT ? Number(process.env.PORT) : 3000,
+  },
 
   tools: {
     rspack(config) {

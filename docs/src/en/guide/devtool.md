@@ -15,11 +15,11 @@ Each completed request is printed as one summary line plus the entry object. The
 GET 200 https://api.example.com/items 123ms  ▸ {url, method, requestHeaders, responseBody, …}
 ```
 
-Failed requests use `console.error`, so `--level error` in the DevTool CLI catches them. FCP is printed as `FCP 812.34ms` with the raw performance entry.
+Failed requests use `console.error`, so `--level error` in the DevTool CLI catches them. Every performance entry is printed the same way, as `pipeline loadBundle FCP 812.34ms` with the entry object.
 
-Request and response bodies in the printed object are cut at 2,000 characters. The Network tab keeps the full body.
+Inside the console's own Log tab these lines are not plain text: a network line renders as the same row as the Network tab (tap it for General, Request and Response), and a performance line renders as the same row as the Perf tab.
 
-To collect only these lines in a tab, use a [filter tab](/guide/customizing#filtering-console-logs-into-a-tab) with `filter: isNetworkLog`.
+To collect only these lines in a tab, use a [filter tab](/guide/customizing#filtering-console-logs-into-a-tab) with `filter: isNetworkLog` or `filter: isPerformanceLog`.
 
 ## Plain text or off
 
@@ -29,13 +29,3 @@ To collect only these lines in a tab, use a [filter tab](/guide/customizing#filt
 initNetworkMonitor({ console: "plain" });
 initPerformanceMonitor({ console: false });
 ```
-
-## Reading everything at once
-
-`get-console` in the DevTool CLI only listens for a few seconds and shows objects as `objectId` references. For the full history, evaluate this from DevTool or its MCP:
-
-```javascript
-__LYNX_CONSOLE__.snapshot()
-```
-
-It returns a JSON string with the latest logs, network entries, and performance entries. Pass `{ limit: 50 }` to change how many of each are included (default 100). Circular references, `Map`, `Set`, and `Error` values are serialized safely.

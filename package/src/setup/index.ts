@@ -1,4 +1,4 @@
-export type { MonitorConsoleOptions, SnapshotOptions } from "../types";
+export type { MonitorConsoleOptions } from "../types";
 export { initLogMonitor } from "./setupLogMonitor";
 export { initMainThreadConsole } from "./setupMainThreadConsole";
 export { initNetworkMonitor } from "./setupNetworkMonitor";

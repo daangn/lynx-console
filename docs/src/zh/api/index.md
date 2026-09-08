@@ -51,10 +51,6 @@ description: props、console handle 和监视器初始化函数。
 
 `options.console`（默认 `true`）会把每条收集到的 entry 以一行带 `%c` 样式的摘要加 entry 对象的形式也打印到控制台，这样在 Lynx DevTool 里也能看到。`"plain"` 打印无样式文本，`false` 则不打印。参见 [Lynx DevTool](/zh/guide/devtool)。
 
-## `isNetworkLog(entry)`
+## `isNetworkLog(entry)` / `isPerformanceLog(entry)`
 
-返回一个 `LogEntry` 是否是网络监视器打印的行。用于筛选标签页：`filter: isNetworkLog`。
-
-## `__LYNX_CONSOLE__.snapshot(options?)`
-
-任意监视器初始化后可用的全局函数。返回包含最近日志、网络 entry 和性能 entry 的 JSON 字符串。`options.limit`（默认 `100`）限制每类的数量。用于在 Lynx DevTool 里求值。
+返回一个 `LogEntry` 是否是网络监视器或性能监视器打印的行。用于筛选标签页：`filter: isNetworkLog`。

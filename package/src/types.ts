@@ -30,11 +30,6 @@ export interface MonitorConsoleOptions {
   console?: boolean | "plain";
 }
 
-export interface SnapshotOptions {
-  // 컬렉션별로 최근 몇 개까지 담을지. 기본값 100
-  limit?: number;
-}
-
 // 추후 Lynx에서 지원하는 Console API를 추가적으로 지원 예정
 // https://lynxjs.org/api/lynx-api/global.html
 export type LogLevel = "log" | "warn" | "error" | "info";
@@ -126,10 +121,6 @@ declare global {
         };
 
         mainThreadInitialized?: boolean;
-
-        // 현재까지 수집한 로그·네트워크·성능 엔트리를 JSON 문자열로 돌려줘요.
-        // Lynx DevTool 의 Runtime.evaluate 로 밖에서 읽는 용도예요
-        snapshot?: (options?: SnapshotOptions) => string;
       }
     | undefined;
 }

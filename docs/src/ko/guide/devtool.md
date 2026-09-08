@@ -15,11 +15,11 @@ Lynx DevTool 에는 Network 패널이 없어요. 그래서 네트워크 모니�
 GET 200 https://api.example.com/items 123ms  ▸ {url, method, requestHeaders, responseBody, …}
 ```
 
-실패한 요청은 `console.error`로 찍혀서, DevTool CLI 의 `--level error`로 걸러져요. FCP 는 `FCP 812.34ms` 형태로 원본 성능 엔트리와 함께 찍혀요.
+실패한 요청은 `console.error`로 찍혀서, DevTool CLI 의 `--level error`로 걸러져요. 성능 엔트리도 같은 방식으로 전부 찍혀요. `pipeline loadBundle FCP 812.34ms` 한 줄과 엔트리 객체예요.
 
-찍히는 객체의 요청·응답 바디는 2,000자에서 잘려요. Network 탭에는 전체가 남아 있어요.
+콘솔 자체의 Log 탭에서는 이 줄들이 텍스트로 보이지 않아요. 네트워크 줄은 Network 탭과 같은 행으로 그려져서 누르면 General · Request · Response 가 열리고, 성능 줄은 Perf 탭과 같은 행으로 그려져요.
 
-이 줄만 따로 모아 보려면 `filter: isNetworkLog`를 준 [필터 탭](/ko/guide/customizing#콘솔-로그를-골라-탭으로-보기)을 만들어요.
+이 줄만 따로 모아 보려면 `filter: isNetworkLog`나 `filter: isPerformanceLog`를 준 [필터 탭](/ko/guide/customizing#콘솔-로그를-골라-탭으로-보기)을 만들어요.
 
 ## 텍스트로만 찍거나 끄기
 
@@ -29,13 +29,3 @@ logcat, CI 로그, `get-console`을 읽는 에이전트처럼 `%c`를 못 그리
 initNetworkMonitor({ console: "plain" });
 initPerformanceMonitor({ console: false });
 ```
-
-## 한 번에 전부 읽기
-
-DevTool CLI 의 `get-console`은 몇 초만 듣고, 객체는 `objectId`로만 보여줘요. 전체 이력이 필요하면 DevTool 이나 MCP 에서 이 식을 평가해요.
-
-```javascript
-__LYNX_CONSOLE__.snapshot()
-```
-
-최근 로그·네트워크·성능 엔트리를 담은 JSON 문자열을 돌려줘요. `{ limit: 50 }`을 넘기면 컬렉션별 개수를 바꿀 수 있어요(기본값 100). 순환 참조, `Map`, `Set`, `Error`도 안전하게 직렬화해요.

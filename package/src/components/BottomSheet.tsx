@@ -43,8 +43,7 @@ export default function BottomSheet({
   const [isClosing, setIsClosing] = useState(false);
   const keyboardHeight = useKeyboardHeight();
 
-  // 드래그 중 높이는 메인 스레드에서만 바꿔요. touchmove 마다 백그라운드 커밋이 나가면
-  // DevTool 이 "CallLepusMethod called too frequently" 경고를 내요
+  // 드래그 중 높이는 메인 스레드에서만 바꿔요
   const contentRef = useMainThreadRef<MainThread.Element | null>(null);
   const dragStartY = useMainThreadRef(0);
   const dragHeight = useMainThreadRef(0);
@@ -165,7 +164,6 @@ export default function BottomSheet({
               style={{ backgroundColor: colors.palette.gray400 }}
             />
           </view>
-          {/* 드래그 핸들 자리를 비워두는 스페이서예요 */}
           <view className="bs-handleSpacer" />
           <view
             className="bs-body"

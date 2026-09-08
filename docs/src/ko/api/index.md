@@ -51,10 +51,6 @@ description: props, handle, 모니터 초기화 함수예요.
 
 `options.console`(기본값 `true`)을 켜두면 수집한 엔트리를 `%c`로 꾸민 요약 한 줄과 엔트리 객체로 콘솔에도 찍어서, Lynx DevTool 에서 볼 수 있어요. `"plain"`은 스타일 없는 텍스트로 찍고, `false`는 안 찍어요. [Lynx DevTool](/ko/guide/devtool)을 참고해요.
 
-## `isNetworkLog(entry)`
+## `isNetworkLog(entry)` / `isPerformanceLog(entry)`
 
-`LogEntry`가 네트워크 모니터가 찍은 줄인지 돌려줘요. 필터 탭에 `filter: isNetworkLog`로 쓰려고 있어요.
-
-## `__LYNX_CONSOLE__.snapshot(options?)`
-
-모니터를 하나라도 초기화하면 생기는 전역 함수예요. 최근 로그·네트워크·성능 엔트리를 담은 JSON 문자열을 돌려줘요. `options.limit`(기본값 `100`)으로 컬렉션별 개수를 제한해요. Lynx DevTool 에서 평가하는 용도예요.
+`LogEntry`가 네트워크 모니터 또는 성능 모니터가 찍은 줄인지 돌려줘요. 필터 탭에 `filter: isNetworkLog`로 쓰려고 있어요.

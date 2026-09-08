@@ -32,20 +32,17 @@ const addPerformanceEntry = (entry: PerformanceEntryData): void => {
   });
 };
 
-// FCP 를 "FCP 812.34ms" 한 줄과 원본 엔트리로 console 에 찍어요
+// 모든 성능 엔트리를 "pipeline loadBundle FCP 812.34ms" 한 줄과 엔트리 객체로 console 에 찍어요
 const emitPerformanceLog = (
   entry: PerformanceEntryData,
   plain: boolean,
 ): void => {
   const metrics = extractFcpMetrics(entry);
-  if (!metrics) return;
-  const fcp = metrics.totalFcp ?? metrics.lynxFcp ?? metrics.fcp;
-  if (fcp?.duration === undefined) return;
-  const name = fcp.name || "FCP";
+  const fcp = metrics?.totalFcp ?? metrics?.lynxFcp ?? metrics?.fcp;
   const summary = plain
-    ? [formatPerformancePlain(name, fcp.duration)]
-    : formatPerformanceConsoleArgs(name, fcp.duration);
-  console.info(...summary, entry.rawEntry);
+    ? [formatPerformancePlain(entry, fcp?.duration)]
+    : formatPerformanceConsoleArgs(entry, fcp?.duration);
+  console.info(...summary, entry);
 };
 
 export const initPerformanceMonitor = (options?: MonitorConsoleOptions) => {

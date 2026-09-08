@@ -8,9 +8,6 @@ import {
   formatNetworkPlain,
 } from "../utils/consoleStyle";
 
-// console 에 실어 보내는 바디 길이 상한. DevTool 이 큰 객체를 받으면 느려져요
-const CONSOLE_BODY_LIMIT = 2_000;
-
 const generateNetworkId = (): string => {
   return `network-${Date.now()}-${Math.random()}`;
 };
@@ -78,26 +75,14 @@ const mergeRequestHeaders = (
   return merged;
 };
 
-const truncateBody = (body: string | undefined): string | undefined => {
-  if (body === undefined || body.length <= CONSOLE_BODY_LIMIT) return body;
-  return `${body.slice(0, CONSOLE_BODY_LIMIT)}… [truncated ${body.length - CONSOLE_BODY_LIMIT} chars]`;
-};
-
-// 완료된 요청을 "GET 200 https://… 123ms" 한 줄과 엔트리 객체로 console 에 찍어요.
-// Lynx DevTool 에는 Network 패널이 없어서, Console 패널이 네트워크를 볼 유일한 자리예요
 const emitNetworkLog = (entry: NetworkEntry, plain: boolean): void => {
   const summary = plain
     ? [formatNetworkPlain(entry)]
     : formatNetworkConsoleArgs(entry);
-  const payload: NetworkEntry = {
-    ...entry,
-    requestBody: truncateBody(entry.requestBody),
-    responseBody: truncateBody(entry.responseBody),
-  };
   if (entry.status === "error") {
-    console.error(...summary, payload);
+    console.error(...summary, entry);
   } else {
-    console.info(...summary, payload);
+    console.info(...summary, entry);
   }
 };
 

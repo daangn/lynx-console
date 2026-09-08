@@ -1,0 +1,279 @@
+import { stringify } from "javascript-stringify";
+import { useThemeColors } from "../styles/ThemeContext";
+import { fontWeight, type ThemeColors } from "../styles/theme";
+import type { PerformanceEntryData } from "../types";
+import { extractFcpMetrics } from "../utils/extractFcp";
+import "./PerformancePanel.css";
+
+const formatDuration = (ms?: number): string => {
+  if (ms === undefined) return "-";
+  return `${ms.toFixed(2)}ms`;
+};
+
+const getPrimaryFcpLabel = (entry: PerformanceEntryData): string => {
+  const fcpMetrics = extractFcpMetrics(entry);
+  if (!fcpMetrics) return "";
+
+  const { totalFcp, lynxFcp, fcp } = fcpMetrics;
+
+  if (totalFcp?.duration !== undefined) {
+    return `totalFcp: ${formatDuration(totalFcp.duration)}`;
+  }
+  if (lynxFcp?.duration !== undefined) {
+    return `lynxFcp: ${formatDuration(lynxFcp.duration)}`;
+  }
+  if (fcp?.duration !== undefined) {
+    return `fcp: ${formatDuration(fcp.duration)}`;
+  }
+  return "";
+};
+
+function getEntryTypeColors(colors: ThemeColors, entryType: string) {
+  switch (entryType) {
+    case "init":
+      return {
+        color: colors.palette.blue600,
+        backgroundColor: colors.palette.blue100,
+      };
+    case "metric":
+      return {
+        color: colors.palette.green600,
+        backgroundColor: colors.palette.green100,
+      };
+    case "pipeline":
+      return {
+        color: colors.palette.purple600,
+        backgroundColor: colors.palette.purple100,
+      };
+    case "resource":
+      return {
+        color: colors.palette.yellow600,
+        backgroundColor: colors.palette.yellow100,
+      };
+    default:
+      return {
+        color: colors.fg.neutral,
+        backgroundColor: colors.bg.neutralWeak,
+      };
+  }
+}
+
+interface PerformanceListItemProps {
+  perf: PerformanceEntryData;
+  expanded: boolean;
+  onToggle: () => void;
+}
+
+// Perf 탭과 Log 탭이 같이 쓰는 성능 엔트리 한 항목이에요
+export const PerformanceListItem = ({
+  perf,
+  expanded,
+  onToggle,
+}: PerformanceListItemProps) => {
+  const colors = useThemeColors();
+  const fcpMetrics = extractFcpMetrics(perf);
+  const hasFcp = fcpMetrics !== null;
+  const primaryFcp = getPrimaryFcpLabel(perf);
+  const { totalFcp, lynxFcp, fcp } = fcpMetrics ?? {};
+
+  return (
+    <view
+      className={"pp-item"}
+      style={{ borderBottomColor: colors.stroke.neutralWeak }}
+    >
+      <view className={"pp-itemHeader"} bindtap={onToggle}>
+        <text
+          className={"pp-entryType t2"}
+          style={{
+            fontWeight: fontWeight.bold,
+            ...getEntryTypeColors(colors, perf.entryType),
+          }}
+        >
+          {perf.entryType}
+        </text>
+        <text
+          className={"pp-entryName t2"}
+          style={{
+            fontWeight: fontWeight.medium,
+            color: colors.fg.neutral,
+          }}
+        >
+          {perf.name}
+        </text>
+        <text
+          className={"pp-timestamp t2"}
+          style={{
+            fontWeight: fontWeight.regular,
+            color: colors.fg.neutralSubtle,
+          }}
+        >
+          {new Date(perf.timestamp).toISOString()}
+        </text>
+      </view>
+
+      <view bindtap={onToggle}>
+        {hasFcp && primaryFcp && (
+          <text
+            className={"pp-fcpHighlight t3"}
+            style={{
+              fontWeight: fontWeight.bold,
+              color: colors.palette.blue600,
+              backgroundColor: colors.palette.blue100,
+            }}
+          >
+            {primaryFcp}
+          </text>
+        )}
+      </view>
+
+      {expanded && (
+        <view className={"pp-detailsContainer"}>
+          {hasFcp && fcpMetrics && (
+            <view className={"pp-fcpSection"}>
+              {totalFcp !== undefined && (
+                <view
+                  className={"pp-fcpMetric"}
+                  style={{ backgroundColor: colors.bg.layerDefault }}
+                >
+                  <view className={"pp-fcpMetricHeader"}>
+                    <text
+                      className={"pp-fcpMetricName t2"}
+                      style={{
+                        fontWeight: fontWeight.bold,
+                        color: colors.fg.neutral,
+                      }}
+                    >
+                      전체 FCP
+                    </text>
+                    <text
+                      className={"pp-fcpMetricValue t1"}
+                      style={{
+                        fontWeight: fontWeight.bold,
+                        color: colors.palette.blue600,
+                      }}
+                    >
+                      {formatDuration(totalFcp.duration)}
+                    </text>
+                  </view>
+                  <text
+                    className={"pp-fcpMetricDescription t3"}
+                    style={{
+                      fontWeight: fontWeight.regular,
+                      color: colors.fg.neutralSubtle,
+                    }}
+                  >
+                    PrepareTemplate Start부터 Paint End 까지 걸리는 시간
+                  </text>
+                </view>
+              )}
+
+              {lynxFcp !== undefined && (
+                <view
+                  className={"pp-fcpMetric"}
+                  style={{ backgroundColor: colors.bg.layerDefault }}
+                >
+                  <view className={"pp-fcpMetricHeader"}>
+                    <text
+                      className={"pp-fcpMetricName t2"}
+                      style={{
+                        fontWeight: fontWeight.bold,
+                        color: colors.fg.neutral,
+                      }}
+                    >
+                      LynxFCP
+                    </text>
+                    <text
+                      className={"pp-fcpMetricValue t1"}
+                      style={{
+                        fontWeight: fontWeight.bold,
+                        color: colors.palette.blue600,
+                      }}
+                    >
+                      {formatDuration(lynxFcp.duration)}
+                    </text>
+                  </view>
+                  <text
+                    className={"pp-fcpMetricDescription t3"}
+                    style={{
+                      fontWeight: fontWeight.regular,
+                      color: colors.fg.neutralSubtle,
+                    }}
+                  >
+                    Bundle Load 시작부터 Paint End 까지 걸리는 시간
+                  </text>
+                </view>
+              )}
+
+              {fcp !== undefined && (
+                <view
+                  className={"pp-fcpMetric"}
+                  style={{ backgroundColor: colors.bg.layerDefault }}
+                >
+                  <view className={"pp-fcpMetricHeader"}>
+                    <text
+                      className={"pp-fcpMetricName t2"}
+                      style={{
+                        fontWeight: fontWeight.bold,
+                        color: colors.fg.neutral,
+                      }}
+                    >
+                      렌더링 FCP
+                    </text>
+                    <text
+                      className={"pp-fcpMetricValue t1"}
+                      style={{
+                        fontWeight: fontWeight.bold,
+                        color: colors.palette.blue600,
+                      }}
+                    >
+                      {formatDuration(fcp.duration)}
+                    </text>
+                  </view>
+                  <text
+                    className={"pp-fcpMetricDescription t3"}
+                    style={{
+                      fontWeight: fontWeight.regular,
+                      color: colors.fg.neutralSubtle,
+                    }}
+                  >
+                    TemplateBundle 준비부터 Paint End 까지 걸리는 시간
+                  </text>
+                </view>
+              )}
+            </view>
+          )}
+
+          {!!perf.rawEntry && (
+            <view
+              className={"pp-rawEntrySection"}
+              style={{ backgroundColor: colors.bg.neutralWeak }}
+            >
+              <text
+                className={"pp-detailTitle t3"}
+                style={{
+                  fontWeight: fontWeight.bold,
+                  color: colors.fg.neutral,
+                }}
+              >
+                Raw Entry
+              </text>
+              <text
+                className={"pp-rawEntry t3"}
+                style={{
+                  fontWeight: fontWeight.regular,
+                  color: colors.fg.neutralSubtle,
+                }}
+              >
+                {String(
+                  stringify(perf.rawEntry, null, 2, {
+                    references: true,
+                  }),
+                )}
+              </text>
+            </view>
+          )}
+        </view>
+      )}
+    </view>
+  );
+};

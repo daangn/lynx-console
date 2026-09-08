@@ -15,11 +15,11 @@ Lynx DevTool 没有 Network 面板。为了能在那里看到请求，网络监�
 GET 200 https://api.example.com/items 123ms  ▸ {url, method, requestHeaders, responseBody, …}
 ```
 
-失败的请求用 `console.error` 打印，DevTool CLI 的 `--level error` 能筛出来。FCP 以 `FCP 812.34ms` 的形式和原始性能 entry 一起打印。
+失败的请求用 `console.error` 打印，DevTool CLI 的 `--level error` 能筛出来。每条性能 entry 也以同样的方式打印：`pipeline loadBundle FCP 812.34ms` 加上 entry 对象。
 
-打印对象里的请求体和响应体在 2,000 个字符处截断。Network 标签页保留完整内容。
+在控制台自己的 Log 标签页里，这些行不是纯文本：网络行渲染成和 Network 标签页相同的条目（点击可看 General、Request、Response），性能行渲染成和 Perf 标签页相同的条目。
 
-想把这些行单独收进一个标签页，用 `filter: isNetworkLog` 建一个[筛选标签页](/zh/guide/customizing#把控制台日志筛进一个标签页)。
+想把这些行单独收进一个标签页，用 `filter: isNetworkLog` 或 `filter: isPerformanceLog` 建一个[筛选标签页](/zh/guide/customizing#把控制台日志筛进一个标签页)。
 
 ## 纯文本或关闭
 
@@ -29,13 +29,3 @@ GET 200 https://api.example.com/items 123ms  ▸ {url, method, requestHeaders, r
 initNetworkMonitor({ console: "plain" });
 initPerformanceMonitor({ console: false });
 ```
-
-## 一次读取全部
-
-DevTool CLI 的 `get-console` 只监听几秒，对象也只显示为 `objectId` 引用。需要完整历史时，在 DevTool 或它的 MCP 里执行：
-
-```javascript
-__LYNX_CONSOLE__.snapshot()
-```
-
-返回一个 JSON 字符串，包含最近的日志、网络 entry 和性能 entry。传 `{ limit: 50 }` 可以改变每类包含的数量（默认 100）。循环引用、`Map`、`Set`、`Error` 都会被安全序列化。

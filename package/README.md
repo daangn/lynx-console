@@ -35,7 +35,7 @@ https://github.com/user-attachments/assets/d231bdf5-71bb-483f-9bdb-5843279c1308
 - **Resizable Panel** — Drag the handle to resize the console panel (200–700px); swipe down to dismiss
 - **Tab Visibility** — Only tabs for initialized monitors are shown; uninitialized monitors are automatically hidden
 - **Custom Tabs** — Add your own tabs via the `customTabs` prop, or give a tab a `filter` to show only the console logs you care about
-- **Lynx DevTool friendly** — Network requests and FCP are also printed to the console as a summary line plus the entry, so they show up in Lynx DevTool (which has no Network panel). `__LYNX_CONSOLE__.snapshot()` returns everything collected as JSON
+- **Lynx DevTool friendly** — Network requests and FCP are also printed to the console as a summary line plus the entry, so they show up in Lynx DevTool (which has no Network panel).
 - **Light/Dark Theme** support
 
 ## Installation
@@ -162,7 +162,7 @@ Pass `renderEntry` to draw each matched entry yourself.
 
 ### Reading from Lynx DevTool
 
-Lynx DevTool has no Network panel, so each completed request is also printed as a `%c`-styled `GET 200 https://… 123ms` line plus the entry object, and FCP as `FCP 812.34ms`. Pass `initNetworkMonitor({ console: "plain" })` for unstyled text (logcat, CI) or `{ console: false }` to turn it off. For the full history, evaluate `__LYNX_CONSOLE__.snapshot()` from DevTool. Use `filter: isNetworkLog` to collect these lines in a tab.
+Lynx DevTool has no Network panel, so each completed request is also printed as a `%c`-styled `GET 200 https://… 123ms` line plus the entry object, and every performance entry as `pipeline loadBundle FCP 812.34ms`. In the console's Log tab these render as the same rows as the Network and Perf tabs. Pass `initNetworkMonitor({ console: "plain" })` for unstyled text (logcat, CI) or `{ console: false }` to turn it off. Use `filter: isNetworkLog` to collect these lines in a tab.
 
 ### Controlling with ref
 

@@ -51,10 +51,6 @@ Tabs are only rendered for monitors that were initialized.
 
 `options.console` (default `true`) also prints each collected entry to the console as a `%c`-styled summary line plus the entry object, so it shows up in Lynx DevTool. `"plain"` prints unstyled text, `false` prints nothing. See [Lynx DevTool](/guide/devtool).
 
-## `isNetworkLog(entry)`
+## `isNetworkLog(entry)` / `isPerformanceLog(entry)`
 
-Returns whether a `LogEntry` is a line the network monitor printed. Meant for a filter tab: `filter: isNetworkLog`.
-
-## `__LYNX_CONSOLE__.snapshot(options?)`
-
-Global function, available once any monitor is initialized. Returns a JSON string with the latest logs, network entries, and performance entries. `options.limit` (default `100`) caps each collection. Meant to be evaluated from Lynx DevTool.
+Return whether a `LogEntry` is a line the network or performance monitor printed. Meant for a filter tab: `filter: isNetworkLog`.

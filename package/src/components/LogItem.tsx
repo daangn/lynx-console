@@ -2,8 +2,14 @@ import { stringify } from "javascript-stringify";
 import { useThemeColors } from "../styles/ThemeContext";
 import { fontWeight, type ThemeColors } from "../styles/theme";
 import type { LogEntry, LogLevel } from "../types";
+import {
+  getNetworkLogEntry,
+  getPerformanceLogEntry,
+} from "../utils/networkLog";
 import { parseConsoleArgs } from "../utils/parseFormat";
 import "./ConsolePanel.css";
+import { NetworkLogRow } from "./NetworkLogRow";
+import { PerformanceLogRow } from "./PerformanceLogRow";
 
 export function getLevelColor(colors: ThemeColors, level: LogLevel): string {
   switch (level) {
@@ -63,6 +69,32 @@ interface LogItemProps {
 // Log 탭과 필터 탭이 같이 쓰는 로그 한 줄이에요
 export const LogItem = ({ log, expandedArgs, toggleArg }: LogItemProps) => {
   const colors = useThemeColors();
+
+  // 네트워크 모니터가 찍은 로그는 Network 탭 항목과 같은 UI 로 보여줘요
+  const network = getNetworkLogEntry(log);
+  if (network) {
+    const key = `${log.id}-network`;
+    return (
+      <NetworkLogRow
+        network={network}
+        expanded={expandedArgs.has(key)}
+        onToggle={() => toggleArg(key)}
+      />
+    );
+  }
+
+  // 성능 모니터가 찍은 로그는 Perf 탭 항목과 같은 UI 로 보여줘요
+  const perf = getPerformanceLogEntry(log);
+  if (perf) {
+    const key = `${log.id}-performance`;
+    return (
+      <PerformanceLogRow
+        perf={perf}
+        expanded={expandedArgs.has(key)}
+        onToggle={() => toggleArg(key)}
+      />
+    );
+  }
 
   const renderArg = (
     arg: unknown,

@@ -122,7 +122,6 @@ export type {
   LogFilter,
   LogLevel,
   MonitorConsoleOptions,
-  SnapshotOptions,
 } from "./types";
-export { isNetworkLog } from "./utils/networkLog";
+export { isNetworkLog, isPerformanceLog } from "./utils/networkLog";
 export default LynxConsole;

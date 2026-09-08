@@ -35,7 +35,7 @@ https://github.com/user-attachments/assets/d231bdf5-71bb-483f-9bdb-5843279c1308
 - **可调整面板** — 拖动手柄调整控制台面板高度（200–700px）；向下滑动即可关闭
 - **标签页自动隐藏** — 只显示已初始化的监视器对应的标签页，没有初始化的不会出现
 - **自定义标签页** — 通过 `customTabs` prop 添加自己的标签页，或者给标签页一个 `filter`，只看你关心的控制台日志
-- **对 Lynx DevTool 友好** — 网络请求和 FCP 也会以一行摘要加 entry 的形式打印到控制台，所以在没有 Network 面板的 Lynx DevTool 里也能看到。`__LYNX_CONSOLE__.snapshot()` 以 JSON 返回收集到的全部内容
+- **对 Lynx DevTool 友好** — 网络请求和 FCP 也会以一行摘要加 entry 的形式打印到控制台，所以在没有 Network 面板的 Lynx DevTool 里也能看到。
 - 支持**浅色/深色主题**
 
 ## 安装
@@ -162,7 +162,7 @@ console.log("%ctrack%c screen_view", "color:#db2777;font-weight:bold", "", { scr
 
 ### 在 Lynx DevTool 里查看
 
-Lynx DevTool 没有 Network 面板，所以每个完成的请求也会打印一行带 `%c` 样式的 `GET 200 https://… 123ms` 和 entry 对象，FCP 打印为 `FCP 812.34ms`。`initNetworkMonitor({ console: "plain" })` 打印无样式文本（logcat、CI），`{ console: false }` 则关闭。需要完整历史时，在 DevTool 里执行 `__LYNX_CONSOLE__.snapshot()`。想把这些行收进一个标签页，用 `filter: isNetworkLog`。
+Lynx DevTool 没有 Network 面板，所以每个完成的请求也会打印一行带 `%c` 样式的 `GET 200 https://… 123ms` 和 entry 对象，每条性能 entry 打印为 `pipeline loadBundle FCP 812.34ms`。在控制台的 Log 标签页里，它们渲染成和 Network、Perf 标签页相同的条目。`initNetworkMonitor({ console: "plain" })` 打印无样式文本（logcat、CI），`{ console: false }` 则关闭。想把这些行收进一个标签页，用 `filter: isNetworkLog`。
 
 ### 用 ref 控制
 

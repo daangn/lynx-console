@@ -1,0 +1,14 @@
+.section {
+  display: flex;
+  flex-direction: column;
+  padding-top: 24px;
+}
+
+.section-title {
+  padding: 0 20px 6px 20px;
+}
+
+.section-rows {
+  display: flex;
+  flex-direction: column;
+}

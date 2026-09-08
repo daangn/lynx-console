@@ -1,0 +1,61 @@
+/* 화면 전체에서 재사용하는 텍스트 · 색이에요. 회색 스케일은 Seed 팔레트를 따라가요. */
+
+.app-title {
+  font-size: 24px;
+  line-height: 32px;
+  font-weight: 700;
+  color: #212124;
+}
+
+.app-subtitle {
+  font-size: 14px;
+  line-height: 20px;
+  color: #909090;
+}
+
+.app-sectionTitle {
+  font-size: 13px;
+  line-height: 18px;
+  font-weight: 700;
+  color: #909090;
+}
+
+.app-label {
+  font-size: 15px;
+  line-height: 22px;
+  font-weight: 500;
+  color: #212124;
+}
+
+.app-caption {
+  font-size: 13px;
+  line-height: 18px;
+  color: #909090;
+}
+
+.app-meta {
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 600;
+  color: #adadad;
+}
+
+/* 메타 텍스트 강조색 (HTTP 메서드 등) */
+.app-metaFg-blue {
+  color: #1b6ef3;
+}
+.app-metaFg-green {
+  color: #00a05b;
+}
+.app-metaFg-purple {
+  color: #7048e8;
+}
+.app-metaFg-red {
+  color: #e5343d;
+}
+.app-metaFg-pink {
+  color: #d6336c;
+}
+.app-metaFg-orange {
+  color: #ff6f0f;
+}

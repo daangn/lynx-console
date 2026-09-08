@@ -1,0 +1,9 @@
+/* 누름 피드백 (usePressFeedback) 전용 스타일이에요. */
+.pressable {
+  display: flex;
+  transition: transform 120ms cubic-bezier(0.2, 0, 0, 1);
+}
+
+.pressable--pressed {
+  transform: scale(0.98);
+}

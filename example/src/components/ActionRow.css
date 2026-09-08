@@ -1,0 +1,24 @@
+.actionRow {
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 20px;
+  /* 줄 사이 구분선이에요. 섹션 마지막 줄에서는 섹션 경계선 역할을 해요 */
+  border-bottom: 1px solid #f2f2f2;
+}
+
+.actionRow--pressed {
+  background-color: #f7f7f8;
+}
+
+.actionRow-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  flex-grow: 1;
+  flex-shrink: 1;
+}
+
+.actionRow-meta {
+  flex-shrink: 0;
+}

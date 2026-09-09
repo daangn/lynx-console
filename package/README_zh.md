@@ -32,7 +32,8 @@ https://github.com/user-attachments/assets/edda4778-ab8d-4cb9-a3c5-bd8c42c81bde
 https://github.com/user-attachments/assets/d231bdf5-71bb-483f-9bdb-5843279c1308
 
 - **悬浮按钮** — 显示最新的 FCP 数值；点击打开控制台，长按拖动可以改变位置
-- **可调整面板** — 拖动手柄调整控制台面板高度（200–700px）；向下滑动即可关闭
+- **可调整面板** — 拖动手柄调整大小：底部弹层调整高度（200–700px），侧边面板调整宽度（280–720px）；向外拖动即可关闭。触摸和 web 上的鼠标都支持
+- **自适应布局** — 竖屏时作为底部弹层打开；当 LynxView 宽度大于高度时（展开的折叠屏、平板、横屏）作为右侧面板打开
 - **标签页自动隐藏** — 只显示已初始化的监视器对应的标签页，没有初始化的不会出现
 - **自定义标签页** — 通过 `customTabs` prop 添加自己的标签页，或者给标签页一个 `filter`，只看你关心的控制台日志
 - **对 Lynx DevTool 友好** — 网络请求和 FCP 也会以一行摘要加 entry 的形式打印到控制台，所以在没有 Network 面板的 Lynx DevTool 里也能看到。
@@ -205,6 +206,7 @@ function App() {
 | --------------------- | ------------------- | ----------- | -------------------------------- |
 | `theme`               | `"light" \| "dark"` | `"light"`   | 控制台 UI 主题                   |
 | `safeAreaInsetBottom` | `string`            | `"50px"`    | 底部安全区域内边距               |
+| `safeAreaInsetTop`    | `string`            | `"24px"`    | 顶部安全区域内边距（仅侧边面板）        |
 | `customTabs`          | `CustomTab[]`       | `undefined` | 要在控制台里额外显示的自定义标签页 |
 | `initialPosition`     | `{ top?: number; left?: number; right?: number; bottom?: number }` | `{ right: 16, bottom: 84 }` | 悬浮按钮的初始位置（px）。四个方向互相独立，所以可以吸附到任意一个角（例如 `{ top: 50, left: 16 }`）。同时设置 `top`/`bottom`（或 `left`/`right`）时，`top`/`left` 生效。用户拖动过按钮之后，保存下来的位置优先。 |
 

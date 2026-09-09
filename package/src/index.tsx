@@ -11,6 +11,7 @@ import "./components/FloatingButton.css";
 import "./styles/tokens.css";
 import { FloatingButton } from "./components/FloatingButton.jsx";
 import { useLatestFcp } from "./hooks/useLatestFcp";
+import { useViewport } from "./hooks/useViewport";
 import { isWebPlatform } from "./shared/isWebPlatform";
 import { ThemeProvider } from "./styles/ThemeContext";
 import { getColors } from "./styles/theme";
@@ -25,6 +26,7 @@ export interface LynxConsoleHandle {
 export interface LynxConsoleProps {
   theme?: "light" | "dark";
   safeAreaInsetBottom?: string;
+  safeAreaInsetTop?: string;
   customTabs?: CustomTab[];
   initialPosition?: {
     top?: number;
@@ -39,6 +41,7 @@ const LynxConsole = forwardRef<LynxConsoleHandle, LynxConsoleProps>(
     {
       theme = "light",
       safeAreaInsetBottom = "50px",
+      safeAreaInsetTop,
       customTabs,
       initialPosition,
     },
@@ -47,10 +50,24 @@ const LynxConsole = forwardRef<LynxConsoleHandle, LynxConsoleProps>(
     const [isOpen, setIsOpen] = useState(false);
     const [shouldClose, setShouldClose] = useState(false);
     const latestFcp = useLatestFcp();
+    const {
+      width: viewportWidth,
+      height: viewportHeight,
+      measure,
+    } = useViewport();
+    // 가로가 세로보다 긴 화면(펼친 폴더블 · 태블릿 · 가로모드)에서는
+    // 바텀시트가 너무 납작해져서 사이드 패널로 열어요
+    const layout =
+      viewportWidth !== undefined &&
+      viewportHeight !== undefined &&
+      viewportWidth > viewportHeight
+        ? "side"
+        : "bottom";
     const colors = useMemo(() => getColors(theme), [theme]);
 
     useImperativeHandle(ref, () => ({
       open: () => {
+        measure();
         setIsOpen(true);
         setShouldClose(false);
       },
@@ -61,6 +78,7 @@ const LynxConsole = forwardRef<LynxConsoleHandle, LynxConsoleProps>(
     }));
 
     const handleOpenBottomSheet = () => {
+      measure();
       setIsOpen(true);
       setShouldClose(false);
     };
@@ -104,6 +122,9 @@ const LynxConsole = forwardRef<LynxConsoleHandle, LynxConsoleProps>(
               shouldClose={shouldClose}
               onClose={handleCloseBottomSheet}
               safeAreaInsetBottom={safeAreaInsetBottom}
+              safeAreaInsetTop={safeAreaInsetTop}
+              layout={layout}
+              viewportWidth={viewportWidth}
             >
               <ConsolePanel customTabs={customTabs} />
             </BottomSheet>

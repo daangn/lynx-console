@@ -113,3 +113,18 @@ function App() {
 ```
 
 `safeAreaInsetBottom` 기본값은 `"50px"` 이에요.
+
+## 가로가 넓은 화면의 사이드 패널
+
+LynxView의 가로가 세로보다 넓으면 오른쪽에 붙는 사이드 패널로 열려요.
+
+기준은 기기가 아니라 LynxView 예요. 열 때 root 를 재고 `onWindowResize` 를 따라가서, 접거나 회전하면
+두 모양 사이를 오가요.
+
+사이드 패널은 화면 맨 위까지 올라오니 콘텐츠에 `safeAreaInsetTop`(기본 `"24px"`) 만큼 여백을 둬요.
+호스트의 상태바 높이가 다르면 값을 넘겨요.
+
+```tsx
+<LynxConsole safeAreaInsetTop="44px" />
+```
+

@@ -11,6 +11,7 @@ description: props, handle, 모니터 초기화 함수예요.
 | --- | --- | --- | --- |
 | `theme` | `"light" \| "dark"` | `"light"` | 콘솔 UI 테마예요. |
 | `safeAreaInsetBottom` | `string` | `"50px"` | 패널 하단 세이프 에어리어 값이에요. |
+| `safeAreaInsetTop` | `string` | `"24px"` | 상단 세이프 에어리어 값이에요. 사이드 패널로 열릴 때만 써요(아래 참고). |
 | `customTabs` | `CustomTab[]` | `undefined` | 콘솔에 추가로 표시할 탭이에요. |
 | `initialPosition` | `{ top?: number; left?: number; right?: number; bottom?: number }` | `{ right: 16, bottom: 84 }` | 플로팅 버튼의 초기 위치(px)예요. 각 변이 독립적이라 원하는 모서리에 붙일 수 있어요(예: `{ top: 50, left: 16 }`). `top`과 `bottom` (또는 `left`와 `right`)을 함께 주면 `top` / `left`가 이겨요. 사용자가 버튼을 드래그한 뒤에는 저장된 위치가 우선해요. |
 

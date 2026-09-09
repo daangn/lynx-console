@@ -68,3 +68,52 @@
   flex-direction: column;
   padding: 12px 16px 16px;
 }
+
+/* 가로가 더 긴 화면에서는 오른쪽 사이드 패널로 열려요 */
+.bs-overlay--side {
+  justify-content: flex-end;
+  align-items: stretch;
+}
+
+.bs-content--side {
+  flex: none;
+  height: 100%;
+  width: 420px;
+  border-top-left-radius: 24px;
+  border-top-right-radius: 0;
+  border-bottom-left-radius: 24px;
+}
+
+/* 세로 방향 리사이즈 핸들이에요. 왼쪽 가장자리를 잡고 너비를 조절해요 */
+.bs-handleContainer--side {
+  top: 0;
+  bottom: 0;
+  right: auto;
+  width: 24px;
+  height: auto;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.bs-handle--side {
+  width: 4px;
+  height: 36px;
+  margin-top: 0;
+  margin-left: 10px;
+}
+
+.bs-body--side {
+  /* padding-top 은 safeAreaInsetTop 으로 덮어써요 */
+  padding: 0 16px 0 24px;
+}
+
+/* web에서 드래그 중 커서가 핸들을 벗어나도 mousemove/mouseup을 받는 투명 오버레이예요 */
+.bs-dragOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 100;
+}

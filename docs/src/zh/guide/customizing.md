@@ -113,3 +113,18 @@ function App() {
 ```
 
 `safeAreaInsetBottom` 默认是 `"50px"`。
+
+## 宽屏上的侧边面板
+
+当 LynxView 的宽度大于高度时，控制台会作为贴在右侧的侧边面板打开。
+
+判断依据是 LynxView 而不是设备：控制台在打开时测量 root，并跟随 `onWindowResize`，
+所以折叠或旋转会在两种形态之间切换。
+
+侧边面板会一直顶到屏幕上方，因此内容会留出 `safeAreaInsetTop`（默认 `"24px"`）的内边距。
+如果宿主的状态栏高度不同，可以自行传入。
+
+```tsx
+<LynxConsole safeAreaInsetTop="44px" />
+```
+

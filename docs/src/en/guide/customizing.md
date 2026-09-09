@@ -113,3 +113,18 @@ Once the user drags the button, the dragged position wins over `initialPosition`
 ```
 
 `safeAreaInsetBottom` defaults to `"50px"`.
+
+## Side panel on wide screens
+
+When the LynxView is wider than it is tall, the console opens as a panel docked to the right edge.
+
+The layout follows the LynxView, not the device: the console measures the root on open and follows
+`onWindowResize`, so folding or rotating switches it between the two shapes.
+
+Because a side panel reaches the top of the screen, its content is inset by `safeAreaInsetTop` (`"24px"` by
+default). Pass the status bar height of your host if that default does not fit.
+
+```tsx
+<LynxConsole safeAreaInsetTop="44px" />
+```
+

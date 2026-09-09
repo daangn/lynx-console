@@ -11,6 +11,7 @@ description: Props, the console handle, and the monitor init functions.
 | --- | --- | --- | --- |
 | `theme` | `"light" \| "dark"` | `"light"` | Console UI theme. |
 | `safeAreaInsetBottom` | `string` | `"50px"` | Bottom safe area inset for the panel. |
+| `safeAreaInsetTop` | `string` | `"24px"` | Top safe area inset, used only when the console opens as a side panel (see below). |
 | `customTabs` | `CustomTab[]` | `undefined` | Extra tabs to show in the console. |
 | `initialPosition` | `{ top?: number; left?: number; right?: number; bottom?: number }` | `{ right: 16, bottom: 84 }` | Initial position (px) of the floating button. Each side is independent, so you can anchor it to any corner (e.g. `{ top: 50, left: 16 }`). When both `top` and `bottom` (or both `left` and `right`) are given, `top` / `left` win. Once the user drags the button, the saved position takes precedence. |
 

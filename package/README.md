@@ -32,7 +32,8 @@ https://github.com/user-attachments/assets/edda4778-ab8d-4cb9-a3c5-bd8c42c81bde
 https://github.com/user-attachments/assets/d231bdf5-71bb-483f-9bdb-5843279c1308
 
 - **Floating Button** — Displays the latest FCP value; tap to open the console, long-press and drag to reposition it
-- **Resizable Panel** — Drag the handle to resize the console panel (200–700px); swipe down to dismiss
+- **Resizable Panel** — Drag the handle to resize the console panel — height as a bottom sheet (200–700px), width as a side panel (280–720px); drag it outward to dismiss. Works with touch and with the mouse on web
+- **Adaptive Layout** — Opens as a bottom sheet on tall screens and as a right side panel when the LynxView is wider than it is tall (unfolded foldable, tablet, landscape)
 - **Tab Visibility** — Only tabs for initialized monitors are shown; uninitialized monitors are automatically hidden
 - **Custom Tabs** — Add your own tabs via the `customTabs` prop, or give a tab a `filter` to show only the console logs you care about
 - **Lynx DevTool friendly** — Network requests and FCP are also printed to the console as a summary line plus the entry, so they show up in Lynx DevTool (which has no Network panel).
@@ -205,6 +206,7 @@ You can also integrate it with a back press handler so that the console closes w
 | --------------------- | ------------------- | ----------- | ------------------------------------------------ |
 | `theme`               | `"light" \| "dark"` | `"light"`   | Console UI theme                                 |
 | `safeAreaInsetBottom` | `string`            | `"50px"`    | Bottom safe area inset                           |
+| `safeAreaInsetTop`    | `string`            | `"24px"`    | Top safe area inset (side panel layout only)     |
 | `customTabs`          | `CustomTab[]`       | `undefined` | Additional custom tabs to display in the console |
 | `initialPosition`     | `{ top?: number; left?: number; right?: number; bottom?: number }` | `{ right: 16, bottom: 84 }` | Initial position (px) of the floating button. Each side is independent, so you can anchor it to any corner (e.g. `{ top: 50, left: 16 }`). When both `top` and `bottom` (or both `left` and `right`) are set, `top`/`left` win. Once the user drags the button, the saved position takes precedence. |
 

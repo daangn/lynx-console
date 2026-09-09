@@ -33,7 +33,8 @@ https://github.com/user-attachments/assets/edda4778-ab8d-4cb9-a3c5-bd8c42c81bde
 https://github.com/user-attachments/assets/d231bdf5-71bb-483f-9bdb-5843279c1308
 
 - **플로팅 버튼** — 최신 FCP 수치를 표시하며, 탭하면 콘솔을 열고, 길게 눌러 드래그하면 위치를 이동할 수 있어요
-- **크기 조절 패널** — 핸들을 드래그해 콘솔 패널 높이를 조절하고(200–700px), 아래로 내리면 닫혀요
+- **크기 조절 패널** — 핸들을 드래그해 크기를 조절해요. 바텀시트는 높이(200–700px), 사이드 패널은 너비(280–720px)를 조절하고 바깥쪽으로 밀면 닫혀요. 터치와 web 의 마우스 둘 다 돼요
+- **화면에 맞는 레이아웃** — 세로가 긴 화면에서는 바텀시트로, LynxView 가 가로로 더 넓으면(펼친 폴더블 · 태블릿 · 가로 모드) 오른쪽 사이드 패널로 열려요
 - **탭 자동 숨김** — 초기화된 모니터의 탭만 표시되고, 초기화하지 않은 모니터의 탭은 표시되지 않아요
 - **커스텀 탭** — `customTabs` prop으로 직접 만든 탭을 추가하거나, `filter`를 줘서 보고 싶은 콘솔 로그만 모아 볼 수 있어요
 - **Lynx DevTool 연동** — 네트워크 요청과 FCP를 요약 한 줄과 엔트리로 콘솔에도 찍어서, Network 패널이 없는 Lynx DevTool에서도 볼 수 있어요.
@@ -206,6 +207,7 @@ back press 핸들러와 연동해서 뒤로 가기 버튼을 눌렀을 때 콘�
 | --------------------- | ------------------- | ----------- | ---------------------------- |
 | `theme`               | `"light" \| "dark"` | `"light"`   | 콘솔 UI 테마                 |
 | `safeAreaInsetBottom` | `string`            | `"50px"`    | 하단 Safe Area 여백          |
+| `safeAreaInsetTop`    | `string`            | `"24px"`    | 상단 Safe Area 여백 (사이드 패널일 때만) |
 | `customTabs`          | `CustomTab[]`       | `undefined` | 콘솔에 추가할 커스텀 탭 목록 |
 | `initialPosition`     | `{ top?: number; left?: number; right?: number; bottom?: number }` | `{ right: 16, bottom: 84 }` | 플로팅 버튼의 초기 위치(px). 네 방향 중 명시한 값만 적용되어 원하는 모서리에 붙일 수 있어요(예: `{ top: 50, left: 16 }`). `top`/`bottom` 또는 `left`/`right`가 둘 다 들어오면 `top`/`left`가 이겨요. 사용자가 한번 드래그하면 그 위치가 저장되어 우선해요. |
 

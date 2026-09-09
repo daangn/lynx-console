@@ -1,9 +1,14 @@
 import { lazy, Suspense } from '@lynx-js/react';
+import { ActionRow, ActionRowContent, Section } from './components';
+import { usePressFeedback } from './hooks/usePressFeedback';
 import './App.css';
 
 const LynxConsole = lazy(() => import('lynx-console'));
 
 const App = () => {
+  // main-thread 핸들러(worklet)는 컴포넌트 prop 으로 넘기면 깨져서, 이 줄만 <view> 를 직접 만들어요
+  const mainThreadRowPress = usePressFeedback('actionRow--pressed');
+
   const testConsoleLog = () => {
     console.log(
       'This is a log message',
@@ -130,135 +135,130 @@ const App = () => {
   return (
     <view className="app-container">
       <list className="app-list" scroll-orientation="vertical">
+        <list-item item-key="hero">
+          <view className="app-hero">
+            <text className="app-title">lynx-console</text>
+            <text className="app-subtitle">
+              아래 항목을 눌러 로그와 네트워크 요청을 만들고, 오른쪽 아래 플로팅
+              버튼으로 콘솔을 열어 확인해보세요.
+            </text>
+          </view>
+        </list-item>
+
         <list-item item-key="section-console">
-          <view className="app-section">
-            <text className="app-sectionTitle">Console Tests</text>
-            <view
+          <Section title="콘솔">
+            <ActionRow
+              label="Console Log"
+              caption="객체 · Map · Set 을 함께 출력해요"
+              meta="log"
               bindtap={testConsoleLog}
-              className="app-baseButton app-consoleButton"
-            >
-              <text className="app-buttonText app-consoleButtonText">
-                Test Console Log
-              </text>
-            </view>
-            <view
+            />
+            <ActionRow
+              label="CSS Console Log"
+              caption="서식 지정자(%c %s %d %o)를 렌더링해요"
+              meta="log"
               bindtap={testCssConsoleLog}
-              className="app-baseButton app-consoleButton"
-            >
-              <text className="app-buttonText app-consoleButtonText">
-                Test CSS Console Log
-              </text>
-            </view>
+            />
             <view
-              bindtap={() => {
-                throw new Error('Test Error');
-              }}
-              className="app-baseButton app-consoleButton"
+              className={`${mainThreadRowPress.className} actionRow`}
+              main-thread:bindtap={testConsoleLogInMainThread}
+              {...mainThreadRowPress.handlers}
             >
-              <text className="app-buttonText app-consoleButtonText">
-                Test throw error
-              </text>
+              <ActionRowContent
+                label="Console Log"
+                caption="메인 스레드에서 남기는 로그예요"
+                meta="main thread"
+              />
             </view>
-            <view
+            <ActionRow
+              label="Console Error"
+              caption="console.error 한 줄을 남겨요"
+              meta="error"
+              tone="red"
               bindtap={() => {
                 console.error('Test console error');
               }}
-              className="app-baseButton app-consoleButton"
-            >
-              <text className="app-buttonText app-consoleButtonText">
-                Test console error
-              </text>
-            </view>
-            <view
-              main-thread:bindtap={testConsoleLogInMainThread}
-              className="app-baseButton app-consoleButton"
-            >
-              <text className="app-buttonText app-consoleButtonText">
-                Test Console Log (Main Thread)
-              </text>
-            </view>
-          </view>
+            />
+            <ActionRow
+              label="Throw Error"
+              caption="처리되지 않은 예외를 던져요"
+              meta="error"
+              tone="red"
+              bindtap={() => {
+                throw new Error('Test Error');
+              }}
+            />
+          </Section>
         </list-item>
 
         <list-item item-key="section-track">
-          <view className="app-section">
-            <text className="app-sectionTitle">Filter Tab Tests</text>
-            <view
+          <Section title="필터 탭">
+            <ActionRow
+              label="screen_view"
+              caption="Track 탭에만 모이는 커스텀 로그예요"
+              meta="track"
+              tone="pink"
               bindtap={() => testTrackEvent('screen_view')}
-              className="app-baseButton app-consoleButton"
-            >
-              <text className="app-buttonText app-consoleButtonText">
-                Track screen_view
-              </text>
-            </view>
-            <view
+            />
+            <ActionRow
+              label="button_click"
+              caption="Track 탭에만 모이는 커스텀 로그예요"
+              meta="track"
+              tone="pink"
               bindtap={() => testTrackEvent('button_click')}
-              className="app-baseButton app-consoleButton"
-            >
-              <text className="app-buttonText app-consoleButtonText">
-                Track button_click
-              </text>
-            </view>
-          </view>
+            />
+          </Section>
         </list-item>
 
         <list-item item-key="section-network">
-          <view className="app-section">
-            <text className="app-sectionTitle">Network Tests</text>
-            <view
+          <Section title="네트워크">
+            <ActionRow
+              label="jsonplaceholder /posts/1"
+              caption="목록 한 건을 받아와요"
+              method="GET"
               bindtap={testGetRequest}
-              className="app-baseButton app-getButton"
-            >
-              <text className="app-buttonText app-getButtonText">
-                GET Request
-              </text>
-            </view>
-            <view
+            />
+            <ActionRow
+              label="jsonplaceholder /posts"
+              caption="새 글을 만들어요"
+              method="POST"
               bindtap={testPostRequest}
-              className="app-baseButton app-postButton"
-            >
-              <text className="app-buttonText app-postButtonText">
-                POST Request
-              </text>
-            </view>
-            <view
+            />
+            <ActionRow
+              label="jsonplaceholder /posts/1"
+              caption="제목만 바꿔요"
+              method="PATCH"
               bindtap={testPatchRequest}
-              className="app-baseButton app-patchButton"
-            >
-              <text className="app-buttonText app-patchButtonText">
-                PATCH Request
-              </text>
-            </view>
-            <view
+            />
+            <ActionRow
+              label="jsonplaceholder /posts/1"
+              caption="한 건을 지워요"
+              method="DELETE"
               bindtap={testDeleteRequest}
-              className="app-baseButton app-deleteButton"
-            >
-              <text className="app-buttonText app-deleteButtonText">
-                DELETE Request
-              </text>
-            </view>
-            <view
+            />
+            <ActionRow
+              label="graphql.org /graphql"
+              caption="graphql-response+json 응답이에요"
+              method="POST"
               bindtap={testGraphqlRequest}
-              className="app-baseButton app-graphqlButton"
-            >
-              <text className="app-buttonText app-graphqlButtonText">
-                GraphQL Request
-              </text>
-            </view>
+            />
+          </Section>
+        </list-item>
+
+        <list-item item-key="section-list-header">
+          <view className="section">
+            <text className="section-title app-sectionTitle">스크롤 목록</text>
           </view>
         </list-item>
 
         {Array.from({ length: 20 }, (_, i) => (
           <list-item item-key={`item-${i}`} key={`item-${i}`}>
-            <view
+            <ActionRow
+              label={`List Item ${i + 1}`}
+              meta="log"
               bindtap={() => console.log(`Item ${i + 1} tapped`)}
-              className="app-baseButton app-consoleButton"
-              style={{ margin: '4px 16px' }}
-            >
-              <text className="app-buttonText app-consoleButtonText">
-                List Item {i + 1}
-              </text>
-            </view>
+            />
+            {i === 19 ? <view className="app-listBottomSpace" /> : null}
           </list-item>
         ))}
       </list>
@@ -279,24 +279,15 @@ const App = () => {
               key: 'debug',
               label: 'Debug',
               renderContent: () => (
-                <view
-                  style={{
-                    padding: '16px',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '8px',
-                  }}
-                >
-                  <view
+                <view className="app-debugPanel">
+                  <ActionRow
+                    label="Log globalProps"
+                    caption="lynx.__globalProps 를 출력해요"
+                    meta="log"
                     bindtap={() => {
                       console.log(lynx.__globalProps);
                     }}
-                    className="app-baseButton app-consoleButton"
-                  >
-                    <text className="app-buttonText app-consoleButtonText">
-                      Log globalProps
-                    </text>
-                  </view>
+                  />
                 </view>
               ),
             },

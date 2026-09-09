@@ -1,5 +1,29 @@
 # lynx-console
 
+## 0.10.0
+
+### Minor Changes
+
+- 3b73297: LynxView 의 가로가 세로보다 넓으면(펼친 폴더블 · 태블릿 · 가로 모드) 콘솔을 바텀시트 대신 오른쪽 사이드 패널로 열어요. 왼쪽 핸들로 너비를 조절하고 오른쪽으로 밀어 닫아요. 사이드 패널의 상단 여백은 `safeAreaInsetTop`(기본 `"24px"`) 으로 조절해요.
+  핸들 드래그는 web 에서도 마우스로 동작해요. 사이드 패널의 너비와 바텀시트의 높이 모두 조절돼요.
+- aeda056: 네트워크 요청과 성능 엔트리를 `%c`로 꾸민 요약 한 줄과 엔트리 객체로 콘솔에도 찍어요 (Lynx DevTool에서 보려고요). `initNetworkMonitor({ console: "plain" })`이면 스타일 없는 텍스트로, `false`면 안 찍어요.
+  Log 탭에서는 이 로그들이 Network · Perf 탭 항목과 같은 UI로 그려져요.
+  커스텀 탭에 `filter`를 주면 조건에 맞는 콘솔 로그만 모아 보여줘요. `renderEntry`로 한 줄을 직접 그릴 수도 있고, `isNetworkLog` · `isPerformanceLog`로 모니터 로그만 고를 수 있어요.
+  바텀시트의 "Lynx Console" 제목을 없앴어요.
+
+### Patch Changes
+
+- b2aba5a: README 중국어(간체) 번역을 추가하고, 세 README 의 언어 전환 줄을 맞췄어요
+- f04b6a9: web에서 플로팅 버튼 드래그 지원
+
+  데스크톱 브라우저는 touch 이벤트를 만들지 않아 `catchtouchstart/move/end`에만 의존하던 드래그가 web에서 아예 시작되지 않던 문제를 고쳤어요. 네이티브 touch 경로는 그대로예요.
+
+  - web에서 `mousedown/mousemove/mouseup`으로 동일한 드래그 상태 머신을 구동 (`useDrag`)
+  - 커서가 버튼 밖으로 벗어나도 포인터를 계속 추적하도록, 누르고 있는 동안만 전체 화면 오버레이를 렌더 (`FloatingButton`)
+  - web의 touch 이벤트는 네이티브와 달리 `detail.x/y`가 없어 `changedTouches` 좌표를 사용하도록 변경 (`useDrag`)
+  - 드래그 직후 이어지는 `click`으로 콘솔이 열리지 않도록 기존 `recentDrag` 가드를 마우스 경로에도 적용, `touchend`와 `bindtap`이 탭을 중복 처리하지 않도록 정리 (`useDrag`)
+  - reload 버튼을 누를 때 드래그가 시작되지 않도록 web에서 `mousedown`도 차단 (`FloatingButton`)
+
 ## 0.9.0
 
 ### Minor Changes

@@ -4253,10 +4253,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"devalue@npm:^5.6.4":
-  version: 5.6.4
-  resolution: "devalue@npm:5.6.4"
-  checksum: 10c0/0c1bbe036945e55c5f6d54f52bb1a99b19677dd48a8404517fbddb02e725803457bed6317d2c05292d68767914ba319a6a645dbfdf8ade65d687ab430bfc2ae1
+"devalue@npm:^5.9.1":
+  version: 5.9.1
+  resolution: "devalue@npm:5.9.1"
+  checksum: 10c0/051254fbd21cd3ee90de325e038a76ea84d2102d27344043a0f861c7d5c8212dbda63979f053ac2d627d83cf33c42b62d301b0b82b4e6a4c6ea539d8feba87e7
   languageName: node
   linkType: hard
 
@@ -6297,7 +6297,7 @@ __metadata:
     "@lynx-js/react": "npm:^0.117.0"
     "@lynx-js/types": "npm:^3.9.0"
     "@types/react": "npm:^18.3.28"
-    devalue: "npm:^5.6.4"
+    devalue: "npm:^5.9.1"
     javascript-stringify: "npm:^2.1.0"
     react: "npm:^18.3.1"
     tsdown: "npm:^0.20.1"

@@ -19,6 +19,9 @@ The search box looks at the printed text as well as the URL, headers and body of
 network row is expanded on the section that matched, with the hit highlighted. The query is shared with the
 network-only view, so it survives switching tabs.
 
+While you scroll up to read, the list stops following new logs. It counts what piled up as `N new ↓`; tap it to
+jump back to the bottom.
+
 ## Adding your own tab
 
 You can put any debugging information you need into a console tab. A tab with `renderContent`

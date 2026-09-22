@@ -175,6 +175,7 @@ export const ConsolePanel = ({ customTabs }: ConsolePanelProps) => {
     return (
       <LogPanel
         logs={filteredLogs}
+        allEntries={entries}
         totalCount={entries.length}
         clearLogs={clearAll}
         renderEntry={renderEntry}

@@ -1,4 +1,4 @@
-import { useRef, useState } from "@lynx-js/react";
+import { useContext, useRef, useState } from "@lynx-js/react";
 import type { BaseTouchEvent, Target } from "@lynx-js/types";
 import { isWebPlatform } from "../shared/isWebPlatform";
 import {
@@ -8,6 +8,13 @@ import {
   type WebMouseEvent,
 } from "../utils/pointerEvent";
 
+import {
+  FloatingButtonPositionContext,
+  type InitialPosition,
+} from "./FloatingButtonPositionContext";
+
+export type { InitialPosition } from "./FloatingButtonPositionContext";
+
 const MOVE_THRESHOLD = 5;
 
 const DEFAULT_RIGHT = 16;
@@ -15,13 +22,6 @@ const DEFAULT_BOTTOM = 84;
 
 type VerticalAxis = "top" | "bottom";
 type HorizontalAxis = "left" | "right";
-
-export interface InitialPosition {
-  top?: number;
-  left?: number;
-  right?: number;
-  bottom?: number;
-}
 
 interface ResolvedAnchors {
   vertical: VerticalAxis;
@@ -66,7 +66,8 @@ export function useFloatingButtonDrag({
   onTap,
   initialPosition,
 }: UseFloatingButtonDragOptions) {
-  const anchors = resolveAnchors(initialPosition);
+  const inheritedPosition = useContext(FloatingButtonPositionContext);
+  const anchors = resolveAnchors(initialPosition ?? inheritedPosition);
 
   // 저장된 위치는 anchor 조합이 동일할 때만 복원해요.
   const snapshot = saved;

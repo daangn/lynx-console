@@ -165,7 +165,7 @@ import LynxConsole from 'lynx-console';
 />
 ```
 
-### 2. 添加拖动和重新加载按钮
+### 2. 添加重新加载按钮和拖动
 
 在按钮组件中使用公开的 `useFloatingButtonDrag` Hook。将 `dragHandlers` 展开到可拖动容器，将 `stopDragHandlers` 展开到重新加载等独立操作按钮。Hook 会处理触摸和鼠标的差异，并避免点击重新加载时同时打开控制台。
 
@@ -176,7 +176,6 @@ function MyFloatingButton({ open }: { open: () => void }) {
   const { positionStyle, dragHandlers, stopDragHandlers, dragOverlayHandlers } =
     useFloatingButtonDrag({
       onTap: open,
-      initialPosition: { right: 16, bottom: 84 },
     });
 
   return (
@@ -211,12 +210,15 @@ function MyFloatingButton({ open }: { open: () => void }) {
   );
 }
 
-<LynxConsole renderFloatingButton={({ open }) => <MyFloatingButton open={open} />} />
+<LynxConsole
+  initialPosition={{ right: 30, bottom: 200 }}
+  renderFloatingButton={({ open }) => <MyFloatingButton open={open} />}
+/>
 ```
 
 当 `dragOverlayHandlers` 存在时，请渲染透明遮罩，以便网页端的鼠标离开按钮后仍可继续拖动。遮罩的 z-index 应高于页面内容、低于按钮。不要再给拖动容器绑定 `bindtap={open}`，Hook 已处理点击。
 
-请在 `MyFloatingButton` 组件内调用 Hook，不要直接在 `renderFloatingButton` 回调中调用。自定义按钮的初始位置应传给 Hook；`LynxConsole.initialPosition` 仅影响默认按钮。Hook 会记住当前运行时中最后拖动的位置，锚点相同时与默认按钮共享。
+请在 `MyFloatingButton` 组件内调用 Hook，不要直接在 `renderFloatingButton` 回调中调用。Hook 会自动读取 `LynxConsole.initialPosition`，只需调用 `useFloatingButtonDrag({ onTap: open })`。显式传给 Hook 的 `initialPosition` 优先；两处都省略时使用 `{ right: 16, bottom: 84 }`。Hook 会记住当前运行时中最后拖动的位置，锚点相同时与默认按钮共享。
 
 ### 3. 切换回默认按钮
 

@@ -60,7 +60,6 @@ export function CustomFloatingButton({ open }: { open: () => void }) {
     stopDragHandlers,
   } = useFloatingButtonDrag({
     onTap: open,
-    initialPosition: { right: 30, bottom: 200 },
   });
   const fcp = useLatestFcp();
   const color = getEffect() === 'solid' ? '#ffffff' : '#1d2025';

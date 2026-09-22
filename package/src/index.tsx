@@ -11,6 +11,7 @@ import { ConsolePanel } from "./components/ConsolePanel.jsx";
 import "./components/FloatingButton.css";
 import "./styles/tokens.css";
 import { FloatingButton } from "./components/FloatingButton.jsx";
+import { FloatingButtonPositionContext } from "./hooks/FloatingButtonPositionContext";
 import { useLatestFcp } from "./hooks/useLatestFcp";
 import { useViewport } from "./hooks/useViewport";
 import { isWebPlatform } from "./shared/isWebPlatform";
@@ -101,55 +102,60 @@ const LynxConsole = forwardRef<LynxConsoleHandle, LynxConsoleProps>(
 
     return (
       <ThemeProvider value={colors}>
-        <view
-          style={{
-            backgroundColor: renderFloatingButton
-              ? "transparent"
-              : colors.bg.layerDefault,
-            color: colors.fg.neutral,
-          }}
-        >
-          {renderFloatingButton ? (
-            renderFloatingButton({ open: handleOpenBottomSheet, isOpen })
-          ) : (
-            <FloatingButton
-              bindtap={handleOpenBottomSheet}
-              initialPosition={initialPosition}
-            >
-              <text
-                className="fb-title t4"
-                style={{ fontWeight: "400", color: colors.palette.staticWhite }}
+        <FloatingButtonPositionContext.Provider value={initialPosition}>
+          <view
+            style={{
+              backgroundColor: renderFloatingButton
+                ? "transparent"
+                : colors.bg.layerDefault,
+              color: colors.fg.neutral,
+            }}
+          >
+            {renderFloatingButton ? (
+              renderFloatingButton({ open: handleOpenBottomSheet, isOpen })
+            ) : (
+              <FloatingButton
+                bindtap={handleOpenBottomSheet}
+                initialPosition={initialPosition}
               >
-                LynxConsole
-              </text>
-              {/* web은 performance entry가 오지 않아 실제 수집된 경우에만 표시해요 */}
-              {(!isWebPlatform || latestFcp) && (
                 <text
-                  className="fb-subtitle t3"
+                  className="fb-title t4"
                   style={{
                     fontWeight: "400",
                     color: colors.palette.staticWhite,
                   }}
                 >
-                  {`${latestFcp?.name ?? "FCP"}: ${latestFcp?.duration ? latestFcp.duration.toFixed(2) : "--"}ms`}
+                  LynxConsole
                 </text>
-              )}
-            </FloatingButton>
-          )}
-          {isOpen && (
-            <BottomSheet
-              isOpen={isOpen}
-              shouldClose={shouldClose}
-              onClose={handleCloseBottomSheet}
-              safeAreaInsetBottom={safeAreaInsetBottom}
-              safeAreaInsetTop={safeAreaInsetTop}
-              layout={layout}
-              viewportWidth={viewportWidth}
-            >
-              <ConsolePanel customTabs={customTabs} />
-            </BottomSheet>
-          )}
-        </view>
+                {/* web은 performance entry가 오지 않아 실제 수집된 경우에만 표시해요 */}
+                {(!isWebPlatform || latestFcp) && (
+                  <text
+                    className="fb-subtitle t3"
+                    style={{
+                      fontWeight: "400",
+                      color: colors.palette.staticWhite,
+                    }}
+                  >
+                    {`${latestFcp?.name ?? "FCP"}: ${latestFcp?.duration ? latestFcp.duration.toFixed(2) : "--"}ms`}
+                  </text>
+                )}
+              </FloatingButton>
+            )}
+            {isOpen && (
+              <BottomSheet
+                isOpen={isOpen}
+                shouldClose={shouldClose}
+                onClose={handleCloseBottomSheet}
+                safeAreaInsetBottom={safeAreaInsetBottom}
+                safeAreaInsetTop={safeAreaInsetTop}
+                layout={layout}
+                viewportWidth={viewportWidth}
+              >
+                <ConsolePanel customTabs={customTabs} />
+              </BottomSheet>
+            )}
+          </view>
+        </FloatingButtonPositionContext.Provider>
       </ThemeProvider>
     );
   },

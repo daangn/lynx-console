@@ -167,7 +167,7 @@ import LynxConsole from 'lynx-console';
 />
 ```
 
-### 2. Add dragging and a reload button
+### 2. Add a reload button and dragging
 
 Use the public `useFloatingButtonDrag` hook inside your button component. Spread `dragHandlers` on the draggable wrapper and `stopDragHandlers` on independent controls such as reload. The hook handles touch/mouse differences and prevents a reload tap from opening the panel.
 
@@ -178,7 +178,6 @@ function MyFloatingButton({ open }: { open: () => void }) {
   const { positionStyle, dragHandlers, stopDragHandlers, dragOverlayHandlers } =
     useFloatingButtonDrag({
       onTap: open,
-      initialPosition: { right: 16, bottom: 84 },
     });
 
   return (
@@ -213,12 +212,15 @@ function MyFloatingButton({ open }: { open: () => void }) {
   );
 }
 
-<LynxConsole renderFloatingButton={({ open }) => <MyFloatingButton open={open} />} />
+<LynxConsole
+  initialPosition={{ right: 30, bottom: 200 }}
+  renderFloatingButton={({ open }) => <MyFloatingButton open={open} />}
+/>
 ```
 
 Render the transparent overlay when `dragOverlayHandlers` is present: it keeps receiving mouse events when the pointer leaves the button on web. Keep its z-index below the button and above page content. Do not add another `bindtap={open}` to the draggable wrapper; the hook handles taps.
 
-Call hooks inside `MyFloatingButton`, not directly inside `renderFloatingButton`. Set a custom button’s initial position through the hook; `LynxConsole.initialPosition` only affects the default button. The hook remembers the last dragged position in this runtime and shares it with the default button when anchors match.
+Call hooks inside `MyFloatingButton`, not directly inside `renderFloatingButton`. The hook automatically uses `LynxConsole.initialPosition`. You only need `useFloatingButtonDrag({ onTap: open })`. An explicit hook `initialPosition` overrides that value; without either, it uses `{ right: 16, bottom: 84 }`. The hook remembers the last dragged position in this runtime and shares it with the default button when anchors match.
 
 ### 3. Switch back to the default button
 

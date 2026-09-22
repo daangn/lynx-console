@@ -167,7 +167,7 @@ import LynxConsole from 'lynx-console';
 />
 ```
 
-### 2. 드래그와 리로드 버튼 추가하기
+### 2. 리로드 버튼과 드래그 추가하기
 
 버튼 컴포넌트 안에서 공개 훅 `useFloatingButtonDrag`를 사용해요. 이동할 영역에는 `dragHandlers`, 리로드처럼 독립적으로 눌러야 하는 버튼에는 `stopDragHandlers`를 펼쳐 넣어요. 터치·마우스 차이를 직접 처리할 필요가 없고, 리로드를 눌렀을 때 콘솔까지 열리는 것도 막아줘요.
 
@@ -178,7 +178,6 @@ function MyFloatingButton({ open }: { open: () => void }) {
   const { positionStyle, dragHandlers, stopDragHandlers, dragOverlayHandlers } =
     useFloatingButtonDrag({
       onTap: open,
-      initialPosition: { right: 16, bottom: 84 },
     });
 
   return (
@@ -213,12 +212,15 @@ function MyFloatingButton({ open }: { open: () => void }) {
   );
 }
 
-<LynxConsole renderFloatingButton={({ open }) => <MyFloatingButton open={open} />} />
+<LynxConsole
+  initialPosition={{ right: 30, bottom: 200 }}
+  renderFloatingButton={({ open }) => <MyFloatingButton open={open} />}
+/>
 ```
 
 `dragOverlayHandlers`가 있으면 투명 오버레이도 렌더링해요. 웹에서 마우스가 버튼 밖으로 나가도 드래그를 이어가기 위해 필요해요. 오버레이의 z-index는 페이지 콘텐츠보다 높고 버튼보다 낮게 두세요. 드래그 영역에 `bindtap={open}`을 따로 붙이지 않아요. 훅이 탭도 처리해요.
 
-훅은 `renderFloatingButton` 콜백 안에서 직접 호출하지 말고 `MyFloatingButton` 안에서 호출해요. 커스텀 버튼의 초기 위치는 훅에 전달해요. `LynxConsole.initialPosition`은 기본 버튼에만 적용돼요. 훅은 현재 런타임의 마지막 드래그 위치를 기억하고, 기준 변이 같으면 기본 버튼과도 공유해요.
+훅은 `renderFloatingButton` 콜백 안에서 직접 호출하지 말고 `MyFloatingButton` 안에서 호출해요. 훅이 `LynxConsole.initialPosition`을 자동으로 읽어서 `useFloatingButtonDrag({ onTap: open })`만 쓰면 돼요. 훅에 `initialPosition`을 직접 넘기면 그 값이 우선해요. 둘 다 생략하면 `{ right: 16, bottom: 84 }`를 사용해요. 훅은 현재 런타임의 마지막 드래그 위치를 기억하고, 기준 변이 같으면 기본 버튼과도 공유해요.
 
 ### 3. 기본 버튼과 전환하기
 

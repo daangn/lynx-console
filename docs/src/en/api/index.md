@@ -14,7 +14,7 @@ description: Props, the console handle, and the monitor init functions.
 | `safeAreaInsetTop` | `string` | `"24px"` | Top safe area inset, used only when the console opens as a side panel (see below). |
 | `customTabs` | `CustomTab[]` | `undefined` | Extra tabs to show in the console. |
 | `initialPosition` | `{ top?: number; left?: number; right?: number; bottom?: number }` | `{ right: 16, bottom: 84 }` | Initial position (px) of the floating button. Each side is independent, so you can anchor it to any corner (e.g. `{ top: 50, left: 16 }`). When both `top` and `bottom` (or both `left` and `right`) are given, `top` / `left` win. Once the user drags the button, the saved position takes precedence. |
-| `renderFloatingButton` | `false \| ((props: FloatingButtonRenderProps) => ReactNode)` | `undefined` | Replaces the default button and reload control. Receives `open` and `isOpen`. Return `null` to hide it. Custom buttons own position and gestures; `initialPosition` applies only to the default button. Pass `false` (or omit the prop) to use the default button. Use `enabled && renderer` to switch conditionally. Returning `null` from the callback still hides the button. |
+| `renderFloatingButton` | `false \| ((props: FloatingButtonRenderProps) => ReactNode)` | `undefined` | Replaces the default button and reload control. Receives `open` and `isOpen`. Return `null` to hide it. The hook automatically uses `LynxConsole.initialPosition`. You only need `useFloatingButtonDrag({ onTap: open })`. An explicit hook `initialPosition` overrides that value; without either, it uses `{ right: 16, bottom: 84 }`. Pass `false` (or omit the prop) to use the default button. Use `enabled && renderer` to switch conditionally. Returning `null` from the callback still hides the button. |
 
 ## `CustomTab`
 
@@ -62,13 +62,13 @@ Return whether a `LogEntry` is a line the network or performance monitor printed
 A public hook for draggable custom buttons. Import it and `UseFloatingButtonDragOptions` / `InitialPosition` from `lynx-console`.
 
 ```tsx
-const drag = useFloatingButtonDrag({ onTap: open, initialPosition: { right: 16, bottom: 84 } });
+const drag = useFloatingButtonDrag({ onTap: open });
 ```
 
 | Option | Type | Description |
 | --- | --- | --- |
 | `onTap` | `() => void` | Callback for a tap without dragging. |
-| `initialPosition` | `InitialPosition` | Initial anchors in px; defaults to `{ right: 16, bottom: 84 }`. |
+| `initialPosition` | `InitialPosition` | The hook automatically uses `LynxConsole.initialPosition`. You only need `useFloatingButtonDrag({ onTap: open })`. An explicit hook `initialPosition` overrides that value; without either, it uses `{ right: 16, bottom: 84 }`. |
 
 | Return | Description |
 | --- | --- |

@@ -14,7 +14,7 @@ description: props, handle, 모니터 초기화 함수예요.
 | `safeAreaInsetTop` | `string` | `"24px"` | 상단 세이프 에어리어 값이에요. 사이드 패널로 열릴 때만 써요(아래 참고). |
 | `customTabs` | `CustomTab[]` | `undefined` | 콘솔에 추가로 표시할 탭이에요. |
 | `initialPosition` | `{ top?: number; left?: number; right?: number; bottom?: number }` | `{ right: 16, bottom: 84 }` | 플로팅 버튼의 초기 위치(px)예요. 각 변이 독립적이라 원하는 모서리에 붙일 수 있어요(예: `{ top: 50, left: 16 }`). `top`과 `bottom` (또는 `left`와 `right`)을 함께 주면 `top` / `left`가 이겨요. 사용자가 버튼을 드래그한 뒤에는 저장된 위치가 우선해요. |
-| `renderFloatingButton` | `false \| ((props: FloatingButtonRenderProps) => ReactNode)` | `undefined` | 기본 버튼과 리로드 버튼을 교체해요. `open`과 `isOpen`을 받아요. `null`을 반환하면 숨겨요. 커스텀 버튼의 위치와 제스처는 직접 처리해요. `initialPosition`은 기본 버튼에만 적용돼요. `false`를 전달하거나 prop을 생략하면 기본 버튼을 사용해요. `enabled && renderer`로 조건에 따라 전환할 수 있어요. 콜백에서 `null`을 반환하면 버튼을 숨겨요. |
+| `renderFloatingButton` | `false \| ((props: FloatingButtonRenderProps) => ReactNode)` | `undefined` | 기본 버튼과 리로드 버튼을 교체해요. `open`과 `isOpen`을 받아요. `null`을 반환하면 숨겨요. 훅이 `LynxConsole.initialPosition`을 자동으로 읽어서 `useFloatingButtonDrag({ onTap: open })`만 쓰면 돼요. 훅에 `initialPosition`을 직접 넘기면 그 값이 우선해요. 둘 다 생략하면 `{ right: 16, bottom: 84 }`를 사용해요. `false`를 전달하거나 prop을 생략하면 기본 버튼을 사용해요. `enabled && renderer`로 조건에 따라 전환할 수 있어요. 콜백에서 `null`을 반환하면 버튼을 숨겨요. |
 
 ## `CustomTab`
 
@@ -62,13 +62,13 @@ description: props, handle, 모니터 초기화 함수예요.
 커스텀 버튼에 드래그를 붙이는 공개 훅이에요. `UseFloatingButtonDragOptions`, `InitialPosition` 타입과 함께 `lynx-console`에서 import해요.
 
 ```tsx
-const drag = useFloatingButtonDrag({ onTap: open, initialPosition: { right: 16, bottom: 84 } });
+const drag = useFloatingButtonDrag({ onTap: open });
 ```
 
 | Option | Type | Description |
 | --- | --- | --- |
 | `onTap` | `() => void` | 드래그 없이 탭했을 때 호출해요. |
-| `initialPosition` | `InitialPosition` | px 단위 초기 위치예요. 기본값은 `{ right: 16, bottom: 84 }`예요. |
+| `initialPosition` | `InitialPosition` | 훅이 `LynxConsole.initialPosition`을 자동으로 읽어서 `useFloatingButtonDrag({ onTap: open })`만 쓰면 돼요. 훅에 `initialPosition`을 직접 넘기면 그 값이 우선해요. 둘 다 생략하면 `{ right: 16, bottom: 84 }`를 사용해요. |
 
 | Return | Description |
 | --- | --- |

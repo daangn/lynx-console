@@ -1,6 +1,8 @@
 import type { ReactNode } from "@lynx-js/react";
-import { type InitialPosition, useDrag } from "../hooks/useDrag";
-import { isWebPlatform } from "../shared/isWebPlatform";
+import {
+  type InitialPosition,
+  useFloatingButtonDrag,
+} from "../hooks/useFloatingButtonDrag";
 import { useThemeColors } from "../styles/ThemeContext";
 import { duration } from "../styles/theme";
 import "./FloatingButton.css";
@@ -34,10 +36,13 @@ export const FloatingButton = ({
   initialPosition,
 }: FloatingButtonProps) => {
   const colors = useThemeColors();
-  const { phase, positionStyle, handlers, dragOverlayHandlers } = useDrag(
-    bindtap,
-    { initialPosition },
-  );
+  const {
+    phase,
+    positionStyle,
+    dragHandlers,
+    dragOverlayHandlers,
+    stopDragHandlers,
+  } = useFloatingButtonDrag({ onTap: bindtap, initialPosition });
 
   const handleReload = () => {
     try {
@@ -50,11 +55,6 @@ export const FloatingButton = ({
   };
 
   const isDragging = phase === "dragging";
-
-  // reload 버튼을 누를 때 wrapper의 드래그가 시작되지 않도록 이벤트를 막아요.
-  const reloadButtonHandlers = isWebPlatform
-    ? { catchmousedown: () => {} }
-    : {};
 
   return (
     <>
@@ -69,7 +69,7 @@ export const FloatingButton = ({
           transform: isDragging ? "scale(1.05)" : "scale(1)",
           transition: `transform ${duration.d4} cubic-bezier(0.4, 0, 0.2, 1)`,
         }}
-        {...handlers}
+        {...dragHandlers}
       >
         <view
           className={"fb-button"}
@@ -81,8 +81,7 @@ export const FloatingButton = ({
         <view
           className={"fb-reloadButton"}
           style={{ backgroundColor: colors.palette.green600 }}
-          catchtouchstart={() => {}}
-          {...reloadButtonHandlers}
+          {...stopDragHandlers}
           bindtap={handleReload}
         >
           <text

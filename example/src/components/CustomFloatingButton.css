@@ -1,0 +1,61 @@
+.custom-fb-wrapper {
+  position: fixed;
+  z-index: 9997;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  overflow: visible;
+  transition: transform 150ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+.custom-fb-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 9996;
+}
+.custom-fb-surface {
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.custom-fb-main {
+  padding: 4px 8px;
+  border-radius: 12px;
+  gap: 2px;
+}
+.custom-fb-solid {
+  background-color: #10ab7d;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+.custom-fb-blur {
+  background-color: rgba(220, 222, 225, 0.15);
+}
+.custom-fb-title,
+.custom-fb-subtitle,
+.custom-fb-reload-icon {
+  font-weight: 400;
+  text-align: center;
+}
+.custom-fb-title {
+  font-size: 0.875rem;
+  line-height: 1.1875rem;
+}
+.custom-fb-subtitle {
+  font-size: 0.8125rem;
+  line-height: 1.125rem;
+}
+.custom-fb-reload {
+  width: 32px;
+  height: 32px;
+  border-radius: 16px;
+}
+.custom-fb-reload-icon {
+  font-size: 20px;
+  line-height: 32px;
+  margin-bottom: 5px;
+}

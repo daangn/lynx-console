@@ -1,6 +1,7 @@
 import {
   type ForwardedRef,
   forwardRef,
+  type ReactNode,
   useImperativeHandle,
   useMemo,
   useState,
@@ -23,7 +24,16 @@ export interface LynxConsoleHandle {
   isOpen: () => boolean;
 }
 
+export interface FloatingButtonRenderProps {
+  open: () => void;
+  isOpen: boolean;
+}
+
 export interface LynxConsoleProps {
+  /** Replaces the entire default button. Pass false for the default; return null to hide it. */
+  renderFloatingButton?:
+    | false
+    | ((props: FloatingButtonRenderProps) => ReactNode);
   theme?: "light" | "dark";
   safeAreaInsetBottom?: string;
   safeAreaInsetTop?: string;
@@ -44,6 +54,7 @@ const LynxConsole = forwardRef<LynxConsoleHandle, LynxConsoleProps>(
       safeAreaInsetTop,
       customTabs,
       initialPosition,
+      renderFloatingButton,
     },
     ref: ForwardedRef<LynxConsoleHandle>,
   ) => {
@@ -92,30 +103,39 @@ const LynxConsole = forwardRef<LynxConsoleHandle, LynxConsoleProps>(
       <ThemeProvider value={colors}>
         <view
           style={{
-            backgroundColor: colors.bg.layerDefault,
+            backgroundColor: renderFloatingButton
+              ? "transparent"
+              : colors.bg.layerDefault,
             color: colors.fg.neutral,
           }}
         >
-          <FloatingButton
-            bindtap={handleOpenBottomSheet}
-            initialPosition={initialPosition}
-          >
-            <text
-              className="fb-title t4"
-              style={{ fontWeight: "400", color: colors.palette.staticWhite }}
+          {renderFloatingButton ? (
+            renderFloatingButton({ open: handleOpenBottomSheet, isOpen })
+          ) : (
+            <FloatingButton
+              bindtap={handleOpenBottomSheet}
+              initialPosition={initialPosition}
             >
-              LynxConsole
-            </text>
-            {/* web은 performance entry가 오지 않아 실제 수집된 경우에만 표시해요 */}
-            {(!isWebPlatform || latestFcp) && (
               <text
-                className="fb-subtitle t3"
+                className="fb-title t4"
                 style={{ fontWeight: "400", color: colors.palette.staticWhite }}
               >
-                {`${latestFcp?.name ?? "FCP"}: ${latestFcp?.duration ? latestFcp.duration.toFixed(2) : "--"}ms`}
+                LynxConsole
               </text>
-            )}
-          </FloatingButton>
+              {/* web은 performance entry가 오지 않아 실제 수집된 경우에만 표시해요 */}
+              {(!isWebPlatform || latestFcp) && (
+                <text
+                  className="fb-subtitle t3"
+                  style={{
+                    fontWeight: "400",
+                    color: colors.palette.staticWhite,
+                  }}
+                >
+                  {`${latestFcp?.name ?? "FCP"}: ${latestFcp?.duration ? latestFcp.duration.toFixed(2) : "--"}ms`}
+                </text>
+              )}
+            </FloatingButton>
+          )}
           {isOpen && (
             <BottomSheet
               isOpen={isOpen}
@@ -146,3 +166,9 @@ export type {
 } from "./types";
 export { isNetworkLog, isPerformanceLog } from "./utils/networkLog";
 export default LynxConsole;
+
+export type {
+  InitialPosition,
+  UseFloatingButtonDragOptions,
+} from "./hooks/useFloatingButtonDrag";
+export { useFloatingButtonDrag } from "./hooks/useFloatingButtonDrag";

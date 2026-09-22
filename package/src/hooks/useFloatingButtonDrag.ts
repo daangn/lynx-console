@@ -57,12 +57,16 @@ interface SavedState {
 
 let saved: SavedState | null = null;
 
-interface UseDragOptions {
+export interface UseFloatingButtonDragOptions {
+  onTap: () => void;
   initialPosition?: InitialPosition;
 }
 
-export function useDrag(onTap: () => void, options?: UseDragOptions) {
-  const anchors = resolveAnchors(options?.initialPosition);
+export function useFloatingButtonDrag({
+  onTap,
+  initialPosition,
+}: UseFloatingButtonDragOptions) {
+  const anchors = resolveAnchors(initialPosition);
 
   // 저장된 위치는 anchor 조합이 동일할 때만 복원해요.
   const snapshot = saved;
@@ -87,6 +91,7 @@ export function useDrag(onTap: () => void, options?: UseDragOptions) {
   const [tempY, setTempY] = useState(initY);
 
   const draggingRef = useRef(false);
+  const childInteractionRef = useRef(false);
   const recentDragRef = useRef(false);
   const startRef = useRef({ x: 0, y: 0, ax: 0, ay: 0 });
 
@@ -95,6 +100,7 @@ export function useDrag(onTap: () => void, options?: UseDragOptions) {
   const ySign = anchors.vertical === "bottom" ? -1 : 1;
 
   const dragStart = (point: Point) => {
+    childInteractionRef.current = false;
     startRef.current = {
       x: point.x,
       y: point.y,
@@ -105,6 +111,7 @@ export function useDrag(onTap: () => void, options?: UseDragOptions) {
   };
 
   const dragMove = (point: Point) => {
+    if (childInteractionRef.current) return;
     const dx = point.x - startRef.current.x;
     const dy = point.y - startRef.current.y;
 
@@ -125,6 +132,7 @@ export function useDrag(onTap: () => void, options?: UseDragOptions) {
   };
 
   const dragEnd = () => {
+    if (childInteractionRef.current) return;
     if (draggingRef.current) {
       setX(tempX);
       setY(tempY);
@@ -178,7 +186,7 @@ export function useDrag(onTap: () => void, options?: UseDragOptions) {
   };
 
   const handleWebTap = () => {
-    if (recentDragRef.current) return;
+    if (recentDragRef.current || childInteractionRef.current) return;
     onTap();
   };
 
@@ -197,10 +205,18 @@ export function useDrag(onTap: () => void, options?: UseDragOptions) {
     catchmouseup: handleMouseUp,
   };
 
+  const stopDrag = () => {
+    childInteractionRef.current = true;
+  };
+
   return {
     phase,
+    stopDragHandlers: {
+      catchtouchstart: stopDrag,
+      ...(isWebPlatform ? { catchmousedown: stopDrag } : {}),
+    },
     positionStyle,
-    handlers: {
+    dragHandlers: {
       catchtouchstart: handleTouchStart,
       catchtouchmove: handleTouchMove,
       catchtouchend: dragEnd,

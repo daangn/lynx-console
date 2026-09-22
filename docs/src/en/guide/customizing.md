@@ -146,3 +146,88 @@ default). Pass the status bar height of your host if that default does not fit.
 <LynxConsole safeAreaInsetTop="44px" />
 ```
 
+## Replacing the floating button
+
+### 1. Use your own button
+
+Pass `renderFloatingButton` to replace the whole default button, including reload. Connect `open` to your tap event; `isOpen` tells you whether the panel is open. Your component controls its own appearance and position.
+
+```tsx
+import LynxConsole from 'lynx-console';
+
+<LynxConsole
+  renderFloatingButton={({ open }) => (
+    <view
+      style={{ position: 'fixed', right: '16px', bottom: '84px', zIndex: 9997 }}
+      bindtap={open}
+    >
+      <text>Open console</text>
+    </view>
+  )}
+/>
+```
+
+### 2. Add dragging and a reload button
+
+Use the public `useFloatingButtonDrag` hook inside your button component. Spread `dragHandlers` on the draggable wrapper and `stopDragHandlers` on independent controls such as reload. The hook handles touch/mouse differences and prevents a reload tap from opening the panel.
+
+```tsx
+import LynxConsole, { useFloatingButtonDrag } from 'lynx-console';
+
+function MyFloatingButton({ open }: { open: () => void }) {
+  const { positionStyle, dragHandlers, stopDragHandlers, dragOverlayHandlers } =
+    useFloatingButtonDrag({
+      onTap: open,
+      initialPosition: { right: 16, bottom: 84 },
+    });
+
+  return (
+    <>
+      {dragOverlayHandlers && (
+        <view
+          style={{
+            position: 'fixed', top: 0, left: 0,
+            width: '100vw', height: '100vh', zIndex: 9996,
+          }}
+          {...dragOverlayHandlers}
+        />
+      )}
+      <view
+        style={{
+          position: 'fixed', ...positionStyle, zIndex: 9997,
+          display: 'flex', flexDirection: 'row', alignItems: 'center',
+          padding: '8px', gap: '12px', borderRadius: '16px',
+          backgroundColor: '#eeeeee',
+        }}
+        {...dragHandlers}
+      >
+        <text style={{ color: '#222222' }}>Console</text>
+        <view
+          {...stopDragHandlers}
+          bindtap={() => lynx.reload({}, () => {})}
+        >
+          <text style={{ color: '#222222' }}>↻</text>
+        </view>
+      </view>
+    </>
+  );
+}
+
+<LynxConsole renderFloatingButton={({ open }) => <MyFloatingButton open={open} />} />
+```
+
+Render the transparent overlay when `dragOverlayHandlers` is present: it keeps receiving mouse events when the pointer leaves the button on web. Keep its z-index below the button and above page content. Do not add another `bindtap={open}` to the draggable wrapper; the hook handles taps.
+
+Call hooks inside `MyFloatingButton`, not directly inside `renderFloatingButton`. Set a custom button’s initial position through the hook; `LynxConsole.initialPosition` only affects the default button. The hook remembers the last dragged position in this runtime and shares it with the default button when anchors match.
+
+### 3. Switch back to the default button
+
+```tsx
+<LynxConsole
+  renderFloatingButton={
+    enabled && (({ open }) => <MyFloatingButton open={open} />)
+  }
+/>
+```
+
+When `enabled` is false, the default button appears. Omitting the prop does the same. Returning `null` from the renderer hides the button instead; use `ref.open()` from another control.

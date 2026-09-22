@@ -14,6 +14,7 @@ description: Props, the console handle, and the monitor init functions.
 | `safeAreaInsetTop` | `string` | `"24px"` | Top safe area inset, used only when the console opens as a side panel (see below). |
 | `customTabs` | `CustomTab[]` | `undefined` | Extra tabs to show in the console. |
 | `initialPosition` | `{ top?: number; left?: number; right?: number; bottom?: number }` | `{ right: 16, bottom: 84 }` | Initial position (px) of the floating button. Each side is independent, so you can anchor it to any corner (e.g. `{ top: 50, left: 16 }`). When both `top` and `bottom` (or both `left` and `right`) are given, `top` / `left` win. Once the user drags the button, the saved position takes precedence. |
+| `renderFloatingButton` | `false \| ((props: FloatingButtonRenderProps) => ReactNode)` | `undefined` | Replaces the default button and reload control. Receives `open` and `isOpen`. Return `null` to hide it. Custom buttons own position and gestures; `initialPosition` applies only to the default button. Pass `false` (or omit the prop) to use the default button. Use `enabled && renderer` to switch conditionally. Returning `null` from the callback still hides the button. |
 
 ## `CustomTab`
 
@@ -55,3 +56,24 @@ Tabs are only rendered for monitors that were initialized. With no tab active, e
 ## `isNetworkLog(entry)` / `isPerformanceLog(entry)`
 
 Return whether a `LogEntry` is a line the network or performance monitor printed. Meant for a filter tab: `filter: isNetworkLog`.
+
+## `useFloatingButtonDrag`
+
+A public hook for draggable custom buttons. Import it and `UseFloatingButtonDragOptions` / `InitialPosition` from `lynx-console`.
+
+```tsx
+const drag = useFloatingButtonDrag({ onTap: open, initialPosition: { right: 16, bottom: 84 } });
+```
+
+| Option | Type | Description |
+| --- | --- | --- |
+| `onTap` | `() => void` | Callback for a tap without dragging. |
+| `initialPosition` | `InitialPosition` | Initial anchors in px; defaults to `{ right: 16, bottom: 84 }`. |
+
+| Return | Description |
+| --- | --- |
+| `positionStyle` | Position styles to spread onto a fixed wrapper. |
+| `dragHandlers` | Spread onto the draggable wrapper; includes tap handling. |
+| `stopDragHandlers` | Spread onto independent child controls, then add their own `bindtap`. |
+| `dragOverlayHandlers` | Render a full-screen transparent overlay with these handlers when non-null (web). |
+| `phase` | `idle`, `dragging`, or `releasing`; useful for visual feedback. |

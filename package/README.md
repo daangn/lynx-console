@@ -152,6 +152,7 @@ function App() {
 The tabs at the top of the console are multi-select. With nothing active everything shows, and several active tabs are a union.
 Turning on `Log` reveals the level dropdown (`Filter ▼`); with `Network` alone active the body switches to the network-only view with match navigation.
 The search box looks at the printed text as well as the URL, headers and body of each network request, and a matched network row is expanded on the section that matched.
+While you scroll up to read, the list stops following new logs and counts what piled up as `N new ↓`.
 
 ### Filtering console logs into a tab
 

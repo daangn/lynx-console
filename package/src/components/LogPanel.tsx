@@ -26,6 +26,7 @@ interface LevelFilter {
 }
 
 interface LogPanelProps {
+  allEntries: LogEntry[];
   // 필터 탭 · 레벨로 이미 걸러진 로그예요
   logs: LogEntry[];
   // 필터 전 전체 개수예요. "3 / 42" 로 지금 얼마나 좁혔는지 보여줘요
@@ -41,6 +42,7 @@ interface LogPanelProps {
 
 export const LogPanel = ({
   logs,
+  allEntries,
   totalCount,
   clearLogs,
   renderEntry,
@@ -220,6 +222,7 @@ export const LogPanel = ({
       </view>
       <LogList
         logs={visibleLogs}
+        allEntries={allEntries}
         emptyText={
           totalCount === 0
             ? 'No logs yet. Try console.log("Hello!")'

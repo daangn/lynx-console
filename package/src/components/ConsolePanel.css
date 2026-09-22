@@ -92,6 +92,42 @@
   border-radius: 4px;
 }
 
+.cp-logListWrapper {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  position: relative;
+}
+
+.cp-jumpToBottomRow {
+  position: absolute;
+  bottom: 8px;
+  left: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.cp-jumpToBottom {
+  padding: 4px 12px;
+  border-radius: 999px;
+  border-width: 1px;
+  border-style: solid;
+}
+
+/* 새로 쌓인 로그가 없을 때는 화살표만 담은 동그란 버튼이에요 */
+.cp-jumpToBottom--icon {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  border-width: 1px;
+  border-style: solid;
+}
+
 .cp-logList {
   flex: 1;
   padding-top: 0;

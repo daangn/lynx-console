@@ -5,9 +5,23 @@ description: 커스텀 탭, ref 로 열고 닫기, 플로팅 버튼 위치예요
 
 # 커스텀 탭과 ref
 
+## 탭으로 걸러 보기
+
+콘솔 위쪽 탭은 여러 개를 동시에 켤 수 있어요. 켠 탭에는 밑줄이 생겨요.
+
+- 아무것도 안 켜면 전부 보여줘요
+- 여러 개를 켜면 합집합이에요. `Log`와 `Network`를 같이 켜면 콘솔 로그와 네트워크 로그를 함께 봐요
+- 켜진 탭을 한 번 더 누르면 꺼져요
+- `Log`를 켜면 왼쪽에 레벨 드롭다운(`Filter ▼`)이 나와요
+- `Network`만 켜면 매치 순회(`▲` `▼`)가 되는 네트워크 전용 화면으로 바뀌어요
+
+검색창은 찍힌 텍스트뿐 아니라 네트워크 요청의 URL · 헤더 · 본문까지 훑어요. 검색에 걸린 네트워크 줄은
+매치가 있는 섹션이 펼쳐진 채로 강조돼요. 검색어는 네트워크 전용 화면과 같이 써서, 탭을 오가도 유지돼요.
+
 ## 탭 추가하기
 
-필요한 디버깅 정보를 콘솔 탭으로 넣을 수 있어요.
+필요한 디버깅 정보를 콘솔 탭으로 넣을 수 있어요. `renderContent`를 준 탭은 구분선 뒤에 놓이고,
+누르면 본문을 통째로 그 콘텐츠로 바꿔요.
 
 ```tsx
 import LynxConsole, { type CustomTab } from 'lynx-console';
@@ -31,7 +45,7 @@ function App() {
 
 ## 콘솔 로그를 골라 탭으로 보기
 
-Log 탭에는 항상 전부 보여요. `filter`를 준 탭은 그중 조건에 맞는 로그만 모아 보여줘서, 보고 싶은 로그만 깔끔하게 볼 수 있어요.
+`filter`를 준 탭은 조건에 맞는 로그만 모아 보여주는 필터 탭이 돼요. `Log` · `Network` · `Perf` 옆에 나란히 놓여서, 다른 탭과 같이 켜거나 단독으로 켤 수 있어요.
 
 ```tsx
 import LynxConsole, { type CustomTab } from 'lynx-console';
@@ -45,12 +59,13 @@ const customTabs: CustomTab[] = [
   { key: 'errors', label: 'Errors', filter: (entry) => entry.level === 'error' },
 ];
 
-console.log('%ctrack%c screen_view', 'color:#db2777;font-weight:bold', '', { screen: 'home' }); // Track 탭에 보여요
+console.log('%ctrack%c screen_view', 'color:#db2777;font-weight:bold', '', { screen: 'home' }); // Track 탭을 켜면 보여요
 ```
 
 문자열·정규식 필터는 실제로 찍히는 텍스트를 봐요. `%c` 스타일 문자열은 빼고 `%s` · `%d` 서식은 적용한 뒤예요. `%c` 스타일은 탭에서도 그대로 그려지니, 색 칩으로 로그 종류를 표시하기 좋아요.
 
-매칭된 로그는 Log 탭과 같은 모양으로 그려요. 한 줄을 직접 그리고 싶으면 `renderEntry`를 줘요.
+매칭된 로그는 평소와 같은 모양으로 그려요. 한 줄을 직접 그리고 싶으면 `renderEntry`를 줘요.
+`renderEntry`는 그 탭만 단독으로 켰을 때 쓰여요.
 
 ```tsx
 import { isNetworkLog } from 'lynx-console';

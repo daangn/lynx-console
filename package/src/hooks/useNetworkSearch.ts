@@ -35,16 +35,15 @@ interface SearchMatch {
   localIndex: number;
 }
 
-// 패널이 다시 마운트돼도 검색어를 유지
-let savedSearchQuery = "";
-
 /**
  * 네트워크 패널의 검색 상태와 매치 네비게이션을 담당한다.
  * url / request·response 헤더 / request·response body 안의 모든 등장을
  * 노드 단위로 모아 위/아래 이동, 스크롤 포커스, 탭 전환, 활성 매치 강조를 제공한다.
  */
-export function useNetworkSearch(networks: NetworkEntry[]) {
-  const [searchQuery, setSearchQuery] = useState(savedSearchQuery);
+export function useNetworkSearch(
+  networks: NetworkEntry[],
+  searchQuery: string,
+) {
   // 전체 매치 배열 기준 현재 인덱스(음수/초과는 wrap 처리)
   const [currentMatchIndex, setCurrentMatchIndex] = useState(0);
   // 항목별 탭 선택 상태(매치로 이동하거나 직접 탭을 누르면 갱신)
@@ -56,17 +55,16 @@ export function useNetworkSearch(networks: NetworkEntry[]) {
   // 현재 활성 매치가 렌더된 노드(헤더 행 / body 섹션 / url 행)에 붙는 ref
   const activeNodeRef = useRef<NodesRef>(null);
 
+  // 검색어가 바뀌면 첫 매치부터 다시 시작하고 탭 선택도 매치를 따르도록 초기화
   useEffect(() => {
-    savedSearchQuery = searchQuery;
-    // 검색어가 바뀌면 첫 매치부터 다시 시작하고 탭 선택도 매치를 따르도록 초기화
     setCurrentMatchIndex(0);
     setTabOverrides({});
   }, [searchQuery]);
 
   useEffect(() => {
-    if (savedSearchQuery) {
+    if (searchQuery) {
       searchInputRef.current
-        ?.invoke({ method: "setValue", params: { value: savedSearchQuery } })
+        ?.invoke({ method: "setValue", params: { value: searchQuery } })
         .exec();
     }
   }, []);
@@ -142,8 +140,6 @@ export function useNetworkSearch(networks: NetworkEntry[]) {
   );
 
   return {
-    searchQuery,
-    setSearchQuery,
     searchInputRef,
     listRef,
     totalMatches: matches.length,

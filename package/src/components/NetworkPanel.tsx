@@ -10,18 +10,23 @@ import { NetworkSearchBar } from "./NetworkSearchBar";
 interface NetworkPanelProps {
   networks: NetworkEntry[];
   clearNetworks: () => void;
+  // 통합 리스트와 같은 검색어를 써요. 탭을 오가도 검색어가 유지돼요
+  searchQuery: string;
+  setSearchQuery: (value: string) => void;
 }
 
 export const NetworkPanel = ({
   networks,
   clearNetworks,
+  searchQuery,
+  setSearchQuery,
 }: NetworkPanelProps) => {
   const colors = useThemeColors();
   // 수동으로 펼친 단일 항목(아코디언). 검색 매치는 별도로 자동 펼침된다.
   const [selectedId, setSelectedId] = useState<string | null>(null);
   // 매치로 자동 펼쳐졌지만 사용자가 직접 접은 항목들(자동 펼침을 무시)
   const [collapsedIds, setCollapsedIds] = useState<Set<string>>(new Set());
-  const search = useNetworkSearch(networks);
+  const search = useNetworkSearch(networks, searchQuery);
 
   const isExpanded = (id: string): boolean => {
     if (collapsedIds.has(id)) return false;
@@ -50,28 +55,16 @@ export const NetworkPanel = ({
   return (
     <view className={"np-container"}>
       <NetworkSearchBar
-        searchQuery={search.searchQuery}
-        setSearchQuery={search.setSearchQuery}
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
         searchInputRef={search.searchInputRef}
         totalMatches={search.totalMatches}
         activeIndex={search.activeIndex}
         goToMatch={search.goToMatch}
         clearNetworks={clearNetworks}
+        matchedCount={search.matchedCount}
+        totalCount={networks.length}
       />
-
-      <view className={"np-countRow"}>
-        <text
-          className={"np-count t3"}
-          style={{
-            fontWeight: fontWeight.regular,
-            color: colors.fg.neutralSubtle,
-          }}
-        >
-          {search.searchQuery.trim()
-            ? `${search.matchedCount} / ${networks.length} requests`
-            : `Total: ${networks.length} requests`}
-        </text>
-      </view>
 
       {networks.length === 0 ? (
         <view className={"np-placeholder"}>
@@ -98,7 +91,7 @@ export const NetworkPanel = ({
                 expanded={isExpanded(network.id)}
                 onToggle={() => toggleExpanded(network.id)}
                 activeTab={search.getActiveTab(network.id)}
-                searchQuery={search.searchQuery}
+                searchQuery={searchQuery}
                 onSelectTab={(tab) => search.selectTab(network.id, tab)}
                 getActiveOccurrence={(nodeKey) =>
                   search.getActiveOccurrence(network.id, nodeKey)

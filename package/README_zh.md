@@ -35,6 +35,7 @@ https://github.com/user-attachments/assets/d231bdf5-71bb-483f-9bdb-5843279c1308
 - **可调整面板** — 拖动手柄调整大小：底部弹层调整高度（200–700px），侧边面板调整宽度（280–720px）；向外拖动即可关闭。触摸和 web 上的鼠标都支持
 - **自适应布局** — 竖屏时作为底部弹层打开；当 LynxView 宽度大于高度时（展开的折叠屏、平板、横屏）作为右侧面板打开
 - **标签页自动隐藏** — 只显示已初始化的监视器对应的标签页，没有初始化的不会出现
+- **可多选的筛选标签页** — 可以同时选中多个标签页，只查看选中的标签页。一个都不选时显示全部，再点一次已选中的就取消
 - **自定义标签页** — 通过 `customTabs` prop 添加自己的标签页，或者给标签页一个 `filter`，只看你关心的控制台日志
 - **对 Lynx DevTool 友好** — 网络请求和 FCP 也会以一行摘要加 entry 的形式打印到控制台，所以在没有 Network 面板的 Lynx DevTool 里也能看到。
 - 支持**浅色/深色主题**
@@ -146,9 +147,15 @@ function App() {
 }
 ```
 
+### 用标签页筛选
+
+控制台顶部的标签页可以同时选中多个。一个都不选时显示全部，选中多个时取并集。
+打开 `Log` 后会出现日志级别下拉框（`Filter ▼`）；只选中 `Network` 时，会切换到带匹配跳转的网络专用界面。
+搜索框不仅看打印出来的文本，也会搜索网络请求的 URL、请求头和请求 / 响应体，命中的网络行会展开到匹配所在的区块。
+
 ### 把控制台日志筛进一个标签页
 
-Log 标签页始终显示全部日志。带 `filter` 的标签页只显示匹配的条目。
+带 `filter` 的标签页会成为筛选标签页，只显示匹配的条目。
 
 ```tsx
 const customTabs: CustomTab[] = [
@@ -156,14 +163,14 @@ const customTabs: CustomTab[] = [
   { key: "errors", label: "Errors", filter: (entry) => entry.level === "error" },
 ];
 
-console.log("%ctrack%c screen_view", "color:#db2777;font-weight:bold", "", { screen: "home" }); // 会出现在 Track 标签页
+console.log("%ctrack%c screen_view", "color:#db2777;font-weight:bold", "", { screen: "home" }); // 打开 Track 标签页后就能看到
 ```
 
-想自己绘制每一条，传 `renderEntry`。
+想自己绘制每一条，传 `renderEntry`，它在只选中该标签页时生效。
 
 ### 在 Lynx DevTool 里查看
 
-Lynx DevTool 没有 Network 面板，所以每个完成的请求也会打印一行带 `%c` 样式的 `GET 200 https://… 123ms` 和 entry 对象，每条性能 entry 打印为 `pipeline loadBundle FCP 812.34ms`。在控制台的 Log 标签页里，它们渲染成和 Network、Perf 标签页相同的条目。`initNetworkMonitor({ console: "plain" })` 打印无样式文本（logcat、CI），`{ console: false }` 则关闭。想把这些行收进一个标签页，用 `filter: isNetworkLog`。
+Lynx DevTool 没有 Network 面板，所以每个完成的请求也会打印一行带 `%c` 样式的 `GET 200 https://… 123ms` 和 entry 对象，每条性能 entry 打印为 `pipeline loadBundle FCP 812.34ms`。在控制台里，它们渲染成和 Network、Perf 标签页相同的条目。`initNetworkMonitor({ console: "plain" })` 打印无样式文本（logcat、CI），`{ console: false }` 则关闭。想把这些行收进一个标签页，用 `filter: isNetworkLog`。
 
 ### 用 ref 控制
 
@@ -218,7 +225,7 @@ function App() {
 | `label`         | `string`          | 标签页的文字           |
 | `renderContent` | `() => ReactNode` | 内容标签页：渲染标签页内容的函数 |
 | `filter`        | `string \| RegExp \| (entry: LogEntry) => boolean` | 筛选标签页：只显示匹配的控制台条目 |
-| `renderEntry`   | `(entry: LogEntry) => ReactNode` | 筛选标签页，可选：渲染一条匹配的条目 |
+| `renderEntry`   | `(entry: LogEntry) => ReactNode` | 筛选标签页，可选：只选中该标签页时渲染一条匹配的条目 |
 
 ### `LynxConsoleHandle`
 

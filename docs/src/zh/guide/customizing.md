@@ -5,9 +5,23 @@ description: 自定义标签页、用代码打开控制台，以及按钮位置�
 
 # 自定义标签页与 ref
 
+## 用标签页筛选
+
+控制台顶部的标签页可以同时选中多个，选中的标签页会带下划线。
+
+- 一个都不选时，显示全部。
+- 选中多个时取并集：同时打开 `Log` 和 `Network`，就能一起看控制台日志和网络日志。
+- 再点一次已选中的标签页就会取消。
+- 打开 `Log` 后，左侧会出现日志级别下拉框（`Filter ▼`）。
+- 只选中 `Network` 时，会切换到带匹配跳转（`▲` `▼`）的网络专用界面。
+
+搜索框不仅看打印出来的文本，也会搜索网络请求的 URL、请求头和请求 / 响应体。命中的网络行会展开到匹配所在的
+区块并高亮。搜索词和网络专用界面共用，切换标签页也不会丢。
+
 ## 添加自己的标签页
 
-任何你需要的调试信息，都可以放进控制台的一个标签页里。
+任何你需要的调试信息，都可以放进控制台的一个标签页里。带 `renderContent` 的标签页排在分隔线之后，
+点击后会把整个正文替换成该内容。
 
 ```tsx
 import LynxConsole, { type CustomTab } from 'lynx-console';
@@ -31,7 +45,7 @@ function App() {
 
 ## 把控制台日志筛进一个标签页
 
-Log 标签页始终显示全部日志。带 `filter` 的标签页只显示匹配的条目，方便只看你关心的那部分。
+带 `filter` 的标签页会成为筛选标签页，只收集匹配的控制台条目。它和 `Log`、`Network`、`Perf` 并排，既可以和它们一起打开，也可以单独打开。
 
 ```tsx
 import LynxConsole, { type CustomTab } from 'lynx-console';
@@ -45,12 +59,12 @@ const customTabs: CustomTab[] = [
   { key: 'errors', label: 'Errors', filter: (entry) => entry.level === 'error' },
 ];
 
-console.log('%ctrack%c screen_view', 'color:#db2777;font-weight:bold', '', { screen: 'home' }); // 会出现在 Track 标签页
+console.log('%ctrack%c screen_view', 'color:#db2777;font-weight:bold', '', { screen: 'home' }); // 打开 Track 标签页后就能看到
 ```
 
 字符串和正则筛选看的是实际打印出来的文本：先去掉 `%c` 样式字符串，并应用 `%s` / `%d`。`%c` 样式在标签页里同样会渲染，所以用彩色标签标记一类日志很方便。
 
-匹配的条目按 Log 标签页的样式渲染。想自己绘制每一条，传 `renderEntry`：
+匹配的条目按普通日志行的样式渲染。想自己绘制每一条，传 `renderEntry`，它在只选中该标签页时生效：
 
 ```tsx
 import { isNetworkLog } from 'lynx-console';

@@ -36,6 +36,7 @@ https://github.com/user-attachments/assets/d231bdf5-71bb-483f-9bdb-5843279c1308
 - **크기 조절 패널** — 핸들을 드래그해 크기를 조절해요. 바텀시트는 높이(200–700px), 사이드 패널은 너비(280–720px)를 조절하고 바깥쪽으로 밀면 닫혀요. 터치와 web 의 마우스 둘 다 돼요
 - **화면에 맞는 레이아웃** — 세로가 긴 화면에서는 바텀시트로, LynxView 가 가로로 더 넓으면(펼친 폴더블 · 태블릿 · 가로 모드) 오른쪽 사이드 패널로 열려요
 - **탭 자동 숨김** — 초기화된 모니터의 탭만 표시되고, 초기화하지 않은 모니터의 탭은 표시되지 않아요
+- **다중 선택 필터 탭** — 탭을 여러 개 켜서 선택한 탭만 볼 수 있어요. 아무것도 안 켜면 전부 보이고, 켜진 탭을 다시 누르면 꺼져요
 - **커스텀 탭** — `customTabs` prop으로 직접 만든 탭을 추가하거나, `filter`를 줘서 보고 싶은 콘솔 로그만 모아 볼 수 있어요
 - **Lynx DevTool 연동** — 네트워크 요청과 FCP를 요약 한 줄과 엔트리로 콘솔에도 찍어서, Network 패널이 없는 Lynx DevTool에서도 볼 수 있어요.
 - **라이트/다크 모드** 를 지원해요
@@ -147,9 +148,15 @@ function App() {
 }
 ```
 
+### 탭으로 걸러 보기
+
+콘솔 위쪽 탭은 여러 개를 동시에 켤 수 있어요. 아무것도 안 켜면 전부 보여주고, 여러 개를 켜면 합집합이에요.
+`Log`를 켜면 레벨 드롭다운(`Filter ▼`)이 나오고, `Network`만 켜면 매치 순회가 되는 네트워크 전용 화면으로 바뀌어요.
+검색창은 찍힌 텍스트뿐 아니라 네트워크 요청의 URL · 헤더 · 본문까지 훑고, 걸린 네트워크 줄은 매치가 있는 섹션이 펼쳐진 채로 강조돼요.
+
 ### 콘솔 로그를 골라 탭으로 보기
 
-Log 탭에는 항상 전부 보여요. `filter`를 준 탭은 조건에 맞는 로그만 모아 보여줘요.
+`filter`를 준 탭은 조건에 맞는 로그만 모아 보여주는 필터 탭이 돼요.
 
 ```tsx
 const customTabs: CustomTab[] = [
@@ -157,14 +164,14 @@ const customTabs: CustomTab[] = [
   { key: "errors", label: "Errors", filter: (entry) => entry.level === "error" },
 ];
 
-console.log("%ctrack%c screen_view", "color:#db2777;font-weight:bold", "", { screen: "home" }); // Track 탭에 보여요
+console.log("%ctrack%c screen_view", "color:#db2777;font-weight:bold", "", { screen: "home" }); // Track 탭을 켜면 보여요
 ```
 
-한 줄을 직접 그리고 싶으면 `renderEntry`를 줘요.
+한 줄을 직접 그리고 싶으면 `renderEntry`를 줘요. 그 탭만 단독으로 켰을 때 쓰여요.
 
 ### Lynx DevTool에서 보기
 
-Lynx DevTool에는 Network 패널이 없어서, 완료된 요청마다 `%c`로 꾸민 `GET 200 https://… 123ms` 한 줄과 엔트리 객체를, 성능 엔트리는 `pipeline loadBundle FCP 812.34ms`를 콘솔에도 찍어요. 콘솔의 Log 탭에서는 Network · Perf 탭과 같은 행으로 그려져요. `initNetworkMonitor({ console: "plain" })`이면 스타일 없는 텍스트로(logcat, CI), `{ console: false }`면 안 찍어요. 이 줄만 탭에 모으려면 `filter: isNetworkLog`를 써요.
+Lynx DevTool에는 Network 패널이 없어서, 완료된 요청마다 `%c`로 꾸민 `GET 200 https://… 123ms` 한 줄과 엔트리 객체를, 성능 엔트리는 `pipeline loadBundle FCP 812.34ms`를 콘솔에도 찍어요. 콘솔에서는 Network · Perf 탭과 같은 행으로 그려져요. `initNetworkMonitor({ console: "plain" })`이면 스타일 없는 텍스트로(logcat, CI), `{ console: false }`면 안 찍어요. 이 줄만 탭에 모으려면 `filter: isNetworkLog`를 써요.
 
 ### ref로 제어하기
 
@@ -219,7 +226,7 @@ back press 핸들러와 연동해서 뒤로 가기 버튼을 눌렀을 때 콘�
 | `label`         | `string`          | 탭 레이블 텍스트            |
 | `renderContent` | `() => ReactNode` | 콘텐츠 탭: 탭 콘텐츠를 렌더링하는 함수 |
 | `filter`        | `string \| RegExp \| (entry: LogEntry) => boolean` | 필터 탭: 조건에 맞는 콘솔 로그만 보여줘요 |
-| `renderEntry`   | `(entry: LogEntry) => ReactNode` | 필터 탭 선택 항목: 매칭된 로그 한 줄을 그려요 |
+| `renderEntry`   | `(entry: LogEntry) => ReactNode` | 필터 탭 선택 항목: 그 탭만 단독으로 켰을 때 매칭된 로그 한 줄을 그려요 |
 
 ### `LynxConsoleHandle`
 

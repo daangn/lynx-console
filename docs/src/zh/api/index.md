@@ -17,7 +17,7 @@ description: props、console handle 和监视器初始化函数。
 
 ## `CustomTab`
 
-标签页是内容标签页或日志筛选标签页两者之一。
+标签页是内容标签页或日志筛选标签页两者之一。筛选标签页和内置的 `Log` / `Network` / `Perf` 标签页并排，可以同时选中多个；内容标签页排在分隔线之后，会替换整个正文。
 
 | 属性 | 类型 | 说明 |
 | --- | --- | --- |
@@ -25,7 +25,7 @@ description: props、console handle 和监视器初始化函数。
 | `label` | `string` | 标签页的显示文字。 |
 | `renderContent` | `() => ReactNode` | 内容标签页：渲染标签页的内容。 |
 | `filter` | `string \| RegExp \| (entry: LogEntry) => boolean` | 筛选标签页：只显示匹配的控制台条目。字符串在打印出来的文本（应用 `%c` / `%s` 之后）包含它时匹配，正则在该文本通过 test 时匹配。 |
-| `renderEntry` | `(entry: LogEntry) => ReactNode` | 筛选标签页，可选：渲染一条匹配的条目。默认和 Log 标签页的样式相同。 |
+| `renderEntry` | `(entry: LogEntry) => ReactNode` | 筛选标签页，可选：只选中该标签页时，用它渲染一条匹配的条目。默认和普通日志行的样式相同。 |
 
 ## `LynxConsoleHandle`
 
@@ -48,7 +48,7 @@ description: props、console handle 和监视器初始化函数。
 | `initNetworkMonitor(options?)` | 拦截并记录 `fetch` 请求。 |
 | `initPerformanceMonitor(options?)` | 收集性能指标。 |
 
-只有初始化过的监视器，才会显示对应的标签页。
+只有初始化过的监视器，才会显示对应的标签页。一个标签页都没选中时，显示全部条目。
 
 `options.console`（默认 `true`）会把每条收集到的 entry 以一行带 `%c` 样式的摘要加 entry 对象的形式也打印到控制台，这样在 Lynx DevTool 里也能看到。`"plain"` 打印无样式文本，`false` 则不打印。参见 [Lynx DevTool](/zh/guide/devtool)。
 

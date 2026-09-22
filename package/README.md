@@ -35,6 +35,7 @@ https://github.com/user-attachments/assets/d231bdf5-71bb-483f-9bdb-5843279c1308
 - **Resizable Panel** — Drag the handle to resize the console panel — height as a bottom sheet (200–700px), width as a side panel (280–720px); drag it outward to dismiss. Works with touch and with the mouse on web
 - **Adaptive Layout** — Opens as a bottom sheet on tall screens and as a right side panel when the LynxView is wider than it is tall (unfolded foldable, tablet, landscape)
 - **Tab Visibility** — Only tabs for initialized monitors are shown; uninitialized monitors are automatically hidden
+- **Multi-select Filter Tabs** — Turn on several tabs at once to view only the selected tabs. With nothing on, everything shows; tap an active tab again to turn it off
 - **Custom Tabs** — Add your own tabs via the `customTabs` prop, or give a tab a `filter` to show only the console logs you care about
 - **Lynx DevTool friendly** — Network requests and FCP are also printed to the console as a summary line plus the entry, so they show up in Lynx DevTool (which has no Network panel).
 - **Light/Dark Theme** support
@@ -146,9 +147,15 @@ function App() {
 }
 ```
 
+### Filtering with tabs
+
+The tabs at the top of the console are multi-select. With nothing active everything shows, and several active tabs are a union.
+Turning on `Log` reveals the level dropdown (`Filter ▼`); with `Network` alone active the body switches to the network-only view with match navigation.
+The search box looks at the printed text as well as the URL, headers and body of each network request, and a matched network row is expanded on the section that matched.
+
 ### Filtering console logs into a tab
 
-The Log tab always shows everything. A tab with `filter` shows only the console entries that match.
+A tab with `filter` becomes a filter tab that collects only the console entries that match.
 
 ```tsx
 const customTabs: CustomTab[] = [
@@ -156,14 +163,14 @@ const customTabs: CustomTab[] = [
   { key: "errors", label: "Errors", filter: (entry) => entry.level === "error" },
 ];
 
-console.log("%ctrack%c screen_view", "color:#db2777;font-weight:bold", "", { screen: "home" }); // shows up in the Track tab
+console.log("%ctrack%c screen_view", "color:#db2777;font-weight:bold", "", { screen: "home" }); // shows up once the Track tab is on
 ```
 
-Pass `renderEntry` to draw each matched entry yourself.
+Pass `renderEntry` to draw each matched entry yourself — it applies when that tab is the only one active.
 
 ### Reading from Lynx DevTool
 
-Lynx DevTool has no Network panel, so each completed request is also printed as a `%c`-styled `GET 200 https://… 123ms` line plus the entry object, and every performance entry as `pipeline loadBundle FCP 812.34ms`. In the console's Log tab these render as the same rows as the Network and Perf tabs. Pass `initNetworkMonitor({ console: "plain" })` for unstyled text (logcat, CI) or `{ console: false }` to turn it off. Use `filter: isNetworkLog` to collect these lines in a tab.
+Lynx DevTool has no Network panel, so each completed request is also printed as a `%c`-styled `GET 200 https://… 123ms` line plus the entry object, and every performance entry as `pipeline loadBundle FCP 812.34ms`. In the console they render as the same rows as the Network and Perf tabs. Pass `initNetworkMonitor({ console: "plain" })` for unstyled text (logcat, CI) or `{ console: false }` to turn it off. Use `filter: isNetworkLog` to collect these lines in a tab.
 
 ### Controlling with ref
 
@@ -218,7 +225,7 @@ You can also integrate it with a back press handler so that the console closes w
 | `label`         | `string`          | Tab label text                        |
 | `renderContent` | `() => ReactNode` | Content tab: renders the tab content |
 | `filter`        | `string \| RegExp \| (entry: LogEntry) => boolean` | Filter tab: shows only matching console entries |
-| `renderEntry`   | `(entry: LogEntry) => ReactNode` | Filter tab, optional: renders one matched entry |
+| `renderEntry`   | `(entry: LogEntry) => ReactNode` | Filter tab, optional: renders one matched entry when that tab is the only active one |
 
 ### `LynxConsoleHandle`
 

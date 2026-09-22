@@ -12,6 +12,9 @@ interface NetworkSearchBarProps {
   activeIndex: number;
   goToMatch: (delta: number) => void;
   clearNetworks: () => void;
+  // 통합 리스트와 같은 형식으로 보여줘요. 좁혔을 때만 "3 / 8" 이에요
+  matchedCount: number;
+  totalCount: number;
 }
 
 export const NetworkSearchBar = ({
@@ -22,6 +25,8 @@ export const NetworkSearchBar = ({
   activeIndex,
   goToMatch,
   clearNetworks,
+  matchedCount,
+  totalCount,
 }: NetworkSearchBarProps) => {
   const colors = useThemeColors();
   const hasQuery = searchQuery.trim().length > 0;
@@ -111,6 +116,15 @@ export const NetworkSearchBar = ({
           </view>
         )}
       </view>
+      <text
+        className={"np-count t2"}
+        style={{
+          fontWeight: fontWeight.regular,
+          color: colors.fg.neutralSubtle,
+        }}
+      >
+        {hasQuery ? `${matchedCount} / ${totalCount}` : String(totalCount)}
+      </text>
       <view
         className={"np-clearButton"}
         style={{ backgroundColor: colors.bg.neutralWeak }}

@@ -17,7 +17,7 @@ description: props, handle, 모니터 초기화 함수예요.
 
 ## `CustomTab`
 
-콘텐츠 탭과 로그 필터 탭, 둘 중 하나예요.
+콘텐츠 탭과 로그 필터 탭, 둘 중 하나예요. 필터 탭은 기본 `Log` / `Network` / `Perf` 탭 옆에 나란히 놓이고 여러 개를 함께 켤 수 있어요. 콘텐츠 탭은 구분선 뒤에 놓이고 본문을 통째로 바꿔요.
 
 | 속성 | 타입 | 설명 |
 | --- | --- | --- |
@@ -25,7 +25,7 @@ description: props, handle, 모니터 초기화 함수예요.
 | `label` | `string` | 탭에 표시할 텍스트예요. |
 | `renderContent` | `() => ReactNode` | 콘텐츠 탭: 탭 콘텐츠를 렌더하는 함수예요. |
 | `filter` | `string \| RegExp \| (entry: LogEntry) => boolean` | 필터 탭: 조건에 맞는 콘솔 로그만 보여줘요. 문자열은 찍힌 텍스트(`%c` · `%s` 서식 적용 후)에 포함되면, 정규식은 그 텍스트가 통과하면 매칭돼요. |
-| `renderEntry` | `(entry: LogEntry) => ReactNode` | 필터 탭 선택 항목: 매칭된 로그 한 줄을 그려요. 기본은 Log 탭과 같은 모양이에요. |
+| `renderEntry` | `(entry: LogEntry) => ReactNode` | 필터 탭 선택 항목: 그 탭만 단독으로 켰을 때 매칭된 로그 한 줄을 그려요. 기본은 평소 로그 한 줄과 같은 모양이에요. |
 
 ## `LynxConsoleHandle`
 
@@ -48,7 +48,7 @@ description: props, handle, 모니터 초기화 함수예요.
 | `initNetworkMonitor(options?)` | `fetch` 요청을 가로채서 기록해요. |
 | `initPerformanceMonitor(options?)` | 성능 지표를 수집해요. |
 
-초기화한 모니터의 탭만 렌더돼요.
+초기화한 모니터의 탭만 렌더돼요. 켠 탭이 하나도 없으면 전부 보여줘요.
 
 `options.console`(기본값 `true`)을 켜두면 수집한 엔트리를 `%c`로 꾸민 요약 한 줄과 엔트리 객체로 콘솔에도 찍어서, Lynx DevTool 에서 볼 수 있어요. `"plain"`은 스타일 없는 텍스트로 찍고, `false`는 안 찍어요. [Lynx DevTool](/ko/guide/devtool)을 참고해요.
 

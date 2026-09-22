@@ -8,12 +8,18 @@ import { LogItem } from "./LogItem";
 
 interface LogListProps {
   logs: LogEntry[];
+  searchQuery?: string | undefined;
   emptyText: string;
   renderEntry?: ((entry: LogEntry) => ReactNode) | undefined;
 }
 
 // Log 탭과 필터 탭이 같이 쓰는 로그 목록이에요. 펼침 상태와 맨 아래 스크롤을 여기서 들어요
-export const LogList = ({ logs, emptyText, renderEntry }: LogListProps) => {
+export const LogList = ({
+  logs,
+  emptyText,
+  renderEntry,
+  searchQuery = "",
+}: LogListProps) => {
   const colors = useThemeColors();
   const [expandedArgs, setExpandedArgs] = useState(new Set<string>());
   const listRef = useRef<NodesRef>(null);
@@ -32,6 +38,10 @@ export const LogList = ({ logs, emptyText, renderEntry }: LogListProps) => {
       })
       .exec();
   }, [logs.length, lastId]);
+
+  useEffect(() => {
+    setExpandedArgs(new Set());
+  }, [searchQuery]);
 
   const toggleArg = (key: string) => {
     setExpandedArgs((prev) => {
@@ -77,6 +87,7 @@ export const LogList = ({ logs, emptyText, renderEntry }: LogListProps) => {
                 log={log}
                 expandedArgs={expandedArgs}
                 toggleArg={toggleArg}
+                searchQuery={searchQuery}
               />
             )}
           </list-item>

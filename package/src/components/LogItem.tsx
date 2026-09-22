@@ -64,10 +64,16 @@ interface LogItemProps {
   log: LogEntry;
   expandedArgs: Set<string>;
   toggleArg: (key: string) => void;
+  searchQuery?: string | undefined;
 }
 
 // Log 탭과 필터 탭이 같이 쓰는 로그 한 줄이에요
-export const LogItem = ({ log, expandedArgs, toggleArg }: LogItemProps) => {
+export const LogItem = ({
+  log,
+  expandedArgs,
+  toggleArg,
+  searchQuery = "",
+}: LogItemProps) => {
   const colors = useThemeColors();
 
   // 네트워크 모니터가 찍은 로그는 Network 탭 항목과 같은 UI 로 보여줘요
@@ -79,6 +85,7 @@ export const LogItem = ({ log, expandedArgs, toggleArg }: LogItemProps) => {
         network={network}
         expanded={expandedArgs.has(key)}
         onToggle={() => toggleArg(key)}
+        searchQuery={searchQuery}
       />
     );
   }

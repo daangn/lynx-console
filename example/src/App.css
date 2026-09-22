@@ -25,5 +25,6 @@
 .app-debugPanel {
   display: flex;
   flex-direction: column;
+  flex: 1;
   padding: 4px 0;
 }

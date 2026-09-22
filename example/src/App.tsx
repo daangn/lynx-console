@@ -1,5 +1,10 @@
 import { lazy, Suspense } from '@lynx-js/react';
-import { ActionRow, ActionRowContent, Section } from './components';
+import {
+  ActionRow,
+  ActionRowContent,
+  GlobalPropsPanel,
+  Section,
+} from './components';
 import { usePressFeedback } from './hooks/usePressFeedback';
 import './App.css';
 
@@ -276,18 +281,12 @@ const App = () => {
               filter: /^track /,
             },
             {
+              // lynx.__globalProps 를 통째로 펼쳐 보여주는 콘텐츠 탭이에요
               key: 'debug',
               label: 'Debug',
               renderContent: () => (
                 <view className="app-debugPanel">
-                  <ActionRow
-                    label="Log globalProps"
-                    caption="lynx.__globalProps 를 출력해요"
-                    meta="log"
-                    bindtap={() => {
-                      console.log(lynx.__globalProps);
-                    }}
-                  />
+                  <GlobalPropsPanel />
                 </view>
               ),
             },

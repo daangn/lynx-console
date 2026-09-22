@@ -5,9 +5,24 @@ description: Custom tabs, opening the console from code, and button placement.
 
 # Custom Tabs & Ref
 
+## Filtering with tabs
+
+The tabs at the top of the console are multi-select. An active tab is underlined.
+
+- With nothing active, everything shows.
+- Several active tabs are a union: turn on `Log` and `Network` to watch console logs and network logs together.
+- Tap an active tab again to turn it off.
+- Turning on `Log` reveals the level dropdown (`Filter ▼`) on the left.
+- With `Network` alone active, the body switches to the network-only view with match navigation (`▲` `▼`).
+
+The search box looks at the printed text as well as the URL, headers and body of each network request. A matched
+network row is expanded on the section that matched, with the hit highlighted. The query is shared with the
+network-only view, so it survives switching tabs.
+
 ## Adding your own tab
 
-You can put any debugging information you need into a console tab.
+You can put any debugging information you need into a console tab. A tab with `renderContent`
+sits after a divider, and tapping it replaces the whole body with that content.
 
 ```tsx
 import LynxConsole, { type CustomTab } from 'lynx-console';
@@ -31,7 +46,7 @@ function App() {
 
 ## Filtering console logs into a tab
 
-The Log tab always shows everything. A tab with `filter` shows only the console entries that match, so you can keep a clean view of the logs you care about.
+A tab with `filter` becomes a filter tab that collects only the console entries that match. It sits next to `Log`, `Network` and `Perf`, so you can turn it on alongside them or on its own.
 
 ```tsx
 import LynxConsole, { type CustomTab } from 'lynx-console';
@@ -45,12 +60,12 @@ const customTabs: CustomTab[] = [
   { key: 'errors', label: 'Errors', filter: (entry) => entry.level === 'error' },
 ];
 
-console.log('%ctrack%c screen_view', 'color:#db2777;font-weight:bold', '', { screen: 'home' }); // shows up in the Track tab
+console.log('%ctrack%c screen_view', 'color:#db2777;font-weight:bold', '', { screen: 'home' }); // shows up once the Track tab is on
 ```
 
 String and RegExp filters look at the text as it is printed: `%c` style strings are dropped and `%s` / `%d` are applied first. `%c` styling is rendered in the tab too, so a colored chip is an easy way to mark a log family.
 
-Matched entries are rendered like the Log tab. Pass `renderEntry` to draw each entry yourself:
+Matched entries are rendered like every other row. Pass `renderEntry` to draw each entry yourself — it applies when that tab is the only one active:
 
 ```tsx
 import { isNetworkLog } from 'lynx-console';

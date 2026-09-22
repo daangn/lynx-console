@@ -17,7 +17,7 @@ description: Props, the console handle, and the monitor init functions.
 
 ## `CustomTab`
 
-A tab is either a content tab or a log filter tab.
+A tab is either a content tab or a log filter tab. Filter tabs are multi-select and sit next to the built-in `Log` / `Network` / `Perf` tabs; content tabs sit after a divider and swap the whole body.
 
 | Property | Type | Description |
 | --- | --- | --- |
@@ -25,7 +25,7 @@ A tab is either a content tab or a log filter tab.
 | `label` | `string` | Tab label text. |
 | `renderContent` | `() => ReactNode` | Content tab: renders the tab content. |
 | `filter` | `string \| RegExp \| (entry: LogEntry) => boolean` | Filter tab: shows only console entries that match. A string matches when the printed text (after `%c` / `%s` formatting) contains it, a RegExp when that text passes the test. |
-| `renderEntry` | `(entry: LogEntry) => ReactNode` | Filter tab, optional: renders one matched entry. Defaults to the Log tab row. |
+| `renderEntry` | `(entry: LogEntry) => ReactNode` | Filter tab, optional: renders one matched entry when that tab is the only active one. Defaults to the standard log row. |
 
 ## `LynxConsoleHandle`
 
@@ -48,7 +48,7 @@ Imported from `lynx-console/setup`, called at your app's entry point.
 | `initNetworkMonitor(options?)` | Intercepts and records `fetch` requests. |
 | `initPerformanceMonitor(options?)` | Collects performance metrics. |
 
-Tabs are only rendered for monitors that were initialized.
+Tabs are only rendered for monitors that were initialized. With no tab active, every entry shows.
 
 `options.console` (default `true`) also prints each collected entry to the console as a `%c`-styled summary line plus the entry object, so it shows up in Lynx DevTool. `"plain"` prints unstyled text, `false` prints nothing. See [Lynx DevTool](/guide/devtool).
 

@@ -1,63 +1,61 @@
-import { useEffect, useMemo, useRef, useState } from "@lynx-js/react";
+import {
+  type ReactNode,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "@lynx-js/react";
 import type { BaseEvent, InputInputEvent, NodesRef } from "@lynx-js/types";
 import { useThemeColors } from "../styles/ThemeContext";
 import { fontWeight } from "../styles/theme";
 import type { LogEntry, LogLevel } from "../types";
-import { getLogSearchStrings } from "../utils/matchesLogFilter";
+import { matchesSearchQuery } from "../utils/logSearch";
 import "./ConsolePanel.css";
 import { getLevelColor } from "./LogItem";
 import { LogList } from "./LogList";
 
-const LOG_LEVELS: LogLevel[] = ["log", "info", "warn", "error"];
+export const LOG_LEVELS: LogLevel[] = ["log", "info", "warn", "error"];
 
-let savedEnabledLevels: Set<LogLevel> | null = null;
-let savedSearchQuery = "";
 let closeFilterDropdown: (() => void) | null = null;
 
 export const dismissFilterDropdown = () => closeFilterDropdown?.();
 
-interface LogPanelProps {
-  logs: LogEntry[];
-  clearLogs: () => void;
+interface LevelFilter {
+  enabled: Set<LogLevel>;
+  toggle: (level: LogLevel) => void;
 }
 
-const runCode = (code: string) => {
-  try {
-    // biome-ignore lint: intentional REPL tool
-    const result = eval(code);
-    if (result instanceof Promise) {
-      result.then((r) => console.log(r)).catch((e) => console.error(e));
-    } else {
-      console.log(result);
-    }
-  } catch (e) {
-    console.error(e);
-  }
-};
+interface LogPanelProps {
+  // 필터 탭 · 레벨로 이미 걸러진 로그예요
+  logs: LogEntry[];
+  // 필터 전 전체 개수예요. "3 / 42" 로 지금 얼마나 좁혔는지 보여줘요
+  totalCount: number;
+  clearLogs: () => void;
+  renderEntry?: ((entry: LogEntry) => ReactNode) | undefined;
+  // 주면 레벨 드롭다운을 그려요. Log 탭을 켰을 때만 와요
+  levelFilter?: LevelFilter | undefined;
+  // Network 전용 화면과 같은 검색어를 써요
+  searchQuery: string;
+  setSearchQuery: (value: string) => void;
+}
 
-export const LogPanel = ({ logs, clearLogs }: LogPanelProps) => {
+export const LogPanel = ({
+  logs,
+  totalCount,
+  clearLogs,
+  renderEntry,
+  levelFilter,
+  searchQuery,
+  setSearchQuery,
+}: LogPanelProps) => {
   const colors = useThemeColors();
-  const [code, setCode] = useState("");
-  const [enabledLevels, setEnabledLevels] = useState<Set<LogLevel>>(
-    () => savedEnabledLevels ?? new Set(LOG_LEVELS),
-  );
   const [filterOpen, setFilterOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState(savedSearchQuery);
-  const inputRef = useRef<NodesRef>(null);
   const searchInputRef = useRef<NodesRef>(null);
 
   useEffect(() => {
-    savedEnabledLevels = enabledLevels;
-  }, [enabledLevels]);
-
-  useEffect(() => {
-    savedSearchQuery = searchQuery;
-  }, [searchQuery]);
-
-  useEffect(() => {
-    if (savedSearchQuery) {
+    if (searchQuery) {
       searchInputRef.current
-        ?.invoke({ method: "setValue", params: { value: savedSearchQuery } })
+        ?.invoke({ method: "setValue", params: { value: searchQuery } })
         .exec();
     }
   }, []);
@@ -69,42 +67,17 @@ export const LogPanel = ({ logs, clearLogs }: LogPanelProps) => {
     };
   }, []);
 
-  const filteredLogs = useMemo(
-    () =>
-      logs.filter((log) => {
-        if (!enabledLevels.has(log.level)) return false;
-        if (searchQuery) {
-          const query = searchQuery.toLowerCase();
-          return getLogSearchStrings(log).some((text) =>
-            text.toLowerCase().includes(query),
-          );
-        }
-        return true;
-      }),
-    [logs, enabledLevels, searchQuery],
+  // 드롭다운이 사라지는 동안 열린 채로 남지 않게 해요
+  useEffect(() => {
+    if (!levelFilter) setFilterOpen(false);
+  }, [levelFilter]);
+
+  const visibleLogs = useMemo(
+    () => logs.filter((log) => matchesSearchQuery(log, searchQuery)),
+    [logs, searchQuery],
   );
-  const toggleLevel = (level: LogLevel) => {
-    setEnabledLevels((prev) => {
-      const next = new Set(prev);
-      if (next.has(level)) {
-        next.delete(level);
-      } else {
-        next.add(level);
-      }
-      return next;
-    });
-  };
 
-  const handleRun = () => {
-    const trimmed = code.trim();
-    if (!trimmed) return;
-
-    setCode("");
-    inputRef.current
-      ?.invoke({ method: "setValue", params: { value: "" } })
-      .exec();
-    runCode(trimmed);
-  };
+  const isFiltered = visibleLogs.length !== totalCount;
 
   return (
     <view
@@ -114,60 +87,62 @@ export const LogPanel = ({ logs, clearLogs }: LogPanelProps) => {
       }}
     >
       <view className={"cp-logHeader"}>
-        <view className={"cp-filterWrapper"}>
-          <view
-            className={"cp-filterButton"}
-            style={{ backgroundColor: colors.bg.neutralWeak }}
-            catchtap={() => setFilterOpen((v) => !v)}
-          >
-            <text
-              className={"cp-filterButtonText t3"}
-              style={{
-                fontWeight: fontWeight.medium,
-                color: colors.fg.neutralMuted,
-              }}
-            >
-              Filter ▼
-            </text>
-          </view>
-          {filterOpen && (
+        {levelFilter && (
+          <view className={"cp-filterWrapper"}>
             <view
-              className={"cp-filterDropdown"}
-              style={{
-                backgroundColor: colors.bg.layerFloating,
-                borderColor: colors.stroke.neutralSubtle,
-              }}
-              catchtap={() => {}}
+              className={"cp-filterButton"}
+              style={{ backgroundColor: colors.bg.neutralWeak }}
+              catchtap={() => setFilterOpen((v) => !v)}
             >
-              {LOG_LEVELS.map((level) => (
-                <view
-                  key={level}
-                  className={"cp-filterOption"}
-                  bindtap={() => toggleLevel(level)}
-                >
-                  <text
-                    className={"cp-filterCheckbox t3"}
-                    style={{
-                      fontWeight: fontWeight.medium,
-                      color: getLevelColor(colors, level),
-                    }}
-                  >
-                    {enabledLevels.has(level) ? "✅" : "⬜"}
-                  </text>
-                  <text
-                    className={"cp-filterLabel t3"}
-                    style={{
-                      fontWeight: fontWeight.medium,
-                      color: getLevelColor(colors, level),
-                    }}
-                  >
-                    {level.toUpperCase()}
-                  </text>
-                </view>
-              ))}
+              <text
+                className={"cp-filterButtonText t3"}
+                style={{
+                  fontWeight: fontWeight.medium,
+                  color: colors.fg.neutralMuted,
+                }}
+              >
+                Filter ▼
+              </text>
             </view>
-          )}
-        </view>
+            {filterOpen && (
+              <view
+                className={"cp-filterDropdown"}
+                style={{
+                  backgroundColor: colors.bg.layerFloating,
+                  borderColor: colors.stroke.neutralSubtle,
+                }}
+                catchtap={() => {}}
+              >
+                {LOG_LEVELS.map((level) => (
+                  <view
+                    key={level}
+                    className={"cp-filterOption"}
+                    bindtap={() => levelFilter.toggle(level)}
+                  >
+                    <text
+                      className={"cp-filterCheckbox t3"}
+                      style={{
+                        fontWeight: fontWeight.medium,
+                        color: getLevelColor(colors, level),
+                      }}
+                    >
+                      {levelFilter.enabled.has(level) ? "✅" : "⬜"}
+                    </text>
+                    <text
+                      className={"cp-filterLabel t3"}
+                      style={{
+                        fontWeight: fontWeight.medium,
+                        color: getLevelColor(colors, level),
+                      }}
+                    >
+                      {level.toUpperCase()}
+                    </text>
+                  </view>
+                ))}
+              </view>
+            )}
+          </view>
+        )}
         <view
           className={"cp-searchWrapper"}
           style={{ borderBottomColor: colors.stroke.neutralSubtle }}
@@ -189,7 +164,7 @@ export const LogPanel = ({ logs, clearLogs }: LogPanelProps) => {
               color: colors.fg.neutral,
               caretColor: colors.palette.green600,
             }}
-            placeholder="Search logs..."
+            placeholder="Search logs, url, request & response..."
             bindinput={(e: BaseEvent<"bindinput", InputInputEvent>) =>
               setSearchQuery(e.detail.value)
             }
@@ -216,68 +191,43 @@ export const LogPanel = ({ logs, clearLogs }: LogPanelProps) => {
             </view>
           )}
         </view>
-        <view style={{ display: "flex", flexDirection: "row", gap: 8 }}>
-          <view
-            className={"cp-clearButton"}
-            style={{ backgroundColor: colors.bg.neutralWeak }}
-            bindtap={clearLogs}
-          >
-            <text
-              className={"cp-clearButtonText t3"}
-              style={{
-                fontWeight: fontWeight.medium,
-                color: colors.fg.neutralMuted,
-              }}
-            >
-              🗑
-            </text>
-          </view>
-        </view>
-      </view>
-      <LogList
-        logs={filteredLogs}
-        emptyText={'No logs yet. Try console.log("Hello!")'}
-      />
-      <view className={"cp-replInputRow"}>
         <text
-          className={"cp-replPrompt t10"}
-          style={{
-            fontWeight: fontWeight.medium,
-            color: colors.fg.placeholder,
-          }}
-        >
-          {"›"}
-        </text>
-        <input
-          ref={inputRef}
-          className={"cp-replInput t5"}
+          className={"cp-logCount t2"}
           style={{
             fontWeight: fontWeight.regular,
-            color: colors.fg.neutral,
-            caretColor: colors.palette.green600,
+            color: colors.fg.neutralSubtle,
           }}
-          placeholder="enter code..."
-          bindinput={(e: BaseEvent<"bindinput", InputInputEvent>) =>
-            setCode(e.detail.value)
-          }
-          bindconfirm={handleRun}
-        />
+        >
+          {isFiltered
+            ? `${visibleLogs.length} / ${totalCount}`
+            : String(totalCount)}
+        </text>
         <view
-          className={"cp-replRunButton"}
-          style={{ backgroundColor: colors.palette.green100 }}
-          bindtap={handleRun}
+          className={"cp-clearButton"}
+          style={{ backgroundColor: colors.bg.neutralWeak }}
+          bindtap={clearLogs}
         >
           <text
-            className={"cp-replRunButtonText t3"}
+            className={"cp-clearButtonText t3"}
             style={{
               fontWeight: fontWeight.medium,
-              color: colors.palette.green600,
+              color: colors.fg.neutralMuted,
             }}
           >
-            Run
+            🗑
           </text>
         </view>
       </view>
+      <LogList
+        logs={visibleLogs}
+        emptyText={
+          totalCount === 0
+            ? 'No logs yet. Try console.log("Hello!")'
+            : "No logs match the current filter."
+        }
+        renderEntry={renderEntry}
+        searchQuery={searchQuery}
+      />
     </view>
   );
 };

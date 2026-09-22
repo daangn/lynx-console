@@ -1,0 +1,49 @@
+.globalProps-list {
+  flex: 1;
+  width: 100%;
+}
+
+.globalProps-header {
+  padding: 8px 0 4px 0;
+}
+
+.globalProps-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid #f2f2f2;
+}
+
+.globalProps-rowStacked {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 8px 0;
+  border-bottom: 1px solid #f2f2f2;
+}
+
+.globalProps-key {
+  flex-shrink: 0;
+}
+
+/* 한 줄 값은 오른쪽 끝에 맞춰요. 키와 값이 각각 세로줄을 이뤄 읽기 쉬워요 */
+.globalProps-value {
+  flex-grow: 1;
+  flex-shrink: 1;
+  text-align: right;
+  word-break: break-all;
+}
+
+.globalProps-rowStacked .globalProps-value {
+  text-align: left;
+}
+
+.globalProps-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  padding: 24px 0;
+}

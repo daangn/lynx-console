@@ -83,6 +83,10 @@
   padding: 2px 4px;
 }
 
+.cp-logCount {
+  margin-right: 8px;
+}
+
 .cp-clearButton {
   padding: 3px 6px;
   border-radius: 4px;

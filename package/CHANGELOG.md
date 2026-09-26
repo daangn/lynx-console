@@ -1,5 +1,21 @@
 # lynx-console
 
+## 0.12.0
+
+### Minor Changes
+
+- f2e7c67: Add renderFloatingButton to replace or hide the default floating button, with open and isOpen render props.
+
+  Pass false to render the default button when conditionally customizing it.
+
+  Expose useFloatingButtonDrag with position, drag/overlay handlers, and child stopDragHandlers for custom buttons.
+
+  Custom drag hooks inherit LynxConsole initialPosition unless explicitly overridden.
+
+### Patch Changes
+
+- 570c5da: Remove the direct @types/react peer requirement and unused React development dependency, and allow @lynx-js/types >=3.6.0 including 4.1 and later.
+
 ## 0.11.0
 
 ### Minor Changes

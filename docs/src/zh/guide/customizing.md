@@ -144,3 +144,90 @@ function App() {
 <LynxConsole safeAreaInsetTop="44px" />
 ```
 
+## 替换悬浮按钮
+
+### 1. 使用自己的按钮
+
+传入 `renderFloatingButton` 可替换整个默认按钮，包括重新加载按钮。将 `open` 绑定到点击事件即可打开控制台，`isOpen` 表示面板是否打开。按钮的外观和位置由你决定。
+
+```tsx
+import LynxConsole from 'lynx-console';
+
+<LynxConsole
+  renderFloatingButton={({ open }) => (
+    <view
+      style={{ position: 'fixed', right: '16px', bottom: '84px', zIndex: 9997 }}
+      bindtap={open}
+    >
+      <text>Open console</text>
+    </view>
+  )}
+/>
+```
+
+### 2. 添加重新加载按钮和拖动
+
+在按钮组件中使用公开的 `useFloatingButtonDrag` Hook。将 `dragHandlers` 展开到可拖动容器，将 `stopDragHandlers` 展开到重新加载等独立操作按钮。Hook 会处理触摸和鼠标的差异，并避免点击重新加载时同时打开控制台。
+
+```tsx
+import LynxConsole, { useFloatingButtonDrag } from 'lynx-console';
+
+function MyFloatingButton({ open }: { open: () => void }) {
+  const { positionStyle, dragHandlers, stopDragHandlers, dragOverlayHandlers } =
+    useFloatingButtonDrag({
+      onTap: open,
+    });
+
+  return (
+    <>
+      {dragOverlayHandlers && (
+        <view
+          style={{
+            position: 'fixed', top: 0, left: 0,
+            width: '100vw', height: '100vh', zIndex: 9996,
+          }}
+          {...dragOverlayHandlers}
+        />
+      )}
+      <view
+        style={{
+          position: 'fixed', ...positionStyle, zIndex: 9997,
+          display: 'flex', flexDirection: 'row', alignItems: 'center',
+          padding: '8px', gap: '12px', borderRadius: '16px',
+          backgroundColor: '#eeeeee',
+        }}
+        {...dragHandlers}
+      >
+        <text style={{ color: '#222222' }}>Console</text>
+        <view
+          {...stopDragHandlers}
+          bindtap={() => lynx.reload({}, () => {})}
+        >
+          <text style={{ color: '#222222' }}>↻</text>
+        </view>
+      </view>
+    </>
+  );
+}
+
+<LynxConsole
+  initialPosition={{ right: 30, bottom: 200 }}
+  renderFloatingButton={({ open }) => <MyFloatingButton open={open} />}
+/>
+```
+
+当 `dragOverlayHandlers` 存在时，请渲染透明遮罩，以便网页端的鼠标离开按钮后仍可继续拖动。遮罩的 z-index 应高于页面内容、低于按钮。不要再给拖动容器绑定 `bindtap={open}`，Hook 已处理点击。
+
+请在 `MyFloatingButton` 组件内调用 Hook，不要直接在 `renderFloatingButton` 回调中调用。Hook 会自动读取 `LynxConsole.initialPosition`，只需调用 `useFloatingButtonDrag({ onTap: open })`。显式传给 Hook 的 `initialPosition` 优先；两处都省略时使用 `{ right: 16, bottom: 84 }`。Hook 会记住当前运行时中最后拖动的位置，锚点相同时与默认按钮共享。
+
+### 3. 切换回默认按钮
+
+```tsx
+<LynxConsole
+  renderFloatingButton={
+    enabled && (({ open }) => <MyFloatingButton open={open} />)
+  }
+/>
+```
+
+`enabled` 为 false 时显示默认按钮，省略此属性也一样。渲染回调返回 `null` 则隐藏按钮，此时可通过其他控件调用 `ref.open()`。

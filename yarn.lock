@@ -1159,6 +1159,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@lynx-js/types@npm:^4.2.1":
+  version: 4.2.1
+  resolution: "@lynx-js/types@npm:4.2.1"
+  dependencies:
+    csstype: "npm:3.1.3"
+  checksum: 10c0/8de6f6d2cba3715cce22bd9cfc19c578281d7072a352a26b4a8793534cd7d88e638fa21efd71209917ea54810c411ef7900e4268aadae07649b5d6b54e98d1fe
+  languageName: node
+  linkType: hard
+
 "@lynx-js/use-sync-external-store@npm:1.5.0":
   version: 1.5.0
   resolution: "@lynx-js/use-sync-external-store@npm:1.5.0"
@@ -6279,7 +6288,7 @@ __metadata:
     "@lynx-js/react": "npm:^0.117.0"
     "@lynx-js/react-rsbuild-plugin": "npm:^0.13.0"
     "@lynx-js/rspeedy": "npm:^0.13.3"
-    "@lynx-js/types": "npm:^3.9.0"
+    "@lynx-js/types": "npm:^4.2.1"
     "@lynx-js/web-core": "npm:0.19.7"
     "@lynx-js/web-elements": "npm:0.11.1"
     "@rsbuild/core": "npm:^1.7.3"

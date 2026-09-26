@@ -14,6 +14,7 @@ description: props、console handle 和监视器初始化函数。
 | `safeAreaInsetTop` | `string` | `"24px"` | 顶部安全区域内边距，仅在以侧边面板打开时使用（见下文）。 |
 | `customTabs` | `CustomTab[]` | `undefined` | 要在控制台里额外显示的标签页。 |
 | `initialPosition` | `{ top?: number; left?: number; right?: number; bottom?: number }` | `{ right: 16, bottom: 84 }` | 悬浮按钮的初始位置（px）。四个方向互相独立，所以可以吸附到任意一个角（例如 `{ top: 50, left: 16 }`）。同时给了 `top` 和 `bottom`（或 `left` 和 `right`）时，`top` / `left` 生效。用户拖动过按钮之后，保存下来的位置优先。 |
+| `renderFloatingButton` | `false \| ((props: FloatingButtonRenderProps) => ReactNode)` | `undefined` | 替换默认按钮及重新加载按钮，接收 `open` 和 `isOpen`。返回 `null` 可隐藏按钮。Hook 会自动读取 `LynxConsole.initialPosition`，只需调用 `useFloatingButtonDrag({ onTap: open })`。显式传给 Hook 的 `initialPosition` 优先；两处都省略时使用 `{ right: 16, bottom: 84 }`。传入 `false` 或省略此属性会使用默认按钮。可以通过 `enabled && renderer` 按条件切换。回调返回 `null` 时仍会隐藏按钮。 |
 
 ## `CustomTab`
 
@@ -55,3 +56,24 @@ description: props、console handle 和监视器初始化函数。
 ## `isNetworkLog(entry)` / `isPerformanceLog(entry)`
 
 返回一个 `LogEntry` 是否是网络监视器或性能监视器打印的行。用于筛选标签页：`filter: isNetworkLog`。
+
+## `useFloatingButtonDrag`
+
+为自定义按钮添加拖动的公开 Hook。可从 `lynx-console` 导入，同时提供 `UseFloatingButtonDragOptions` 和 `InitialPosition` 类型。
+
+```tsx
+const drag = useFloatingButtonDrag({ onTap: open });
+```
+
+| Option | Type | Description |
+| --- | --- | --- |
+| `onTap` | `() => void` | 未拖动的点击回调。 |
+| `initialPosition` | `InitialPosition` | Hook 会自动读取 `LynxConsole.initialPosition`，只需调用 `useFloatingButtonDrag({ onTap: open })`。显式传给 Hook 的 `initialPosition` 优先；两处都省略时使用 `{ right: 16, bottom: 84 }`。 |
+
+| Return | Description |
+| --- | --- |
+| `positionStyle` | 展开到 fixed 容器的 style 中。 |
+| `dragHandlers` | 展开到拖动容器，已包含点击处理。 |
+| `stopDragHandlers` | 展开到独立子按钮，再绑定该按钮自己的 `bindtap`。 |
+| `dragOverlayHandlers` | 非 null 时展开到全屏透明遮罩上（网页端）。 |
+| `phase` | `idle`、`dragging` 或 `releasing`，可用于视觉反馈。 |

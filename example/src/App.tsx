@@ -1,16 +1,18 @@
-import { lazy, Suspense } from '@lynx-js/react';
+import { lazy, Suspense, useState } from '@lynx-js/react';
 import {
   ActionRow,
   ActionRowContent,
   GlobalPropsPanel,
   Section,
 } from './components';
+import { CustomFloatingButton } from './components/CustomFloatingButton';
 import { usePressFeedback } from './hooks/usePressFeedback';
 import './App.css';
 
 const LynxConsole = lazy(() => import('lynx-console'));
 
 const App = () => {
+  const [customFloatingButton, setCustomFloatingButton] = useState(false);
   // main-thread 핸들러(worklet)는 컴포넌트 prop 으로 넘기면 깨져서, 이 줄만 <view> 를 직접 만들어요
   const mainThreadRowPress = usePressFeedback('actionRow--pressed');
 
@@ -139,139 +141,158 @@ const App = () => {
 
   return (
     <view className="app-container">
-      <list className="app-list" scroll-orientation="vertical">
-        <list-item item-key="hero">
-          <view className="app-hero">
-            <text className="app-title">lynx-console</text>
-            <text className="app-subtitle">
-              아래 항목을 눌러 로그와 네트워크 요청을 만들고, 오른쪽 아래 플로팅
-              버튼으로 콘솔을 열어 확인해보세요.
-            </text>
-          </view>
-        </list-item>
-
-        <list-item item-key="section-console">
-          <Section title="콘솔">
-            <ActionRow
-              label="Console Log"
-              caption="객체 · Map · Set 을 함께 출력해요"
-              meta="log"
-              bindtap={testConsoleLog}
-            />
-            <ActionRow
-              label="CSS Console Log"
-              caption="서식 지정자(%c %s %d %o)를 렌더링해요"
-              meta="log"
-              bindtap={testCssConsoleLog}
-            />
-            <view
-              className={`${mainThreadRowPress.className} actionRow`}
-              main-thread:bindtap={testConsoleLogInMainThread}
-              {...mainThreadRowPress.handlers}
-            >
-              <ActionRowContent
-                label="Console Log"
-                caption="메인 스레드에서 남기는 로그예요"
-                meta="main thread"
-              />
+      <view id="demo-blur-target" className="app-list" flatten={false}>
+        <list className="app-list" scroll-orientation="vertical">
+          <list-item item-key="hero">
+            <view className="app-hero">
+              <text className="app-title">lynx-console</text>
+              <text className="app-subtitle">
+                아래 항목을 눌러 로그와 네트워크 요청을 만들고, 오른쪽 아래
+                플로팅 버튼으로 콘솔을 열어 확인해보세요.
+              </text>
             </view>
-            <ActionRow
-              label="Console Error"
-              caption="console.error 한 줄을 남겨요"
-              meta="error"
-              tone="red"
-              bindtap={() => {
-                console.error('Test console error');
-              }}
-            />
-            <ActionRow
-              label="Throw Error"
-              caption="처리되지 않은 예외를 던져요"
-              meta="error"
-              tone="red"
-              bindtap={() => {
-                throw new Error('Test Error');
-              }}
-            />
-          </Section>
-        </list-item>
-
-        <list-item item-key="section-track">
-          <Section title="필터 탭">
-            <ActionRow
-              label="screen_view"
-              caption="Track 탭에만 모이는 커스텀 로그예요"
-              meta="track"
-              tone="pink"
-              bindtap={() => testTrackEvent('screen_view')}
-            />
-            <ActionRow
-              label="button_click"
-              caption="Track 탭에만 모이는 커스텀 로그예요"
-              meta="track"
-              tone="pink"
-              bindtap={() => testTrackEvent('button_click')}
-            />
-          </Section>
-        </list-item>
-
-        <list-item item-key="section-network">
-          <Section title="네트워크">
-            <ActionRow
-              label="jsonplaceholder /posts/1"
-              caption="목록 한 건을 받아와요"
-              method="GET"
-              bindtap={testGetRequest}
-            />
-            <ActionRow
-              label="jsonplaceholder /posts"
-              caption="새 글을 만들어요"
-              method="POST"
-              bindtap={testPostRequest}
-            />
-            <ActionRow
-              label="jsonplaceholder /posts/1"
-              caption="제목만 바꿔요"
-              method="PATCH"
-              bindtap={testPatchRequest}
-            />
-            <ActionRow
-              label="jsonplaceholder /posts/1"
-              caption="한 건을 지워요"
-              method="DELETE"
-              bindtap={testDeleteRequest}
-            />
-            <ActionRow
-              label="graphql.org /graphql"
-              caption="graphql-response+json 응답이에요"
-              method="POST"
-              bindtap={testGraphqlRequest}
-            />
-          </Section>
-        </list-item>
-
-        <list-item item-key="section-list-header">
-          <view className="section">
-            <text className="section-title app-sectionTitle">스크롤 목록</text>
-          </view>
-        </list-item>
-
-        {Array.from({ length: 20 }, (_, i) => (
-          <list-item item-key={`item-${i}`} key={`item-${i}`}>
-            <ActionRow
-              label={`List Item ${i + 1}`}
-              meta="log"
-              bindtap={() => console.log(`Item ${i + 1} tapped`)}
-            />
-            {i === 19 ? <view className="app-listBottomSpace" /> : null}
           </list-item>
-        ))}
-      </list>
+
+          <list-item item-key="section-custom-button">
+            <Section title="플로팅 버튼">
+              <ActionRow
+                label="Custom floating button"
+                caption="켜면 지원 기기에서 블러 · Liquid Glass로 보여요"
+                meta={customFloatingButton ? 'ON' : 'OFF'}
+                bindtap={() => setCustomFloatingButton((enabled) => !enabled)}
+              />
+            </Section>
+          </list-item>
+
+          <list-item item-key="section-console">
+            <Section title="콘솔">
+              <ActionRow
+                label="Console Log"
+                caption="객체 · Map · Set 을 함께 출력해요"
+                meta="log"
+                bindtap={testConsoleLog}
+              />
+              <ActionRow
+                label="CSS Console Log"
+                caption="서식 지정자(%c %s %d %o)를 렌더링해요"
+                meta="log"
+                bindtap={testCssConsoleLog}
+              />
+              <view
+                className={`${mainThreadRowPress.className} actionRow`}
+                main-thread:bindtap={testConsoleLogInMainThread}
+                {...mainThreadRowPress.handlers}
+              >
+                <ActionRowContent
+                  label="Console Log"
+                  caption="메인 스레드에서 남기는 로그예요"
+                  meta="main thread"
+                />
+              </view>
+              <ActionRow
+                label="Console Error"
+                caption="console.error 한 줄을 남겨요"
+                meta="error"
+                tone="red"
+                bindtap={() => {
+                  console.error('Test console error');
+                }}
+              />
+              <ActionRow
+                label="Throw Error"
+                caption="처리되지 않은 예외를 던져요"
+                meta="error"
+                tone="red"
+                bindtap={() => {
+                  throw new Error('Test Error');
+                }}
+              />
+            </Section>
+          </list-item>
+
+          <list-item item-key="section-track">
+            <Section title="필터 탭">
+              <ActionRow
+                label="screen_view"
+                caption="Track 탭에만 모이는 커스텀 로그예요"
+                meta="track"
+                tone="pink"
+                bindtap={() => testTrackEvent('screen_view')}
+              />
+              <ActionRow
+                label="button_click"
+                caption="Track 탭에만 모이는 커스텀 로그예요"
+                meta="track"
+                tone="pink"
+                bindtap={() => testTrackEvent('button_click')}
+              />
+            </Section>
+          </list-item>
+
+          <list-item item-key="section-network">
+            <Section title="네트워크">
+              <ActionRow
+                label="jsonplaceholder /posts/1"
+                caption="목록 한 건을 받아와요"
+                method="GET"
+                bindtap={testGetRequest}
+              />
+              <ActionRow
+                label="jsonplaceholder /posts"
+                caption="새 글을 만들어요"
+                method="POST"
+                bindtap={testPostRequest}
+              />
+              <ActionRow
+                label="jsonplaceholder /posts/1"
+                caption="제목만 바꿔요"
+                method="PATCH"
+                bindtap={testPatchRequest}
+              />
+              <ActionRow
+                label="jsonplaceholder /posts/1"
+                caption="한 건을 지워요"
+                method="DELETE"
+                bindtap={testDeleteRequest}
+              />
+              <ActionRow
+                label="graphql.org /graphql"
+                caption="graphql-response+json 응답이에요"
+                method="POST"
+                bindtap={testGraphqlRequest}
+              />
+            </Section>
+          </list-item>
+
+          <list-item item-key="section-list-header">
+            <view className="section">
+              <text className="section-title app-sectionTitle">
+                스크롤 목록
+              </text>
+            </view>
+          </list-item>
+
+          {Array.from({ length: 20 }, (_, i) => (
+            <list-item item-key={`item-${i}`} key={`item-${i}`}>
+              <ActionRow
+                label={`List Item ${i + 1}`}
+                meta="log"
+                bindtap={() => console.log(`Item ${i + 1} tapped`)}
+              />
+              {i === 19 ? <view className="app-listBottomSpace" /> : null}
+            </list-item>
+          ))}
+        </list>
+      </view>
 
       <Suspense fallback={<text>Loading...</text>}>
         <LynxConsole
           safeAreaInsetBottom="0px"
           theme="light"
+          renderFloatingButton={
+            customFloatingButton &&
+            (({ open }) => <CustomFloatingButton open={open} />)
+          }
           initialPosition={{ right: 30, bottom: 200 }}
           customTabs={[
             {

@@ -1,6 +1,7 @@
 import {
   type ForwardedRef,
   forwardRef,
+  type ReactNode,
   useImperativeHandle,
   useMemo,
   useState,
@@ -10,6 +11,7 @@ import { ConsolePanel } from "./components/ConsolePanel.jsx";
 import "./components/FloatingButton.css";
 import "./styles/tokens.css";
 import { FloatingButton } from "./components/FloatingButton.jsx";
+import { FloatingButtonPositionContext } from "./hooks/FloatingButtonPositionContext";
 import { useLatestFcp } from "./hooks/useLatestFcp";
 import { useViewport } from "./hooks/useViewport";
 import { isWebPlatform } from "./shared/isWebPlatform";
@@ -23,7 +25,16 @@ export interface LynxConsoleHandle {
   isOpen: () => boolean;
 }
 
+export interface FloatingButtonRenderProps {
+  open: () => void;
+  isOpen: boolean;
+}
+
 export interface LynxConsoleProps {
+  /** Replaces the entire default button. Pass false for the default; return null to hide it. */
+  renderFloatingButton?:
+    | false
+    | ((props: FloatingButtonRenderProps) => ReactNode);
   theme?: "light" | "dark";
   safeAreaInsetBottom?: string;
   safeAreaInsetTop?: string;
@@ -44,6 +55,7 @@ const LynxConsole = forwardRef<LynxConsoleHandle, LynxConsoleProps>(
       safeAreaInsetTop,
       customTabs,
       initialPosition,
+      renderFloatingButton,
     },
     ref: ForwardedRef<LynxConsoleHandle>,
   ) => {
@@ -90,46 +102,60 @@ const LynxConsole = forwardRef<LynxConsoleHandle, LynxConsoleProps>(
 
     return (
       <ThemeProvider value={colors}>
-        <view
-          style={{
-            backgroundColor: colors.bg.layerDefault,
-            color: colors.fg.neutral,
-          }}
-        >
-          <FloatingButton
-            bindtap={handleOpenBottomSheet}
-            initialPosition={initialPosition}
+        <FloatingButtonPositionContext.Provider value={initialPosition}>
+          <view
+            style={{
+              backgroundColor: renderFloatingButton
+                ? "transparent"
+                : colors.bg.layerDefault,
+              color: colors.fg.neutral,
+            }}
           >
-            <text
-              className="fb-title t4"
-              style={{ fontWeight: "400", color: colors.palette.staticWhite }}
-            >
-              LynxConsole
-            </text>
-            {/* web은 performance entry가 오지 않아 실제 수집된 경우에만 표시해요 */}
-            {(!isWebPlatform || latestFcp) && (
-              <text
-                className="fb-subtitle t3"
-                style={{ fontWeight: "400", color: colors.palette.staticWhite }}
+            {renderFloatingButton ? (
+              renderFloatingButton({ open: handleOpenBottomSheet, isOpen })
+            ) : (
+              <FloatingButton
+                bindtap={handleOpenBottomSheet}
+                initialPosition={initialPosition}
               >
-                {`${latestFcp?.name ?? "FCP"}: ${latestFcp?.duration ? latestFcp.duration.toFixed(2) : "--"}ms`}
-              </text>
+                <text
+                  className="fb-title t4"
+                  style={{
+                    fontWeight: "400",
+                    color: colors.palette.staticWhite,
+                  }}
+                >
+                  LynxConsole
+                </text>
+                {/* web은 performance entry가 오지 않아 실제 수집된 경우에만 표시해요 */}
+                {(!isWebPlatform || latestFcp) && (
+                  <text
+                    className="fb-subtitle t3"
+                    style={{
+                      fontWeight: "400",
+                      color: colors.palette.staticWhite,
+                    }}
+                  >
+                    {`${latestFcp?.name ?? "FCP"}: ${latestFcp?.duration ? latestFcp.duration.toFixed(2) : "--"}ms`}
+                  </text>
+                )}
+              </FloatingButton>
             )}
-          </FloatingButton>
-          {isOpen && (
-            <BottomSheet
-              isOpen={isOpen}
-              shouldClose={shouldClose}
-              onClose={handleCloseBottomSheet}
-              safeAreaInsetBottom={safeAreaInsetBottom}
-              safeAreaInsetTop={safeAreaInsetTop}
-              layout={layout}
-              viewportWidth={viewportWidth}
-            >
-              <ConsolePanel customTabs={customTabs} />
-            </BottomSheet>
-          )}
-        </view>
+            {isOpen && (
+              <BottomSheet
+                isOpen={isOpen}
+                shouldClose={shouldClose}
+                onClose={handleCloseBottomSheet}
+                safeAreaInsetBottom={safeAreaInsetBottom}
+                safeAreaInsetTop={safeAreaInsetTop}
+                layout={layout}
+                viewportWidth={viewportWidth}
+              >
+                <ConsolePanel customTabs={customTabs} />
+              </BottomSheet>
+            )}
+          </view>
+        </FloatingButtonPositionContext.Provider>
       </ThemeProvider>
     );
   },
@@ -146,3 +172,9 @@ export type {
 } from "./types";
 export { isNetworkLog, isPerformanceLog } from "./utils/networkLog";
 export default LynxConsole;
+
+export type {
+  InitialPosition,
+  UseFloatingButtonDragOptions,
+} from "./hooks/useFloatingButtonDrag";
+export { useFloatingButtonDrag } from "./hooks/useFloatingButtonDrag";

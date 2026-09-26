@@ -146,3 +146,90 @@ LynxView의 가로가 세로보다 넓으면 오른쪽에 붙는 사이드 패�
 <LynxConsole safeAreaInsetTop="44px" />
 ```
 
+## 플로팅 버튼 교체하기
+
+### 1. 내 버튼으로 교체하기
+
+`renderFloatingButton`을 전달하면 리로드를 포함한 기본 버튼 전체를 교체해요. 탭 이벤트에 `open`을 연결하면 콘솔이 열려요. `isOpen`으로 패널이 열려 있는지도 알 수 있어요. 모양과 위치는 직접 정해요.
+
+```tsx
+import LynxConsole from 'lynx-console';
+
+<LynxConsole
+  renderFloatingButton={({ open }) => (
+    <view
+      style={{ position: 'fixed', right: '16px', bottom: '84px', zIndex: 9997 }}
+      bindtap={open}
+    >
+      <text>Open console</text>
+    </view>
+  )}
+/>
+```
+
+### 2. 리로드 버튼과 드래그 추가하기
+
+버튼 컴포넌트 안에서 공개 훅 `useFloatingButtonDrag`를 사용해요. 이동할 영역에는 `dragHandlers`, 리로드처럼 독립적으로 눌러야 하는 버튼에는 `stopDragHandlers`를 펼쳐 넣어요. 터치·마우스 차이를 직접 처리할 필요가 없고, 리로드를 눌렀을 때 콘솔까지 열리는 것도 막아줘요.
+
+```tsx
+import LynxConsole, { useFloatingButtonDrag } from 'lynx-console';
+
+function MyFloatingButton({ open }: { open: () => void }) {
+  const { positionStyle, dragHandlers, stopDragHandlers, dragOverlayHandlers } =
+    useFloatingButtonDrag({
+      onTap: open,
+    });
+
+  return (
+    <>
+      {dragOverlayHandlers && (
+        <view
+          style={{
+            position: 'fixed', top: 0, left: 0,
+            width: '100vw', height: '100vh', zIndex: 9996,
+          }}
+          {...dragOverlayHandlers}
+        />
+      )}
+      <view
+        style={{
+          position: 'fixed', ...positionStyle, zIndex: 9997,
+          display: 'flex', flexDirection: 'row', alignItems: 'center',
+          padding: '8px', gap: '12px', borderRadius: '16px',
+          backgroundColor: '#eeeeee',
+        }}
+        {...dragHandlers}
+      >
+        <text style={{ color: '#222222' }}>Console</text>
+        <view
+          {...stopDragHandlers}
+          bindtap={() => lynx.reload({}, () => {})}
+        >
+          <text style={{ color: '#222222' }}>↻</text>
+        </view>
+      </view>
+    </>
+  );
+}
+
+<LynxConsole
+  initialPosition={{ right: 30, bottom: 200 }}
+  renderFloatingButton={({ open }) => <MyFloatingButton open={open} />}
+/>
+```
+
+`dragOverlayHandlers`가 있으면 투명 오버레이도 렌더링해요. 웹에서 마우스가 버튼 밖으로 나가도 드래그를 이어가기 위해 필요해요. 오버레이의 z-index는 페이지 콘텐츠보다 높고 버튼보다 낮게 두세요. 드래그 영역에 `bindtap={open}`을 따로 붙이지 않아요. 훅이 탭도 처리해요.
+
+훅은 `renderFloatingButton` 콜백 안에서 직접 호출하지 말고 `MyFloatingButton` 안에서 호출해요. 훅이 `LynxConsole.initialPosition`을 자동으로 읽어서 `useFloatingButtonDrag({ onTap: open })`만 쓰면 돼요. 훅에 `initialPosition`을 직접 넘기면 그 값이 우선해요. 둘 다 생략하면 `{ right: 16, bottom: 84 }`를 사용해요. 훅은 현재 런타임의 마지막 드래그 위치를 기억하고, 기준 변이 같으면 기본 버튼과도 공유해요.
+
+### 3. 기본 버튼과 전환하기
+
+```tsx
+<LynxConsole
+  renderFloatingButton={
+    enabled && (({ open }) => <MyFloatingButton open={open} />)
+  }
+/>
+```
+
+`enabled`가 false면 기본 버튼이 나와요. prop을 생략해도 같아요. 반면 렌더 콜백에서 `null`을 반환하면 버튼을 숨겨요. 이때는 다른 UI에서 `ref.open()`으로 열 수 있어요.

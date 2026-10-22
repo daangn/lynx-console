@@ -1,5 +1,11 @@
 # lynx-console
 
+## 0.13.0
+
+### Minor Changes
+
+- 056d9fc: Console tabs are now single-select. Tapping another tab switches to it without turning off the active one first; tapping the active tab again turns it off and shows everything. Turning on a content tab turns off the filter tab.
+
 ## 0.12.0
 
 ### Minor Changes

@@ -35,7 +35,7 @@ https://github.com/user-attachments/assets/d231bdf5-71bb-483f-9bdb-5843279c1308
 - **Resizable Panel** — Drag the handle to resize the console panel — height as a bottom sheet (200–700px), width as a side panel (280–720px); drag it outward to dismiss. Works with touch and with the mouse on web
 - **Adaptive Layout** — Opens as a bottom sheet on tall screens and as a right side panel when the LynxView is wider than it is tall (unfolded foldable, tablet, landscape)
 - **Tab Visibility** — Only tabs for initialized monitors are shown; uninitialized monitors are automatically hidden
-- **Multi-select Filter Tabs** — Turn on several tabs at once to view only the selected tabs. With nothing on, everything shows; tap an active tab again to turn it off
+- **Filter Tabs** — Turn on a tab to view only its entries. Tap another tab to switch right away; with nothing on, everything shows, and tapping the active tab again turns it off
 - **Custom Tabs** — Add your own tabs via the `customTabs` prop, or give a tab a `filter` to show only the console logs you care about
 - **Lynx DevTool friendly** — Network requests and FCP are also printed to the console as a summary line plus the entry, so they show up in Lynx DevTool (which has no Network panel).
 - **Light/Dark Theme** support
@@ -149,8 +149,8 @@ function App() {
 
 ### Filtering with tabs
 
-The tabs at the top of the console are multi-select. With nothing active everything shows, and several active tabs are a union.
-Turning on `Log` reveals the level dropdown (`Filter ▼`); with `Network` alone active the body switches to the network-only view with match navigation.
+Only one tab at the top of the console is active at a time. Tapping another tab switches to it, and with nothing active everything shows.
+Turning on `Log` reveals the level dropdown (`Filter ▼`); with `Network` active the body switches to the network-only view with match navigation.
 The search box looks at the printed text as well as the URL, headers and body of each network request, and a matched network row is expanded on the section that matched.
 While you scroll up to read, the list stops following new logs and counts what piled up as `N new ↓`.
 

@@ -8,11 +8,11 @@ export interface TabItem {
 }
 
 interface MultiTabsProps {
-  // 여러 개를 동시에 켤 수 있는 필터 탭이에요. 하나도 안 켜면 전부 보여줘요
+  // 로그를 걸러 보는 필터 탭이에요. 하나만 켜지고, 안 켜면 전부 보여줘요
   items: TabItem[];
-  selected: Set<string>;
+  selected: string | null;
   onToggle: (key: string) => void;
-  // 본문을 통째로 갈아끼우는 콘텐츠 탭이에요. 구분선 뒤에 붙고 하나만 켜져요
+  // 본문을 통째로 갈아끼우는 콘텐츠 탭이에요. 구분선 뒤에 붙고, 켜지면 필터 탭은 꺼져요
   contentTabs?: TabItem[] | undefined;
   activeContentTab?: string | null | undefined;
   onContentTabToggle?: ((key: string) => void) | undefined;
@@ -27,19 +27,12 @@ export const MultiTabs = ({
   onContentTabToggle,
 }: MultiTabsProps) => {
   const colors = useThemeColors();
-  // 콘텐츠 탭이 켜져 있는 동안은 필터가 걸리지 않으니, 켜둔 필터 탭을 흐리게 보여줘요
-  const dimFilters = activeContentTab != null;
   const total = items.length + (contentTabs?.length ?? 0);
   // 탭이 많아지면 글자를 한 단계씩 줄여요
   const tabSize = total < 4 ? undefined : `t${Math.max(1, 5 - (total - 3))}`;
 
-  const renderTab = (
-    item: TabItem,
-    isActive: boolean,
-    tap: () => void,
-    dimmed = false,
-  ) => {
-    const activeColor = dimmed ? colors.fg.disabled : colors.fg.neutral;
+  const renderTab = (item: TabItem, isActive: boolean, tap: () => void) => {
+    const activeColor = colors.fg.neutral;
     return (
       <view key={item.key} className={"mt-triggerButton"} bindtap={tap}>
         <text
@@ -69,12 +62,7 @@ export const MultiTabs = ({
       style={{ boxShadow: `inset 0 -1px 0 0 ${colors.stroke.neutralSubtle}` }}
     >
       {items.map((item) =>
-        renderTab(
-          item,
-          selected.has(item.key),
-          () => onToggle(item.key),
-          dimFilters,
-        ),
+        renderTab(item, selected === item.key, () => onToggle(item.key)),
       )}
       {contentTabs?.length && onContentTabToggle
         ? contentTabs.map((item) =>

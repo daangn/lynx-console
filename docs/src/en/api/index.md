@@ -18,7 +18,7 @@ description: Props, the console handle, and the monitor init functions.
 
 ## `CustomTab`
 
-A tab is either a content tab or a log filter tab. Filter tabs are multi-select and sit next to the built-in `Log` / `Network` / `Perf` tabs; content tabs sit after a divider and swap the whole body.
+A tab is either a content tab or a log filter tab. Filter tabs sit next to the built-in `Log` / `Network` / `Perf` tabs; content tabs sit after a divider and swap the whole body. Only one tab is active at a time.
 
 | Property | Type | Description |
 | --- | --- | --- |

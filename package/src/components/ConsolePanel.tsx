@@ -21,7 +21,7 @@ interface FilterTab extends TabItem {
 }
 
 // 시트를 닫았다 열어도 필터가 유지되게 모듈 스코프에 들고 있어요
-let savedSelected: Set<string> | null = null;
+let savedSelected: string | null = null;
 let savedLevels: Set<LogLevel> | null = null;
 let savedSearchQuery = "";
 
@@ -75,9 +75,8 @@ export const ConsolePanel = ({ customTabs }: ConsolePanelProps) => {
     [customTabs],
   );
 
-  const [selected, setSelected] = useState<Set<string>>(
-    () => savedSelected ?? new Set(),
-  );
+  // 필터 탭은 한 번에 하나만 켜져요. null 이면 전부 보여줘요
+  const [selected, setSelected] = useState<string | null>(() => savedSelected);
   const [enabledLevels, setEnabledLevels] = useState<Set<LogLevel>>(
     () => savedLevels ?? new Set(LOG_LEVELS),
   );
@@ -99,14 +98,14 @@ export const ConsolePanel = ({ customTabs }: ConsolePanelProps) => {
 
   const activeTab = contentTabs.find((tab) => tab.key === activeContentTab);
   // Network 탭만 단독으로 켜면 매치 순회가 되는 전용 패널을 보여줘요
-  const networkOnly =
-    !activeTab && selected.size === 1 && selected.has("network");
+  const networkOnly = !activeTab && selected === "network";
   // 레벨 필터는 Log 탭을 켰을 때만 의미가 있어요
-  const showLevelFilter = !activeTab && !networkOnly && selected.has("log");
+  const showLevelFilter = !activeTab && selected === "log";
 
-  // 아무것도 안 켜면 전부 보여줘요. 여러 개 켜면 합집합이에요
+  const activeFilterTab = filterTabs.find((tab) => tab.key === selected);
+
+  // 아무것도 안 켜면 전부 보여줘요
   const filteredLogs = useMemo(() => {
-    const active = filterTabs.filter((tab) => selected.has(tab.key));
     return entries.filter((log) => {
       if (
         showLevelFilter &&
@@ -114,16 +113,9 @@ export const ConsolePanel = ({ customTabs }: ConsolePanelProps) => {
         !enabledLevels.has(log.level)
       )
         return false;
-      if (active.length === 0) return true;
-      return active.some((tab) => tab.match(log));
+      return activeFilterTab ? activeFilterTab.match(log) : true;
     });
-  }, [entries, filterTabs, selected, enabledLevels, showLevelFilter]);
-
-  // 커스텀 필터 탭 하나만 켰을 때는 그 탭이 주던 전용 렌더러를 그대로 써요
-  const renderEntry = useMemo(() => {
-    if (selected.size !== 1) return undefined;
-    return filterTabs.find((tab) => selected.has(tab.key))?.renderEntry;
-  }, [filterTabs, selected]);
+  }, [entries, activeFilterTab, enabledLevels, showLevelFilter]);
 
   const clearAll = () => {
     clearLogs();
@@ -134,15 +126,13 @@ export const ConsolePanel = ({ customTabs }: ConsolePanelProps) => {
   const toggleFilterTab = (key: string) => {
     dismissFilterDropdown();
     setActiveContentTab(null);
-    setSelected((prev) => {
-      const next = new Set(prev);
-      if (!next.delete(key)) next.add(key);
-      return next;
-    });
+    // 다른 탭을 누르면 그 탭으로 바뀌고, 켜진 탭을 다시 누르면 꺼져요
+    setSelected((prev) => (prev === key ? null : key));
   };
 
   const toggleContentTab = (key: string) => {
     dismissFilterDropdown();
+    setSelected(null);
     setActiveContentTab((prev) => (prev === key ? null : key));
   };
 
@@ -178,7 +168,7 @@ export const ConsolePanel = ({ customTabs }: ConsolePanelProps) => {
         allEntries={entries}
         totalCount={entries.length}
         clearLogs={clearAll}
-        renderEntry={renderEntry}
+        renderEntry={activeFilterTab?.renderEntry}
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
         levelFilter={

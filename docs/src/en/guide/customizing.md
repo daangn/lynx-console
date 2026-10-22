@@ -7,13 +7,13 @@ description: Custom tabs, opening the console from code, and button placement.
 
 ## Filtering with tabs
 
-The tabs at the top of the console are multi-select. An active tab is underlined.
+Only one tab at the top of the console is active at a time. The active tab is underlined.
 
 - With nothing active, everything shows.
-- Several active tabs are a union: turn on `Log` and `Network` to watch console logs and network logs together.
-- Tap an active tab again to turn it off.
+- Tap another tab to switch to it right away.
+- Tap the active tab again to turn it off and see everything.
 - Turning on `Log` reveals the level dropdown (`Filter ▼`) on the left.
-- With `Network` alone active, the body switches to the network-only view with match navigation (`▲` `▼`).
+- With `Network` active, the body switches to the network-only view with match navigation (`▲` `▼`).
 
 The search box looks at the printed text as well as the URL, headers and body of each network request. A matched
 network row is expanded on the section that matched, with the hit highlighted. The query is shared with the

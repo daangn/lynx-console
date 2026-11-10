@@ -70,8 +70,7 @@ const LynxConsole = forwardRef<LynxConsoleHandle, LynxConsoleProps>(
     const latestFcp = useLatestFcp();
     const viewport = useViewport();
     const { measure } = viewport;
-    // overlay 는 LynxView 가 아니라 화면 전체에 떠요. 헤더처럼 납작하게 삽입된
-    // LynxView 의 root 크기로 정하면 엉뚱하게 사이드 패널로 열려서 기기 화면 크기를 봐요
+    // overlay 는 화면 전체에 떠서, 사이드 패널로 열지는 기기 화면 크기를 기준으로 봐요
     const { width: viewportWidth, height: viewportHeight } =
       useOverlay && !isWebPlatform ? readSystemInfoViewport() : viewport;
     // 가로가 세로보다 긴 화면(펼친 폴더블 · 태블릿 · 가로모드)에서는

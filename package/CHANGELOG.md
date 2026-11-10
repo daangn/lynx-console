@@ -1,5 +1,11 @@
 # lynx-console
 
+## 0.14.0
+
+### Minor Changes
+
+- 9e41cc4: `useOverlay` 옵션을 켜면 콘솔 시트를 Lynx `<overlay>` 안에 열어요
+
 ## 0.13.0
 
 ### Minor Changes

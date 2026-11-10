@@ -216,6 +216,7 @@ You can also integrate it with a back press handler so that the console closes w
 | `safeAreaInsetBottom` | `string`            | `"50px"`    | Bottom safe area inset                           |
 | `safeAreaInsetTop`    | `string`            | `"24px"`    | Top safe area inset (side panel layout only)     |
 | `customTabs`          | `CustomTab[]`       | `undefined` | Additional custom tabs to display in the console |
+| `useOverlay`          | `boolean`           | `false`     | Open the panel inside Lynx `<overlay>` (host must register `overlay`) |
 | `initialPosition`     | `{ top?: number; left?: number; right?: number; bottom?: number }` | `{ right: 16, bottom: 84 }` | Initial position (px) of the floating button. Each side is independent, so you can anchor it to any corner (e.g. `{ top: 50, left: 16 }`). When both `top` and `bottom` (or both `left` and `right`) are set, `top`/`left` win. Once the user drags the button, the saved position takes precedence. |
 
 ### `CustomTab`

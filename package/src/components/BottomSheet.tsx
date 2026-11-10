@@ -29,6 +29,8 @@ interface BottomSheetProps {
   layout?: SheetLayout;
   /** side 레이아웃에서 최대 너비를 화면에 맞춰 제한하는 데 써요 */
   viewportWidth?: number;
+  /** true 면 `<overlay>` 안에 열어서 페이지 위 네이티브 레이어에 떠요 */
+  useOverlay?: boolean;
 }
 
 const MIN_HEIGHT = 200;
@@ -57,6 +59,7 @@ export default function BottomSheet({
   safeAreaInsetTop = "24px",
   layout = "bottom",
   viewportWidth,
+  useOverlay = false,
 }: BottomSheetProps) {
   const colors = useThemeColors();
   const isSide = layout === "side";
@@ -227,9 +230,11 @@ export default function BottomSheet({
     : { height: `${sheetHeight}px` };
   const sizeTransition = isSide ? "width" : "height";
 
-  return (
+  const sheet = (
     <scroll-view
-      className="bs-backdrop"
+      className={
+        useOverlay ? "bs-backdrop bs-backdrop--overlay" : "bs-backdrop"
+      }
       style={{
         background: colors.bg.overlay,
         opacity: isVisible ? 1 : 0,
@@ -237,7 +242,13 @@ export default function BottomSheet({
       }}
     >
       <view
-        className={isSide ? "bs-overlay bs-overlay--side" : "bs-overlay"}
+        className={[
+          "bs-overlay",
+          isSide && "bs-overlay--side",
+          useOverlay && "bs-overlay--overlay",
+        ]
+          .filter(Boolean)
+          .join(" ")}
         bindtap={handleBackdropTap}
       >
         {showDragOverlay && (
@@ -298,5 +309,24 @@ export default function BottomSheet({
         </view>
       </view>
     </scroll-view>
+  );
+
+  if (!useOverlay) return sheet;
+
+  // overlay 는 페이지 레이아웃과 상관없이 화면 맨 위 레이어에 떠요.
+  // fixed 는 overlay 가 아니라 페이지 기준으로 잡혀서 그림과 터치 영역이 어긋나요.
+  // lynx-ui OverlayView 처럼 custom-layout 으로 띄우고, 화면을 채우는 view 안에 absolute 로 깔아요.
+  // 안드로이드 뒤로가기는 bindrequestclose 로 들어와서 닫기 애니메이션을 태워요
+  return (
+    <overlay
+      visible
+      custom-layout={true}
+      style={{ position: "fixed", overflow: "visible" }}
+      bindrequestclose={() => {
+        if (phase !== "closing") handleClose();
+      }}
+    >
+      <view className="bs-overlayRoot">{sheet}</view>
+    </overlay>
   );
 }

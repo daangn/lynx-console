@@ -146,6 +146,21 @@ default). Pass the status bar height of your host if that default does not fit.
 <LynxConsole safeAreaInsetTop="44px" />
 ```
 
+## Opening in an overlay
+
+By default the panel is drawn with `position: fixed` in the page that mounts `LynxConsole`, so a parent
+with its own stacking or clipping can cover it. Pass `useOverlay` to open it inside Lynx `<overlay>`
+instead. It then floats on a native layer above the page, and the Android back button closes it.
+The overlay covers the whole screen, so the panel picks bottom or side from the device screen rather
+than the LynxView, and `safeAreaInsetBottom` is measured from the bottom of the screen.
+
+```tsx
+<LynxConsole useOverlay />
+```
+
+`<overlay>` is not built into the Lynx Engine. The host app has to register it, so turn this on only
+where it is available.
+
 ## Replacing the floating button
 
 ### 1. Use your own button

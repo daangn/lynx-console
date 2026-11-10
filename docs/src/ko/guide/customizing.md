@@ -146,6 +146,19 @@ LynxView의 가로가 세로보다 넓으면 오른쪽에 붙는 사이드 패�
 <LynxConsole safeAreaInsetTop="44px" />
 ```
 
+## overlay 로 열기
+
+기본으로는 `LynxConsole`을 둔 페이지 안에 `position: fixed`로 그려서, 부모가 쌓임 순서나 잘림을
+따로 가지면 가려질 수 있어요. `useOverlay`를 넘기면 Lynx `<overlay>` 안에 열어요. 페이지 위 네이티브
+레이어에 뜨고, 안드로이드 뒤로가기로도 닫혀요. overlay 는 화면 전체를 덮어서, 바텀시트와 사이드 패널은
+LynxView 가 아니라 기기 화면 비율로 정하고 `safeAreaInsetBottom` 도 화면 맨 아래 기준으로 잡아요.
+
+```tsx
+<LynxConsole useOverlay />
+```
+
+`<overlay>`는 Lynx Engine 기본 엘리먼트가 아니라 호스트 앱이 등록해야 써요. 등록된 환경에서만 켜요.
+
 ## 플로팅 버튼 교체하기
 
 ### 1. 내 버튼으로 교체하기

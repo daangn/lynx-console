@@ -217,6 +217,7 @@ back press 핸들러와 연동해서 뒤로 가기 버튼을 눌렀을 때 콘�
 | `safeAreaInsetBottom` | `string`            | `"50px"`    | 하단 Safe Area 여백          |
 | `safeAreaInsetTop`    | `string`            | `"24px"`    | 상단 Safe Area 여백 (사이드 패널일 때만) |
 | `customTabs`          | `CustomTab[]`       | `undefined` | 콘솔에 추가할 커스텀 탭 목록 |
+| `useOverlay`          | `boolean`           | `false`     | 패널을 Lynx `<overlay>` 안에 열어요 (호스트에 `overlay` 등록 필요) |
 | `initialPosition`     | `{ top?: number; left?: number; right?: number; bottom?: number }` | `{ right: 16, bottom: 84 }` | 플로팅 버튼의 초기 위치(px). 네 방향 중 명시한 값만 적용되어 원하는 모서리에 붙일 수 있어요(예: `{ top: 50, left: 16 }`). `top`/`bottom` 또는 `left`/`right`가 둘 다 들어오면 `top`/`left`가 이겨요. 사용자가 한번 드래그하면 그 위치가 저장되어 우선해요. |
 
 ### `CustomTab`

@@ -13,7 +13,7 @@ import "./styles/tokens.css";
 import { FloatingButton } from "./components/FloatingButton.jsx";
 import { FloatingButtonPositionContext } from "./hooks/FloatingButtonPositionContext";
 import { useLatestFcp } from "./hooks/useLatestFcp";
-import { useViewport } from "./hooks/useViewport";
+import { readSystemInfoViewport, useViewport } from "./hooks/useViewport";
 import { isWebPlatform } from "./shared/isWebPlatform";
 import { ThemeProvider } from "./styles/ThemeContext";
 import { getColors } from "./styles/theme";
@@ -45,6 +45,11 @@ export interface LynxConsoleProps {
     right?: number;
     bottom?: number;
   };
+  /**
+   * Opens the sheet inside Lynx `<overlay>` so it floats above the page regardless of where
+   * LynxConsole is mounted. The host app must register the `overlay` element.
+   */
+  useOverlay?: boolean;
 }
 
 const LynxConsole = forwardRef<LynxConsoleHandle, LynxConsoleProps>(
@@ -56,17 +61,19 @@ const LynxConsole = forwardRef<LynxConsoleHandle, LynxConsoleProps>(
       customTabs,
       initialPosition,
       renderFloatingButton,
+      useOverlay = false,
     },
     ref: ForwardedRef<LynxConsoleHandle>,
   ) => {
     const [isOpen, setIsOpen] = useState(false);
     const [shouldClose, setShouldClose] = useState(false);
     const latestFcp = useLatestFcp();
-    const {
-      width: viewportWidth,
-      height: viewportHeight,
-      measure,
-    } = useViewport();
+    const viewport = useViewport();
+    const { measure } = viewport;
+    // overlay 는 LynxView 가 아니라 화면 전체에 떠요. 헤더처럼 납작하게 삽입된
+    // LynxView 의 root 크기로 정하면 엉뚱하게 사이드 패널로 열려서 기기 화면 크기를 봐요
+    const { width: viewportWidth, height: viewportHeight } =
+      useOverlay && !isWebPlatform ? readSystemInfoViewport() : viewport;
     // 가로가 세로보다 긴 화면(펼친 폴더블 · 태블릿 · 가로모드)에서는
     // 바텀시트가 너무 납작해져서 사이드 패널로 열어요
     const layout =
@@ -150,6 +157,7 @@ const LynxConsole = forwardRef<LynxConsoleHandle, LynxConsoleProps>(
                 safeAreaInsetTop={safeAreaInsetTop}
                 layout={layout}
                 viewportWidth={viewportWidth}
+                useOverlay={useOverlay}
               >
                 <ConsolePanel customTabs={customTabs} />
               </BottomSheet>

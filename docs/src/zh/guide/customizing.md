@@ -144,6 +144,19 @@ function App() {
 <LynxConsole safeAreaInsetTop="44px" />
 ```
 
+## 在 overlay 中打开
+
+默认情况下，面板以 `position: fixed` 绘制在挂载 `LynxConsole` 的页面里，如果父元素有自己的层叠或裁剪，
+面板可能会被遮住。传入 `useOverlay` 后会在 Lynx `<overlay>` 中打开，浮在页面上方的原生层，
+Android 返回键也能关闭它。overlay 会覆盖整个屏幕，因此底部面板和侧边面板按设备屏幕比例而不是 LynxView
+来决定，`safeAreaInsetBottom` 也以屏幕底部为基准。
+
+```tsx
+<LynxConsole useOverlay />
+```
+
+`<overlay>` 不是 Lynx Engine 的内置元素，需要宿主应用注册后才能使用，请只在已注册的环境中开启。
+
 ## 替换悬浮按钮
 
 ### 1. 使用自己的按钮

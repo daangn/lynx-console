@@ -13,6 +13,7 @@ const LynxConsole = lazy(() => import('lynx-console'));
 
 const App = () => {
   const [customFloatingButton, setCustomFloatingButton] = useState(false);
+  const [useOverlay, setUseOverlay] = useState(false);
   // main-thread 핸들러(worklet)는 컴포넌트 prop 으로 넘기면 깨져서, 이 줄만 <view> 를 직접 만들어요
   const mainThreadRowPress = usePressFeedback('actionRow--pressed');
 
@@ -161,6 +162,12 @@ const App = () => {
                 meta={customFloatingButton ? 'ON' : 'OFF'}
                 bindtap={() => setCustomFloatingButton((enabled) => !enabled)}
               />
+              <ActionRow
+                label="Open in overlay"
+                caption="켜면 콘솔 시트를 <overlay> 안에 열어요"
+                meta={useOverlay ? 'ON' : 'OFF'}
+                bindtap={() => setUseOverlay((enabled) => !enabled)}
+              />
             </Section>
           </list-item>
 
@@ -287,8 +294,10 @@ const App = () => {
 
       <Suspense fallback={<text>Loading...</text>}>
         <LynxConsole
-          safeAreaInsetBottom="0px"
+          // overlay 는 내비게이션 바 영역까지 덮어서 그만큼 아래 여백을 둬요
+          safeAreaInsetBottom={useOverlay ? '34px' : '0px'}
           theme="light"
+          useOverlay={useOverlay}
           renderFloatingButton={
             customFloatingButton &&
             (({ open }) => <CustomFloatingButton open={open} />)

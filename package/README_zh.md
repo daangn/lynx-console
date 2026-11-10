@@ -216,6 +216,7 @@ function App() {
 | `safeAreaInsetBottom` | `string`            | `"50px"`    | 底部安全区域内边距               |
 | `safeAreaInsetTop`    | `string`            | `"24px"`    | 顶部安全区域内边距（仅侧边面板）        |
 | `customTabs`          | `CustomTab[]`       | `undefined` | 要在控制台里额外显示的自定义标签页 |
+| `useOverlay`          | `boolean`           | `false`     | 在 Lynx `<overlay>` 中打开面板（宿主需注册 `overlay`） |
 | `initialPosition`     | `{ top?: number; left?: number; right?: number; bottom?: number }` | `{ right: 16, bottom: 84 }` | 悬浮按钮的初始位置（px）。四个方向互相独立，所以可以吸附到任意一个角（例如 `{ top: 50, left: 16 }`）。同时设置 `top`/`bottom`（或 `left`/`right`）时，`top`/`left` 生效。用户拖动过按钮之后，保存下来的位置优先。 |
 
 ### `CustomTab`

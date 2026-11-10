@@ -117,3 +117,14 @@
   height: 100vh;
   z-index: 100;
 }
+
+/* <overlay> 안에서는 fixed 대신 overlay 를 채우는 루트 기준으로 깔아요 */
+.bs-overlayRoot {
+  width: 100%;
+  height: 100%;
+}
+
+.bs-backdrop--overlay,
+.bs-overlay--overlay {
+  position: absolute;
+}

@@ -11,8 +11,10 @@ export interface Viewport {
   height?: number;
 }
 
-function readWebViewport(): Viewport {
-  // web 런타임은 lynx-view 크기를 기준으로 SystemInfo 를 채워줘요
+/**
+ * SystemInfo 로 읽은 크기예요. web 은 lynx-view 크기, 네이티브는 기기 화면 크기예요.
+ */
+export function readSystemInfoViewport(): Viewport {
   if (typeof SystemInfo === "undefined") return {};
   const ratio = SystemInfo.pixelRatio || 1;
   const width = SystemInfo.pixelWidth / ratio;
@@ -33,12 +35,12 @@ function readWebViewport(): Viewport {
  */
 export function useViewport() {
   const [viewport, setViewport] = useState<Viewport>(() =>
-    isWebPlatform ? readWebViewport() : {},
+    isWebPlatform ? readSystemInfoViewport() : {},
   );
 
   const measure = useCallback(() => {
     if (isWebPlatform) {
-      setViewport(readWebViewport());
+      setViewport(readSystemInfoViewport());
       return;
     }
     try {

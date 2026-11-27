@@ -8,6 +8,11 @@ import {
   formatNetworkPlain,
 } from "../utils/consoleStyle";
 import { emitMonitorLog } from "./setupLogMonitor";
+import {
+  isStreamingResponse,
+  STREAMING_BODY_PLACEHOLDER,
+  tapStreamingBody,
+} from "./tapStreamingBody";
 
 const generateNetworkId = (): string => {
   return `network-${Date.now()}-${Math.random()}`;
@@ -138,6 +143,23 @@ const updateNetworkEntry = (
   });
 };
 
+const readResponseBody = async (
+  response: Response,
+  mimeType: string | undefined,
+): Promise<string> => {
+  try {
+    if (mimeType === "application/json" || mimeType?.endsWith("+json")) {
+      const json = await response.clone().json();
+      return stringify(json, null, 2, { references: true }) ?? "";
+    }
+    if (mimeType?.includes("text")) return await response.clone().text();
+    return "";
+  } catch (error) {
+    console.error("[LynxConsole] Error reading response body:", error);
+    return `[Unable to read response body] ${error}`;
+  }
+};
+
 export const initNetworkMonitor = (options?: MonitorConsoleOptions) => {
   const consoleMode = options?.console ?? true;
   const emitToConsole = consoleMode !== false;
@@ -212,30 +234,23 @@ export const initNetworkMonitor = (options?: MonitorConsoleOptions) => {
       const endTime = Date.now();
 
       const responseHeaders: Record<string, string> = {};
+      let contentType: string | undefined;
       response.headers.forEach((value, key) => {
         responseHeaders[key] = value;
+        if (key.toLowerCase() === "content-type") contentType = value;
       });
+      const mimeType = contentType?.split(";")[0]?.trim().toLowerCase();
 
-      const clonedResponse = response.clone();
-      let responseBody: string | undefined;
-
-      try {
-        const headerMap: Record<string, string> = {};
-        response.headers.forEach((value, key) => {
-          headerMap[key.toLowerCase()] = value;
+      let responseBody: string;
+      if (isStreamingResponse(response, mimeType)) {
+        responseBody = STREAMING_BODY_PLACEHOLDER;
+        tapStreamingBody(response, (body) => {
+          // 스트림이 끝나기 전에 Network 탭을 비우면 항목이 없어요. 그때는 조용히 넘어가요
+          if (!state.networksMap?.has(id)) return;
+          updateNetworkEntry(id, { responseBody: body });
         });
-
-        const contentType = headerMap["content-type"];
-        const mimeType = contentType?.split(";")[0]?.trim().toLowerCase();
-        if (mimeType === "application/json" || mimeType?.endsWith("+json")) {
-          const json = await clonedResponse.json();
-          responseBody = stringify(json, null, 2, { references: true }) ?? "";
-        } else if (mimeType?.includes("text")) {
-          responseBody = await clonedResponse.text();
-        }
-      } catch (error) {
-        responseBody = `[Unable to read response body] ${error}`;
-        console.error("[LynxConsole] Error reading response body:", error);
+      } else {
+        responseBody = await readResponseBody(response, mimeType);
       }
 
       updateNetworkEntry(id, {
@@ -245,7 +260,7 @@ export const initNetworkMonitor = (options?: MonitorConsoleOptions) => {
         endTime,
         duration: endTime - startTime,
         responseHeaders,
-        responseBody: responseBody ?? "",
+        responseBody,
       });
 
       if (emitToConsole) {

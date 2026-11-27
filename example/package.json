@@ -8,7 +8,8 @@
     "check": "biome check --write",
     "dev": "rspeedy dev",
     "format": "biome format --write",
-    "preview": "rspeedy preview"
+    "preview": "rspeedy preview",
+    "sse-server": "node scripts/sse-server.mjs"
   },
   "dependencies": {
     "@lynx-js/lynx-core": "0.1.3",

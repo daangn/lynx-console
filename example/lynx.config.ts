@@ -5,6 +5,7 @@ import { pluginQRCode } from '@lynx-js/qrcode-rsbuild-plugin';
 import { pluginReactLynx } from '@lynx-js/react-rsbuild-plugin';
 import { defineConfig } from '@lynx-js/rspeedy';
 import { pluginTypeCheck } from '@rsbuild/plugin-type-check';
+import { pluginEntryPageConfig } from './plugins/pluginEntryPageConfig.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -23,6 +24,8 @@ const getLocalIP = () => {
   return '127.0.0.1';
 };
 
+const isDev = process.env.NODE_ENV !== 'production';
+
 export default defineConfig({
   environments: {
     web: {
@@ -35,13 +38,24 @@ export default defineConfig({
         assetPrefix: '/',
       },
     },
-    lynx: {},
+    lynx: {
+      source: {
+        // 스트리밍 예제는 로컬 SSE 서버가 있어야 해서 Lynx dev 빌드에만 넣어요
+        entry: isDev ? { streaming: './src/streaming/index.tsx' } : {},
+      },
+    },
   },
   source: {
     entry: {
       main: './src/index.tsx',
     },
-    define: { console: 'globalThis.console', fetch: 'lynx.fetch' },
+    define: {
+      console: 'globalThis.console',
+      fetch: 'lynx.fetch',
+      __SSE_SERVER_URL__: JSON.stringify(
+        `http://${getLocalIP()}:${Number(process.env.SSE_PORT) || 3100}`,
+      ),
+    },
     include: [
       { and: [packageDir, { not: /[\\/]node_modules[\\/]/ }] },
       /[\\/]node_modules[\\/]devalue[\\/]/,
@@ -76,6 +90,11 @@ export default defineConfig({
       },
     }),
     pluginReactLynx({}),
+    // 이 설정이 켜진 페이지는 모든 fetch 가 네이티브 스트리밍 경로로 가요.
+    // 다른 페이지가 영향을 받지 않게 streaming 엔트리에만 넣어요
+    pluginEntryPageConfig({
+      streaming: { enableFetchAPIStandardStreaming: true },
+    }),
     pluginTypeCheck(),
   ],
 });
